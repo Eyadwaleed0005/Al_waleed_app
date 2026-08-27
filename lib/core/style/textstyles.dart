@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/fontweighthelper.dart';
