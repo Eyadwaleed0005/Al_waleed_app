@@ -1,3 +1,4 @@
+import 'package:al_waleed/app/routes/app_images_routes.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class CustomSearchBar extends StatelessWidget {
     this.autofocus = false,
     this.readOnly = false,
     this.onTap,
+    this.prefixIcon,
   });
 
   final TextEditingController? controller;
@@ -24,6 +26,7 @@ class CustomSearchBar extends StatelessWidget {
   final bool autofocus;
   final bool readOnly;
   final VoidCallback? onTap;
+  final Widget? prefixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +46,16 @@ class CustomSearchBar extends StatelessWidget {
         hintText: hintText,
         hintTextDirection: TextDirection.rtl,
         hintStyle: AppTextStyle.font14TextSecondaryRegularTajawal(),
-        prefixIcon: Icon(
-          Icons.search_rounded,
-          color: ColorPalette.textMuted,
-          size: 22.sp,
-        ),
+        prefixIcon: prefixIcon ??
+            Padding(
+              padding: EdgeInsets.all(12.w),
+              child: Image.asset(
+                AppImage().search,
+                width: 20.w,
+                height: 20.w,
+                fit: BoxFit.contain,
+              ),
+            ),
         suffixIcon: controller != null && (controller?.text.isNotEmpty ?? false)
             ? IconButton(
                 icon: Icon(
