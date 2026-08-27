@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/fontweighthelper.dart';
@@ -60,6 +60,24 @@ class AppTextStyle {
       fontWeight: FontWeightHelper.regular,
       fontFamily: tajawal,
       color: ColorPalette.textMuted,
+    );
+  }
+
+  static TextStyle font15SurfaceMediumTajawal() {
+    return TextStyle(
+      fontSize: 15.sp,
+      fontWeight: FontWeightHelper.medium,
+      fontFamily: tajawal,
+      color: ColorPalette.surface,
+    );
+  }
+
+  static TextStyle font15TextPrimaryMediumTajawal() {
+    return TextStyle(
+      fontSize: 15.sp,
+      fontWeight: FontWeightHelper.medium,
+      fontFamily: tajawal,
+      color: ColorPalette.textPrimary,
     );
   }
 

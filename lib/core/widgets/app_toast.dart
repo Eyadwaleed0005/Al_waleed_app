@@ -1,4 +1,6 @@
-/*import 'package:al_waleed/core/helper/spacer.dart';
+import 'package:al_waleed/core/helper/spacer.dart';
+import 'package:al_waleed/core/style/app_color.dart';
+import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -134,11 +136,11 @@ class _AppToastOverlayState extends State<_AppToastOverlay>
                       vertical: 16.h,
                     ),
                     decoration: BoxDecoration(
-                      color: ColorPalette.textPrimary.withOpacity(0.92),
+                      color: ColorPalette.textPrimary.withValues(alpha: 0.92),
                       borderRadius: BorderRadius.circular(16.r),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.18),
+                          color: Colors.black.withValues(alpha: 0.18),
                           blurRadius: 20.r,
                           offset: Offset(0, 8.h),
                         ),
@@ -172,4 +174,4 @@ class _AppToastOverlayState extends State<_AppToastOverlay>
       ),
     );
   }
-}*/
+}
