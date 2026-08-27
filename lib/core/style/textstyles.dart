@@ -63,6 +63,24 @@ class AppTextStyle {
     );
   }
 
+  static TextStyle font15SurfaceMediumTajawal() {
+    return TextStyle(
+      fontSize: 15.sp,
+      fontWeight: FontWeightHelper.medium,
+      fontFamily: tajawal,
+      color: ColorPalette.surface,
+    );
+  }
+
+  static TextStyle font15TextPrimaryMediumTajawal() {
+    return TextStyle(
+      fontSize: 15.sp,
+      fontWeight: FontWeightHelper.medium,
+      fontFamily: tajawal,
+      color: ColorPalette.textPrimary,
+    );
+  }
+
   static TextStyle font15TextLightBoldTajawal() {
     return TextStyle(
       fontSize: 15.sp,

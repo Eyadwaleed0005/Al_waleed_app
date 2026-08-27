@@ -32,20 +32,33 @@ class CustomSecondaryButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           foregroundColor: ColorPalette.primary,
           side: BorderSide(color: ColorPalette.primary, width: 1.5.w),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14.r),
+          ),
         ),
         child: isLoading
             ? SizedBox(
                 width: 22.w,
                 height: 22.w,
-                child: CircularProgressIndicator(color: ColorPalette.primary, strokeWidth: 2.5),
+                child: CircularProgressIndicator(
+                  color: ColorPalette.primary,
+                  strokeWidth: 2.5,
+                ),
               )
             : Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (icon != null) ...[Icon(icon, size: 20.sp, color: ColorPalette.primary), horizontalSpace(8)],
-                  Text(text, style: AppTextStyle.font15TextLightBoldTajawal().copyWith(color: ColorPalette.primary)),
+                  if (icon != null) ...[
+                    Icon(icon, size: 20.sp, color: ColorPalette.primary),
+                    horizontalSpace(8),
+                  ],
+                  Text(
+                    text,
+                    style: AppTextStyle.font15TextLightBoldTajawal().copyWith(
+                      color: ColorPalette.primary,
+                    ),
+                  ),
                 ],
               ),
       ),

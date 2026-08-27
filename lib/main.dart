@@ -1,4 +1,3 @@
-import 'package:al_waleed/app/routes/app_route_observer.dart';
 import 'package:al_waleed/app/routes/app_routes.dart';
 import 'package:al_waleed/app/routes/route_names.dart';
 import 'package:flutter/material.dart';

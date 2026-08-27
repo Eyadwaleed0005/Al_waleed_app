@@ -46,7 +46,8 @@ class CustomSearchBar extends StatelessWidget {
         hintText: hintText,
         hintTextDirection: TextDirection.rtl,
         hintStyle: AppTextStyle.font14TextSecondaryRegularTajawal(),
-        prefixIcon: prefixIcon ??
+        prefixIcon:
+            prefixIcon ??
             Padding(
               padding: EdgeInsets.all(12.w),
               child: Image.asset(

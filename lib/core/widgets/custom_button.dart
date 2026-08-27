@@ -36,13 +36,18 @@ class CustomButton extends StatelessWidget {
           disabledBackgroundColor: ColorPalette.disabled,
           foregroundColor: ColorPalette.textLight,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14.r),
+          ),
         ),
         child: isLoading
             ? SizedBox(
                 width: 22.w,
                 height: 22.w,
-                child: CircularProgressIndicator(color: ColorPalette.textLight, strokeWidth: 2.5),
+                child: CircularProgressIndicator(
+                  color: ColorPalette.textLight,
+                  strokeWidth: 2.5,
+                ),
               )
             : Row(
                 mainAxisSize: MainAxisSize.min,
