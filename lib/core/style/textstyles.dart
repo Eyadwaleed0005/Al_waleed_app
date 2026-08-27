@@ -1,7 +1,6 @@
-import 'dart:ui';
-
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/fontweighthelper.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppTextStyle {
@@ -340,6 +339,15 @@ class AppTextStyle {
       fontWeight: FontWeightHelper.semiBold,
       fontFamily: tajawal,
       color: ColorPalette.error,
+    );
+  }
+
+  static TextStyle font26PageTitleBoldKufam() {
+    return TextStyle(
+      fontSize: 26.sp,
+      fontWeight: FontWeightHelper.bold,
+      fontFamily: kufam,
+      color: ColorPalette.highlight,
     );
   }
 }

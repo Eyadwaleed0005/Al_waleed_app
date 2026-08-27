@@ -38,4 +38,5 @@ class ColorPalette {
   static const Color warning = Color(0xFFB8860B);
   static const Color error = Color(0xFFC0392B);
   static const Color info = Color(0xFF28729F);
+
 }
