@@ -1,3 +1,6 @@
+import 'package:al_waleed/app/routes/app_route_observer.dart';
+import 'package:al_waleed/app/routes/app_routes.dart';
+import 'package:al_waleed/app/routes/route_names.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,6 +17,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //final route = AppRouteObserver();
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
@@ -23,7 +27,8 @@ class MyApp extends StatelessWidget {
           title: 'الوليد',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(),
-          home: const Scaffold(body: Center(child: Text('Al Waleed'))),
+          initialRoute: RouteNames.home,
+          onGenerateRoute: AppRoutes.generateRoute,
         );
       },
     );
