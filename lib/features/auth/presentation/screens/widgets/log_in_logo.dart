@@ -1,13 +1,10 @@
-
 import 'package:al_waleed/core/style/app_asset.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomAuthLogo extends StatelessWidget {
-  const CustomAuthLogo({
-    super.key,
-  });
+class CustomLogInLogo extends StatelessWidget {
+  const CustomLogInLogo({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +13,7 @@ class CustomAuthLogo extends StatelessWidget {
       height: 110.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28.r),
-        border: Border.all(
-          color: ColorPalette.highlight,
-          width: 3.w,
-        ),
+        border: Border.all(color: ColorPalette.highlight, width: 3.w),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.15),

@@ -1,22 +1,22 @@
 import 'package:al_waleed/core/helper/app_validator.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
-import 'package:al_waleed/core/widgets/custom_app_button.dart';
 import 'package:al_waleed/core/widgets/custom_app_card.dart';
-import 'package:al_waleed/features/auth/presentation/screens/widgets/custom_auth_logo.dart';
-import 'package:al_waleed/features/auth/presentation/screens/widgets/custom_forgot_password.dart';
+import 'package:al_waleed/core/widgets/custom_button.dart';
+import 'package:al_waleed/core/widgets/custom_secondary_button.dart';
+import 'package:al_waleed/features/auth/presentation/screens/widgets/log_in_logo.dart';
 import 'package:al_waleed/features/auth/presentation/screens/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 
-class AuthViewBody extends StatefulWidget {
-  const AuthViewBody({super.key});
+class LogInViewBody extends StatefulWidget {
+  const LogInViewBody({super.key});
 
   @override
-  State<AuthViewBody> createState() => _AuthViewBodyState();
+  State<LogInViewBody> createState() => _LogInViewBodyState();
 }
 
-class _AuthViewBodyState extends State<AuthViewBody> {
+class _LogInViewBodyState extends State<LogInViewBody> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -60,7 +60,7 @@ class _AuthViewBodyState extends State<AuthViewBody> {
               children: [
                 SizedBox(height: 40.h),
 
-                CustomAuthLogo(),
+                CustomLogInLogo(),
 
                 SizedBox(height: 12.h),
                 Text('الوليد', style: AppTextStyle.font26PageTitleBoldKufam()),
@@ -122,10 +122,31 @@ class _AuthViewBodyState extends State<AuthViewBody> {
                       ),
                       SizedBox(height: 24.h),
 
-                      CustomAppButton(text: 'تسجيل الدخول', onPressed: _submit),
+                      CustomButton(text: 'تسجيل الدخول', onPressed: _submit),
                       SizedBox(height: 16.h),
-
-                      CustomForgotpassword(),
+                      CustomSecondaryButton(
+                        onPressed: () {},
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '.نسيت كلمة المرور؟ تواصل مع المدرس',
+                              style:
+                                  AppTextStyle.font12TextSecondaryRegularTajawal(),
+                            ),
+                            SizedBox(width: 9.w),
+                            CircleAvatar(
+                              radius: 10.r,
+                              backgroundColor: ColorPalette.accent,
+                              child: Text(
+                                '؟',
+                                style:
+                                    AppTextStyle.font14TextPrimaryMediumKufam(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
