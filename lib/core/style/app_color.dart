@@ -12,6 +12,8 @@ class ColorPalette {
   static const Color accent = Color(0xFFABC8A3);
   static const Color highlight = Color(0xFFF0E295);
   static const Color paleSage = Color(0xFFDCEBE1);
+  static const Color navActiveGlow = Color(0xFF94D041);
+  static const Color navActiveText = Color(0xFFC6E762);
 
   // ===== Background Colors =====
   static const Color background = Color(0xFFF0F7F3);
