@@ -24,6 +24,8 @@ class AppImage {
   late final String bookOpenBig = '${baseIcons}BookOpenBig.png';
   late final String exam = '${baseIcons}exams.png';
   late final String studyNotes = '${baseIcons}study_notes.png';
+  late final String emptyNotesIcon = '${baseIcons}empty_notes.png';
+  late final String profile = '${baseIcons}profile.png';
 
   // ===== animations =====
 }

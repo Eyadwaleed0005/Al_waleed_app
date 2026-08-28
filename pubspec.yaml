@@ -28,26 +28,21 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
   flutter_animate: ^4.5.2
-  flutter_screenutil: ^5.9.3
-  flutter_image_compress: ^2.5.1
-  internet_connection_checker_plus: ^3.1.1
   flutter_bloc: ^9.1.1
-  shared_preferences: ^2.5.5
+  flutter_image_compress: ^2.5.1
+  flutter_screenutil: ^5.9.3
   flutter_secure_storage: ^11.0.0
-  get_it: ^9.2.1
-  font_awesome_flutter: ^11.0.0
   flutter_svg: ^2.3.0
+  font_awesome_flutter: ^11.0.0
+  get_it: ^9.2.1
+  internet_connection_checker_plus: ^3.1.1
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -55,6 +50,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -71,7 +68,6 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
-  
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
