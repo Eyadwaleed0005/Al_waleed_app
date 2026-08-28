@@ -1,21 +1,22 @@
-import 'package:flutter/material.dart';
-
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/fontweighthelper.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppTextStyle {
   const AppTextStyle._();
 
-  /*static TextStyle font20HighlightSemiBold() {
-    return TextStyle(
-      fontSize: 20.sp,
-      color: ColorPalette.highlight,
-    );
-  }*/
-
   static const String tajawal = 'Tajawal';
   static const String kufam = 'Kufam';
+
+  static TextStyle font15TextLightSemiBoldKufam() {
+    return TextStyle(
+      fontSize: 15.sp,
+      fontWeight: FontWeightHelper.semiBold,
+      fontFamily: kufam,
+      color: ColorPalette.textLight,
+    );
+  }
 
   static TextStyle font20TextLightRegularTajawal() {
     return TextStyle(

@@ -11,6 +11,7 @@ class ColorPalette {
   static const Color secondary = Color(0xFF28729F);
   static const Color accent = Color(0xFFABC8A3);
   static const Color highlight = Color(0xFFF0E295);
+  static const Color paleSage = Color(0xFFDCEBE1);
 
   // ===== Background Colors =====
   static const Color background = Color(0xFFF0F7F3);
