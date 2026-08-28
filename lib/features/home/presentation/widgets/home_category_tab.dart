@@ -1,8 +1,8 @@
+import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomCategoryCard extends StatelessWidget {
   final String label;
@@ -51,7 +51,7 @@ class CustomCategoryCard extends StatelessWidget {
                   ),
                   child: Image.asset(image, width: 22.w, height: 22.h),
                 ),
-                SizedBox(height: 6.h),
+                verticalSpace(6),
                 // Scalable Text Label
                 FittedBox(
                   fit: BoxFit.scaleDown,

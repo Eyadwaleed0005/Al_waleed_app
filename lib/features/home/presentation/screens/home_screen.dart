@@ -1,11 +1,12 @@
 import 'package:al_waleed/app/routes/app_images_routes.dart';
 import 'package:al_waleed/app/routes/route_names.dart';
+import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
+import 'package:al_waleed/core/widgets/background/background_student_layout.dart';
 import 'package:al_waleed/core/widgets/custom_app_bar.dart';
 import 'package:al_waleed/core/widgets/custom_app_card.dart';
 import 'package:al_waleed/features/home/presentation/widgets/home_category_tab.dart';
 import 'package:flutter/material.dart';
-import 'package:al_waleed/core/widgets/background/background_student_layout.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -29,7 +30,7 @@ class HomeScreen extends StatelessWidget {
                     Image.asset(AppImage().homeIcon, height: 24.h, width: 24.w),
                   ],
                 ),
-                SizedBox(height: 50.h),
+                verticalSpace(50),
                 AspectRatio(
                   aspectRatio: 350 / 180,
                   child: CustomAppCard(
@@ -45,7 +46,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 35.h),
+                verticalSpace(35),
                 AspectRatio(
                   aspectRatio: 350 / 180,
                   child: CustomAppCard(
@@ -61,25 +62,24 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 20.h),
+                verticalSpace(20),
                 Text(
                   'روابط سريعة',
                   style: AppTextStyle.font20TextPrimarySemiBoldKufam(),
                 ),
-                SizedBox(height: 10.h),
+                verticalSpace(10),
                 Row(
                   children: [
                     CustomCategoryCard(
                       label: 'الاختبارات',
                       image: AppImage().exam,
                     ),
-
-                    SizedBox(width: 10.w),
+                    horizontalSpace(10),
                     CustomCategoryCard(
                       label: 'المذاكرات',
                       image: AppImage().studyNotes,
                     ),
-                    SizedBox(width: 10.w),
+                    horizontalSpace(10),
                     CustomCategoryCard(
                       label: 'الدروس',
                       image: AppImage().bookOpen,
