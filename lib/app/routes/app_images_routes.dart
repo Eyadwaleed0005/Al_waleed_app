@@ -16,7 +16,7 @@ class AppImage {
   // ===== images =====
 
   // ===== icons =====
-
+  late final String search = '${baseIcons}search.png';
 
   // ===== animations =====
 }

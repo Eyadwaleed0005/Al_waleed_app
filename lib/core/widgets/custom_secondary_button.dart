@@ -46,6 +46,10 @@ class CustomSecondaryButton extends StatelessWidget {
                   color: ColorPalette.primary,
                   strokeWidth: 2.5,
                 ),
+                child: CircularProgressIndicator(
+                  color: ColorPalette.primary,
+                  strokeWidth: 2.5,
+                ),
               )
             : child ??
                   Row(
