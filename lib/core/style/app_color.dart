@@ -6,6 +6,7 @@ class ColorPalette {
   static const Color primaryHover = Color(0xFF0B5C3B);
   static const Color primaryPressed = Color(0xFF012415);
   static const Color primarySoftBackground = Color(0xFFF0F7F3);
+  static const Color lightYellow = Color(0xFFEEE9CB);
 
   // ===== Brand Colors =====
   static const Color secondary = Color(0xFF28729F);
@@ -19,6 +20,7 @@ class ColorPalette {
   static const Color background = Color(0xFFF0F7F3);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color cardBackground = Color(0xFFFFFFFF);
+  static const Color ligthBlackShadow = Color(0x33000000);
 
   // ===== Border Colors =====
   static const Color border = Color(0xFFDDE3DF);
