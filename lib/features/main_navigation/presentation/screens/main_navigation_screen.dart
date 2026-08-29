@@ -9,18 +9,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class MainNavigationScreen extends StatelessWidget {
   const MainNavigationScreen({super.key});
 
-  static const List<Widget> _screens = [ViewNotesScreen(), ViewNotesScreen(), ViewNotesScreen(), LessonsScreen(), HomeScreen()];
+  static const List<Widget> _screens = [
+    ViewNotesScreen(),
+    ViewNotesScreen(),
+    ViewNotesScreen(),
+    LessonsScreen(),
+    HomeScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => BottomNavigationCubit()..changeIndex(4), // Default to الرئيسية (Index 4)
+      create: (_) =>
+          BottomNavigationCubit()
+            ..changeIndex(4), // Default to الرئيسية (Index 4)
       child: Scaffold(
         extendBody: true,
         backgroundColor: Colors.transparent,
         body: BlocBuilder<BottomNavigationCubit, int>(
           builder: (context, selectedIndex) {
-            return IndexedStack(index: selectedIndex.clamp(0, _screens.length - 1), children: _screens);
+            return IndexedStack(
+              index: selectedIndex.clamp(0, _screens.length - 1),
+              children: _screens,
+            );
           },
         ),
         bottomNavigationBar: const CustomBottomNavBar(),
