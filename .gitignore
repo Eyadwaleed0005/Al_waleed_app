@@ -3,6 +3,8 @@
 *.log
 *.pyc
 *.swp
+*.hprof
+*.log
 .DS_Store
 .atom/
 .build/
@@ -11,6 +13,7 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+android/*.hprof
 
 # IntelliJ related
 *.iml
