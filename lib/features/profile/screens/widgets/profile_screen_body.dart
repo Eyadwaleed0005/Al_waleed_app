@@ -1,3 +1,4 @@
+import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/widgets/custom_app_card.dart';
 import 'package:al_waleed/core/widgets/custom_button.dart';
@@ -8,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
 
-class ProfileViewBody extends StatelessWidget {
-  const ProfileViewBody({super.key});
+class ProfileScreenBody extends StatelessWidget {
+  const ProfileScreenBody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +26,13 @@ class ProfileViewBody extends StatelessWidget {
               style: AppTextStyle.font20TextBlackSemiBoldKufam(),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 6.h),
+            verticalSpace(6.h),
             Text(
               'طالب الصف الثالث الثانوي',
               style: AppTextStyle.font12TextSecondaryRegularTajawal(),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 32.h),
+            verticalSpace(32.h),
 
             CustomAppCard(
               child: Column(
@@ -60,8 +61,7 @@ class ProfileViewBody extends StatelessWidget {
                 ],
               ),
             ),
-
-            SizedBox(height: 32.h),
+            verticalSpace(32.h),
 
             CustomButton(
               text: 'تسجيل الخروج',

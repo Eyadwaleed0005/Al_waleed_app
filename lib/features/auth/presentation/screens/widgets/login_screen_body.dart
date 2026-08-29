@@ -1,4 +1,5 @@
 import 'package:al_waleed/core/helper/app_validator.dart';
+import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:al_waleed/core/widgets/custom_app_card.dart';
 import 'package:al_waleed/core/widgets/custom_button.dart';
@@ -10,14 +11,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 
-class LogInViewBody extends StatefulWidget {
-  const LogInViewBody({super.key});
+class LogInScreenBody extends StatefulWidget {
+  const LogInScreenBody({super.key});
 
   @override
-  State<LogInViewBody> createState() => _LogInViewBodyState();
+  State<LogInScreenBody> createState() => _LogInScreenBodyState();
 }
 
-class _LogInViewBodyState extends State<LogInViewBody> {
+class _LogInScreenBodyState extends State<LogInScreenBody> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -56,11 +57,9 @@ class _LogInViewBodyState extends State<LogInViewBody> {
                       color: ColorPalette.cardBackground.withValues(alpha: .6),
                     ),
               ),
-
-              SizedBox(height: 20.h),
+              verticalSpace(20.h),
 
               CustomAppCard(
-                
                 child: Column(
                   children: [
                     Text(
@@ -74,7 +73,7 @@ class _LogInViewBodyState extends State<LogInViewBody> {
                           .copyWith(color: ColorPalette.textSecondary),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 24.h),
+                    verticalSpace(24.h),
 
                     CustomTextFormField(
                       labelText: 'البريد الإلكتروني',
@@ -82,7 +81,7 @@ class _LogInViewBodyState extends State<LogInViewBody> {
                       controller: _emailController,
                       validator: AppValidator.email,
                     ),
-                    SizedBox(height: 16.h),
+                    verticalSpace(16.h),
 
                     CustomTextFormField(
                       labelText: 'كلمة المرور',
@@ -104,10 +103,10 @@ class _LogInViewBodyState extends State<LogInViewBody> {
                         },
                       ),
                     ),
-                    SizedBox(height: 24.h),
+                    verticalSpace(24.h),
 
                     CustomButton(text: 'تسجيل الدخول', onPressed: _submit),
-                    SizedBox(height: 16.h),
+                    verticalSpace(16.h),
                     CustomSecondaryButton(
                       onPressed: () {},
                       child: Row(
@@ -118,7 +117,8 @@ class _LogInViewBodyState extends State<LogInViewBody> {
                             style:
                                 AppTextStyle.font12TextSecondaryRegularTajawal(),
                           ),
-                          SizedBox(width: 9.w),
+                          horizontalSpace(9.w),
+
                           CircleAvatar(
                             radius: 10.r,
                             backgroundColor: ColorPalette.accent,
@@ -134,7 +134,7 @@ class _LogInViewBodyState extends State<LogInViewBody> {
                   ],
                 ),
               ),
-              SizedBox(height: 50.h),
+              verticalSpace(50.h),
             ],
           ),
         ),

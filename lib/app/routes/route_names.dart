@@ -7,4 +7,6 @@ class RouteNames {
   static const String studyNotes = '/studyNotes';
   static const String noteReader = '/noteReader';
   static const String main = '/main';
+    static const String liveSession = '/liveSession';
+
 }
