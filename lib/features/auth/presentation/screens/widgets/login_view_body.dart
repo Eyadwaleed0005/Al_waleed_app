@@ -3,8 +3,9 @@ import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:al_waleed/core/widgets/custom_app_card.dart';
 import 'package:al_waleed/core/widgets/custom_button.dart';
 import 'package:al_waleed/core/widgets/custom_secondary_button.dart';
+import 'package:al_waleed/core/widgets/custom_text_form_field.dart';
+import 'package:al_waleed/features/auth/presentation/screens/widgets/log_in_background.dart';
 import 'package:al_waleed/features/auth/presentation/screens/widgets/log_in_logo.dart';
-import 'package:al_waleed/features/auth/presentation/screens/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_waleed/core/style/app_color.dart';
@@ -35,124 +36,106 @@ class _LogInViewBodyState extends State<LogInViewBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomRight,
-          colors: [
-            ColorPalette.primaryPressed,
-            ColorPalette.primary,
-            ColorPalette.primarySoftBackground,
-            ColorPalette.highlight,
-          ],
-          stops: [0.0, 0.4, 0.8, 1.0],
-        ),
-      ),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                SizedBox(height: 40.h),
+    return LogInBackground(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 24.w),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              SizedBox(height: 40.h),
 
-                CustomLogInLogo(),
+              CustomLogInLogo(),
 
-                SizedBox(height: 12.h),
-                Text('الوليد', style: AppTextStyle.font26PageTitleBoldKufam()),
-                Text(
-                  'منصة الكيمياء التعليمية',
-                  style: AppTextStyle.font14TextSecondaryRegularTajawal()
-                      .copyWith(
-                        color: ColorPalette.cardBackground.withValues(
-                          alpha: .6,
+              SizedBox(height: 12.h),
+              Text('الوليد', style: AppTextStyle.font26PageTitleBoldKufam()),
+              Text(
+                'منصة الكيمياء التعليمية',
+                style: AppTextStyle.font14TextSecondaryRegularTajawal()
+                    .copyWith(
+                      color: ColorPalette.cardBackground.withValues(alpha: .6),
+                    ),
+              ),
+
+              SizedBox(height: 20.h),
+
+              CustomAppCard(
+                
+                child: Column(
+                  children: [
+                    Text(
+                      'أهلاً بك من جديد',
+                      style: AppTextStyle.font20TextBlackSemiBoldKufam(),
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      '.سجّل دخولك للوصول إلى دروسك واختباراتك',
+                      style: AppTextStyle.font14TextBlackRegularTajawal()
+                          .copyWith(color: ColorPalette.textSecondary),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 24.h),
+
+                    CustomTextFormField(
+                      labelText: 'البريد الإلكتروني',
+                      hintText: 'example@email.com',
+                      controller: _emailController,
+                      validator: AppValidator.email,
+                    ),
+                    SizedBox(height: 16.h),
+
+                    CustomTextFormField(
+                      labelText: 'كلمة المرور',
+                      hintText: 'أدخل كلمة المرور',
+                      controller: _passwordController,
+                      obscureText: _isObscure,
+                      validator: AppValidator.strongPassword,
+                      prefixIcon: IconButton(
+                        icon: Icon(
+                          _isObscure
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                          color: ColorPalette.textMuted,
                         ),
+                        onPressed: () {
+                          setState(() {
+                            _isObscure = !_isObscure;
+                          });
+                        },
                       ),
-                ),
+                    ),
+                    SizedBox(height: 24.h),
 
-                SizedBox(height: 20.h),
-
-                CustomAppCard(
-                  child: Column(
-                    children: [
-                      Text(
-                        'أهلاً بك من جديد',
-                        style: AppTextStyle.font20TextBlackSemiBoldKufam(),
-                      ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        '.سجّل دخولك للوصول إلى دروسك واختباراتك',
-                        style: AppTextStyle.font14TextBlackRegularTajawal()
-                            .copyWith(color: ColorPalette.textSecondary),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 24.h),
-
-                      CustomTextFormField(
-                        label: 'البريد الإلكتروني',
-                        hintText: 'example@email.com',
-                        controller: _emailController,
-                        validator: AppValidator.email,
-                      ),
-                      SizedBox(height: 16.h),
-
-                      CustomTextFormField(
-                        label: 'كلمة المرور',
-                        hintText: 'أدخل كلمة المرور',
-                        controller: _passwordController,
-                        isObscureText: _isObscure,
-                        validator: AppValidator.strongPassword,
-                        prefixIcon: IconButton(
-                          icon: Icon(
-                            _isObscure
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
-                            color: ColorPalette.textMuted,
+                    CustomButton(text: 'تسجيل الدخول', onPressed: _submit),
+                    SizedBox(height: 16.h),
+                    CustomSecondaryButton(
+                      onPressed: () {},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '.نسيت كلمة المرور؟ تواصل مع المدرس',
+                            style:
+                                AppTextStyle.font12TextSecondaryRegularTajawal(),
                           ),
-                          onPressed: () {
-                            setState(() {
-                              _isObscure = !_isObscure;
-                            });
-                          },
-                        ),
-                      ),
-                      SizedBox(height: 24.h),
-
-                      CustomButton(text: 'تسجيل الدخول', onPressed: _submit),
-                      SizedBox(height: 16.h),
-                      CustomSecondaryButton(
-                        onPressed: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '.نسيت كلمة المرور؟ تواصل مع المدرس',
+                          SizedBox(width: 9.w),
+                          CircleAvatar(
+                            radius: 10.r,
+                            backgroundColor: ColorPalette.accent,
+                            child: Text(
+                              '؟',
                               style:
-                                  AppTextStyle.font12TextSecondaryRegularTajawal(),
+                                  AppTextStyle.font14TextPrimaryMediumKufam(),
                             ),
-                            SizedBox(width: 9.w),
-                            CircleAvatar(
-                              radius: 10.r,
-                              backgroundColor: ColorPalette.accent,
-                              child: Text(
-                                '؟',
-                                style:
-                                    AppTextStyle.font14TextPrimaryMediumKufam(),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 50.h),
-              ],
-            ),
+              ),
+              SizedBox(height: 50.h),
+            ],
           ),
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:al_waleed/app/routes/route_names.dart';
 import 'package:al_waleed/features/auth/presentation/screens/login_view.dart';
 import 'package:al_waleed/features/home/presentation/screens/home_screen.dart';
+import 'package:al_waleed/features/profile/screens/profile_view.dart';
 import 'package:flutter/material.dart';
 
 class AppRoutes {
@@ -12,6 +13,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (context) => const HomeScreen());
       case RouteNames.login:
         return MaterialPageRoute(builder: (context) => const LogInView());
+      case RouteNames.profile:
+        return MaterialPageRoute(builder: (context) => const ProfileView());
       default:
         return null;
     }

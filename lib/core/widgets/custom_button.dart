@@ -14,6 +14,10 @@ class CustomButton extends StatelessWidget {
     this.height,
     this.prefixIcon,
     this.suffixIcon,
+    this.foreground,
+    this.background,
+    this.borderColor,
+    this.borderWidth,
   });
 
   final String text;
@@ -23,6 +27,10 @@ class CustomButton extends StatelessWidget {
   final double? height;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final Color? foreground;
+  final Color? background;
+  final Color? borderColor;
+  final double? borderWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +40,15 @@ class CustomButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: ColorPalette.primary,
+          backgroundColor: background ?? ColorPalette.primary,
           disabledBackgroundColor: ColorPalette.disabled,
-          foregroundColor: ColorPalette.textLight,
+          foregroundColor: foreground ?? ColorPalette.textLight,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14.r),
+            side: borderColor != null
+                ? BorderSide(color: borderColor!, width: borderWidth ?? 1.5.w)
+                : BorderSide.none,
           ),
         ),
         child: isLoading
@@ -45,7 +56,7 @@ class CustomButton extends StatelessWidget {
                 width: 22.w,
                 height: 22.w,
                 child: CircularProgressIndicator(
-                  color: ColorPalette.textLight,
+                  color: foreground ?? ColorPalette.textLight,
                   strokeWidth: 2.5,
                 ),
               )
@@ -54,7 +65,12 @@ class CustomButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (prefixIcon != null) ...[prefixIcon!, horizontalSpace(8)],
-                  Text(text, style: AppTextStyle.font15TextLightBoldTajawal()),
+                  Text(
+                    text,
+                    style: AppTextStyle.font15TextLightBoldTajawal().copyWith(
+                      color: foreground,
+                    ),
+                  ),
                   if (suffixIcon != null) ...[horizontalSpace(8), suffixIcon!],
                 ],
               ),
