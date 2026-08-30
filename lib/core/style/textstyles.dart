@@ -370,4 +370,31 @@ class AppTextStyle {
       color: ColorPalette.highlight,
     );
   }
+
+  static TextStyle font14TextPrimaryMediumTajawal() {
+    return TextStyle(
+      fontSize: 14.sp,
+      fontWeight: FontWeightHelper.medium,
+      fontFamily: tajawal,
+      color: ColorPalette.textPrimary,
+    );
+  }
+
+  static TextStyle font14TextPrimaryBoldTajawal() {
+    return TextStyle(
+      fontSize: 14.sp,
+      fontWeight: FontWeightHelper.bold,
+      fontFamily: tajawal,
+      color: ColorPalette.textPrimary,
+    );
+  }
+
+  static TextStyle font14TextPrimarySemiBoldKufam() {
+    return TextStyle(
+      fontSize: 14.sp,
+      fontWeight: FontWeightHelper.semiBold,
+      fontFamily: kufam,
+      color: ColorPalette.textPrimary,
+    );
+  }
 }

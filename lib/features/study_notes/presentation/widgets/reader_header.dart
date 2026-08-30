@@ -2,14 +2,18 @@ import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/fontweighthelper.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
-import 'package:al_waleed/features/study_notes/domain/entities/study_note_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ReaderHeader extends StatelessWidget {
-  const ReaderHeader({super.key, required this.note});
+  const ReaderHeader({
+    super.key,
+    this.title = 'قارئ المذكرة',
+    this.subject = 'الكيمياء العضوية',
+  });
 
-  final StudyNoteEntity note;
+  final String title;
+  final String subject;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +37,7 @@ class ReaderHeader extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'قارئ المذكرة',
+                  title,
                   style: AppTextStyle.font18TextPrimarySemiBoldKufam().copyWith(
                     color: ColorPalette.primary,
                     fontWeight: FontWeightHelper.bold,
@@ -41,7 +45,7 @@ class ReaderHeader extends StatelessWidget {
                 ),
                 verticalSpace(2),
                 Text(
-                  note.subject,
+                  subject,
                   style: AppTextStyle.font12TextSecondaryRegularTajawal().copyWith(
                     color: ColorPalette.textSecondary,
                   ),

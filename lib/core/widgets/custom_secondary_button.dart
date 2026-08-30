@@ -13,6 +13,9 @@ class CustomSecondaryButton extends StatelessWidget {
     this.height,
     this.icon,
     this.child,
+    this.backgroundColor,
+    this.borderColor,
+    this.foregroundColor,
   });
 
   final String? text;
@@ -22,6 +25,9 @@ class CustomSecondaryButton extends StatelessWidget {
   final double? height;
   final IconData? icon;
   final Widget? child;
+  final Color? backgroundColor;
+  final Color? borderColor;
+  final Color? foregroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +37,13 @@ class CustomSecondaryButton extends StatelessWidget {
       child: OutlinedButton(
         onPressed: isLoading ? null : onPressed,
         style: OutlinedButton.styleFrom(
-          backgroundColor: ColorPalette.primarySoftBackground,
-          foregroundColor: ColorPalette.primary,
-          side: BorderSide(color: ColorPalette.border, width: 1.5.w),
+          padding: EdgeInsets.symmetric(horizontal: 8.w),
+          backgroundColor: backgroundColor ?? ColorPalette.surface,
+          foregroundColor: foregroundColor ?? ColorPalette.primary,
+          side: BorderSide(
+            color: borderColor ?? ColorPalette.softSage,
+            width: 1.5.w,
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.r),
           ),
@@ -43,24 +53,35 @@ class CustomSecondaryButton extends StatelessWidget {
                 width: 22.w,
                 height: 22.w,
                 child: CircularProgressIndicator(
-                  color: ColorPalette.primary,
+                  color: foregroundColor ?? ColorPalette.primary,
                   strokeWidth: 2.5,
                 ),
               )
             : child ??
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (icon != null) ...[
-                        Icon(icon, size: 20.sp, color: ColorPalette.primary),
-                      ],
-                      Text(
-                        text ?? '',
-                        style: AppTextStyle.font15TextLightBoldTajawal()
-                            .copyWith(color: ColorPalette.primary),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (icon != null) ...[
+                      Icon(
+                        icon,
+                        size: 18.sp,
+                        color: foregroundColor ?? ColorPalette.primary,
                       ),
+                      SizedBox(width: 4.w),
                     ],
-                  ),
+                    Flexible(
+                      child: Text(
+                        text ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyle.font15TextLightBoldTajawal().copyWith(
+                          color: foregroundColor ?? ColorPalette.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
       ),
     );
   }
