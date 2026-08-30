@@ -34,6 +34,8 @@ class CustomTextFormField extends StatefulWidget {
     this.textDirection = TextDirection.rtl,
     this.autofillHints,
     this.autovalidateMode = AutovalidateMode.disabled,
+    this.prefixIcon,
+    this.obscureText = false,
   });
 
   final TextEditingController controller;
@@ -52,7 +54,7 @@ class CustomTextFormField extends StatefulWidget {
   final ValueChanged<String>? onSubmitted;
 
   final VoidCallback? onTap;
-
+  final Widget? prefixIcon;
   final Widget? suffixIcon;
   final VoidCallback? onSuffixTap;
   final String? suffixTooltip;
@@ -62,7 +64,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool isRequired;
   final bool enabled;
   final bool readOnly;
-
+final bool obscureText;
   final int maxLines;
   final int? minLines;
   final int? maxLength;
@@ -230,6 +232,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           key: _fieldKey,
           controller: widget.controller,
           focusNode: widget.focusNode,
+          obscureText: widget.obscureText,
           keyboardType: widget.keyboardType,
           textInputAction: widget.textInputAction,
           inputFormatters: widget.inputFormatters,
@@ -241,7 +244,6 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           textAlign: TextAlign.right,
           textDirection: widget.textDirection,
           cursorColor: ColorPalette.primary,
-          obscureText: false,
           autofillHints: widget.autofillHints,
           autovalidateMode: widget.autovalidateMode,
           style: AppTextStyle.font15TextPrimaryMediumTajawal(),
@@ -265,6 +267,13 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             );
           },
           decoration: InputDecoration(
+            prefixIcon: widget.prefixIcon,
+            prefixIconConstraints: BoxConstraints(
+              minWidth: 56.w,
+              minHeight: 56.h,
+              maxWidth: 56.w,
+              maxHeight: 56.h,
+            ),
             hintText: widget.hintText,
             hintStyle: AppTextStyle.font15TextMutedRegularTajawal(),
             filled: true,
