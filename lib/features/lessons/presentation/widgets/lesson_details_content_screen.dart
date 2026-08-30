@@ -65,6 +65,9 @@ class LessonDetailsContentScreen extends StatelessWidget {
                 subtitle: 'سؤال · ٤ درجات',
                 icon: AppImage().exam,
                 iconBackground: ColorPalette.accent,
+                onTap: () {
+                  Navigator.of(context).pushNamed(RouteNames.lessonQuiz);
+                },
               ),
             ],
           ),

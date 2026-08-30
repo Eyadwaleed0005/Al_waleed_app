@@ -40,7 +40,7 @@ class AppEmptyState extends StatelessWidget {
                 child: Icon(
                   icon ?? Icons.inbox_rounded,
                   size: 30.sp,
-                  color: ColorPalette.primary.withOpacity(0.6),
+                  color: ColorPalette.primary.withValues(alpha: 0.6),
                 ),
               ),
               verticalSpace(12),
