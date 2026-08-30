@@ -11,7 +11,8 @@ class MainNavigationScreen extends StatelessWidget {
   const MainNavigationScreen({super.key});
 
   static const List<Widget> _screens = [
-    ProfileScreen(),
+    ViewNotesScreen(),
+    ViewNotesScreen(),
     ViewNotesScreen(),
     LessonsScreen(),
     HomeScreen(),

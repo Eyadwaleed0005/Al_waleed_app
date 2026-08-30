@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
 class ColorPalette {
-  // ===== True Color Shade Definitions =====
-  static const Color emeraldGreen = Color(0xFF023A22);
-  static const Color darkForestGreen = Color(0xFF012415);
-  static const Color forestGreenHover = Color(0xFF0B5C3B);
-  static const Color paleMint = Color(0xFFF0F7F3);
-  static const Color softSage = Color(0xFFABC8A3);
+  // ===== Primary Colors =====
+  static const Color primary = Color(0xFF023A22);
+  static const Color primaryHover = Color(0xFF0B5C3B);
+  static const Color primaryPressed = Color(0xFF012415);
+  static const Color primarySoftBackground = Color(0xFFF0F7F3);
+  static const Color lightYellow = Color(0xFFEEE9CB);
+
+  // ===== Brand Colors =====
+  static const Color secondary = Color(0xFF28729F);
+  static const Color accent = Color(0xFFABC8A3);
+  static const Color highlight = Color(0xFFF0E295);
   static const Color paleSage = Color(0xFFDCEBE1);
   static const Color goldHighlight = Color(0xFFF0E295);
   static const Color oceanBlue = Color(0xFF28729F);
@@ -31,6 +36,7 @@ class ColorPalette {
   static const Color background = paleMint;
   static const Color surface = Color(0xFFFFFFFF);
   static const Color cardBackground = Color(0xFFFFFFFF);
+  static const Color ligthBlackShadow = Color(0x33000000);
 
   // ===== Border & Divider =====
   static const Color border = Color(0xFFDDE3DF);

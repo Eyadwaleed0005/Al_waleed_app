@@ -1,12 +1,13 @@
 import 'package:al_waleed/app/routes/app_images_routes.dart';
-import 'package:al_waleed/app/routes/route_names.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:al_waleed/core/widgets/background/background_student_layout.dart';
 import 'package:al_waleed/core/widgets/custom_app_bar.dart';
 import 'package:al_waleed/core/widgets/custom_app_card.dart';
 import 'package:al_waleed/features/home/presentation/widgets/home_category_tab.dart';
+import 'package:al_waleed/features/main_navigation/presentation/cubit/bottom_navigation_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreenContent extends StatelessWidget {
@@ -83,7 +84,7 @@ class HomeScreenContent extends StatelessWidget {
                     label: 'الدروس',
                     image: AppImage().bookOpen,
                     onTap: () {
-                      Navigator.of(context).pushNamed(RouteNames.lessons);
+                      context.read<BottomNavigationCubit>().changeIndex(3);
                     },
                   ),
                 ],
