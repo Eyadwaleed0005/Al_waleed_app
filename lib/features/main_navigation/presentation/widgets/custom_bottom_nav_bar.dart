@@ -1,4 +1,5 @@
 import 'package:al_waleed/app/routes/app_images_routes.dart';
+import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_animations.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/fontweighthelper.dart';
@@ -32,13 +33,12 @@ class CustomBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeIndex = currentIndex ?? (context.watch<BottomNavigationCubit?>()?.state ?? 4);
-
+    final activeIndex = currentIndex ?? context.watch<BottomNavigationCubit>().state;
     void handleTap(int index) {
       if (onItemSelected != null) {
         onItemSelected!(index);
       } else {
-        context.read<BottomNavigationCubit?>()?.changeIndex(index);
+        context.read<BottomNavigationCubit>().changeIndex(index);
       }
     }
 
@@ -78,11 +78,7 @@ class CustomBottomNavBar extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30.r),
                             border: Border.all(color: ColorPalette.accent.withValues(alpha: 0.7), width: 1.5.w),
                             boxShadow: [
-                              BoxShadow(
-                                color: ColorPalette.primary.withValues(alpha: 0.45),
-                                blurRadius: 20.r,
-                                offset: Offset(0, 8.h),
-                              ),
+                              BoxShadow(color: ColorPalette.primary.withValues(alpha: 0.45), blurRadius: 20.r, offset: Offset(0, 8.h)),
                             ],
                           ),
                         ),
@@ -126,7 +122,7 @@ class CustomBottomNavBar extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 4.h),
+                                    verticalSpace(4),
                                     Text(
                                       item.label,
                                       maxLines: 1,
@@ -179,16 +175,10 @@ class _SelectedCircleIndicator extends StatelessWidget {
           border: Border.all(color: ColorPalette.highlight, width: 2.5.w),
         ),
         child: Container(
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: ColorPalette.accent,
-          ),
+          decoration: const BoxDecoration(shape: BoxShape.circle, color: ColorPalette.accent),
           child: Center(
             child: ColorFiltered(
-              colorFilter: const ColorFilter.mode(
-                ColorPalette.primary,
-                BlendMode.srcIn,
-              ),
+              colorFilter: const ColorFilter.mode(ColorPalette.primary, BlendMode.srcIn),
               child: Image.asset(iconPath, width: 30.w, height: 30.w, fit: BoxFit.fill),
             ),
           ),

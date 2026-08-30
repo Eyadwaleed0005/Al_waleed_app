@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppSystemUi.light(),
-      child: Scaffold(body: HomeScreenContent()),
+      child: const Scaffold(body: HomeScreenContent()),
     );
   }
 }
