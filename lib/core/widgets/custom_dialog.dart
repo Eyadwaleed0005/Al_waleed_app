@@ -19,6 +19,9 @@ class CustomDialog extends StatelessWidget {
     this.onPrimaryPressed,
     this.onSecondaryPressed,
     this.customIcon,
+    this.iconColor,
+    this.iconBgColor,
+    this.iconBorderRadius,
   });
 
   final String title;
@@ -29,25 +32,35 @@ class CustomDialog extends StatelessWidget {
   final VoidCallback? onPrimaryPressed;
   final VoidCallback? onSecondaryPressed;
   final IconData? customIcon;
+  final Color? iconColor;
+  final Color? iconBgColor;
+  final BorderRadiusGeometry? iconBorderRadius;
 
-  /// 1. Action Confirmation Dialog
   static Future<bool?> showConfirm(
     BuildContext context, {
     required String title,
     required String message,
     String primaryText = 'تأكيد',
     String secondaryText = 'إلغاء',
+    IconData? icon,
+    Color? iconColor,
+    Color? iconBgColor,
+    BorderRadiusGeometry? iconBorderRadius,
     VoidCallback? onConfirm,
   }) {
     return showDialog<bool>(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.4),
+      barrierColor: Colors.black.withValues(alpha: 0.4),
       builder: (context) => CustomDialog(
         type: CustomDialogType.confirm,
         title: title,
         message: message,
         primaryButtonText: primaryText,
         secondaryButtonText: secondaryText,
+        customIcon: icon,
+        iconColor: iconColor,
+        iconBgColor: iconBgColor,
+        iconBorderRadius: iconBorderRadius,
         onPrimaryPressed: () {
           Navigator.of(context).pop(true);
           onConfirm?.call();
@@ -57,22 +70,29 @@ class CustomDialog extends StatelessWidget {
     );
   }
 
-  /// 2. Operation Success Dialog
   static Future<void> showSuccess(
     BuildContext context, {
     required String title,
     required String message,
     String buttonText = 'تم',
+    IconData? icon,
+    Color? iconColor,
+    Color? iconBgColor,
+    BorderRadiusGeometry? iconBorderRadius,
     VoidCallback? onPressed,
   }) {
     return showDialog<void>(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.4),
+      barrierColor: Colors.black.withValues(alpha: 0.4),
       builder: (context) => CustomDialog(
         type: CustomDialogType.success,
         title: title,
         message: message,
         primaryButtonText: buttonText,
+        customIcon: icon,
+        iconColor: iconColor,
+        iconBgColor: iconBgColor,
+        iconBorderRadius: iconBorderRadius,
         onPrimaryPressed: () {
           Navigator.of(context).pop();
           onPressed?.call();
@@ -81,24 +101,31 @@ class CustomDialog extends StatelessWidget {
     );
   }
 
-  /// 3. Confirm Delete Dialog
   static Future<bool?> showDelete(
     BuildContext context, {
     required String title,
     required String message,
     String primaryText = 'حذف',
     String secondaryText = 'إلغاء',
+    IconData? icon,
+    Color? iconColor,
+    Color? iconBgColor,
+    BorderRadiusGeometry? iconBorderRadius,
     VoidCallback? onDelete,
   }) {
     return showDialog<bool>(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.4),
+      barrierColor: Colors.black.withValues(alpha: 0.4),
       builder: (context) => CustomDialog(
         type: CustomDialogType.delete,
         title: title,
         message: message,
         primaryButtonText: primaryText,
         secondaryButtonText: secondaryText,
+        customIcon: icon ?? Icons.info_outline,
+        iconColor: iconColor,
+        iconBgColor: iconBgColor,
+        iconBorderRadius: iconBorderRadius,
         onPrimaryPressed: () {
           Navigator.of(context).pop(true);
           onDelete?.call();
@@ -108,22 +135,29 @@ class CustomDialog extends StatelessWidget {
     );
   }
 
-  /// 4. Notice / Warning Dialog (تنبيه)
   static Future<void> showNotice(
     BuildContext context, {
     required String title,
     required String message,
     String buttonText = 'فهمت',
+    IconData? icon,
+    Color? iconColor,
+    Color? iconBgColor,
+    BorderRadiusGeometry? iconBorderRadius,
     VoidCallback? onPressed,
   }) {
     return showDialog<void>(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.4),
+      barrierColor: Colors.black.withValues(alpha: 0.4),
       builder: (context) => CustomDialog(
         type: CustomDialogType.notice,
         title: title,
         message: message,
         primaryButtonText: buttonText,
+        customIcon: icon,
+        iconColor: iconColor,
+        iconBgColor: iconBgColor,
+        iconBorderRadius: iconBorderRadius,
         onPrimaryPressed: () {
           Navigator.of(context).pop();
           onPressed?.call();
@@ -132,30 +166,32 @@ class CustomDialog extends StatelessWidget {
     );
   }
 
-  Color get _iconBgColor {
+  Color get _resolvedIconBgColor {
+    if (iconBgColor != null) return iconBgColor!;
     return switch (type) {
-      CustomDialogType.confirm => const Color(0xFFE8F3FB), // Light Blue
-      CustomDialogType.success => const Color(0xFFE6F4EE), // Light Green
-      CustomDialogType.delete => const Color(0xFFFBEAEA), // Light Red
-      CustomDialogType.notice => const Color(0xFFE8F3FB), // Light Blue
+      CustomDialogType.confirm => const Color(0xFFE8F3FB),
+      CustomDialogType.success => const Color(0xFFE6F4EE),
+      CustomDialogType.delete => const Color(0xFFFBEAEA),
+      CustomDialogType.notice => const Color(0xFFE8F3FB),
     };
   }
 
-  Color get _iconColor {
+  Color get _resolvedIconColor {
+    if (iconColor != null) return iconColor!;
     return switch (type) {
-      CustomDialogType.confirm => ColorPalette.secondary, // Blue #28729F
-      CustomDialogType.success => ColorPalette.primary, // Green #023A22
-      CustomDialogType.delete => ColorPalette.error, // Red #C0392B
-      CustomDialogType.notice => ColorPalette.secondary, // Blue #28729F
+      CustomDialogType.confirm => ColorPalette.secondary,
+      CustomDialogType.success => ColorPalette.primary,
+      CustomDialogType.delete => ColorPalette.error,
+      CustomDialogType.notice => ColorPalette.secondary,
     };
   }
 
-  IconData get _iconData {
+  IconData get _resolvedIconData {
     if (customIcon != null) return customIcon!;
     return switch (type) {
       CustomDialogType.confirm => Icons.info_outline_rounded,
       CustomDialogType.success => Icons.check_circle_outline_rounded,
-      CustomDialogType.delete => Icons.error_outline_rounded,
+      CustomDialogType.delete => Icons.logout_rounded,
       CustomDialogType.notice => Icons.info_outline_rounded,
     };
   }
@@ -164,12 +200,13 @@ class CustomDialog extends StatelessWidget {
     return switch (type) {
       CustomDialogType.confirm => 'تأكيد',
       CustomDialogType.success => 'تم',
-      CustomDialogType.delete => 'حذف',
+      CustomDialogType.delete => 'تسجيل الخروج',
       CustomDialogType.notice => 'فهمت',
     };
   }
 
-  bool get _isSingleButton => type == CustomDialogType.success || type == CustomDialogType.notice;
+  bool get _isSingleButton =>
+      type == CustomDialogType.success || type == CustomDialogType.notice;
 
   @override
   Widget build(BuildContext context) {
@@ -181,33 +218,50 @@ class CustomDialog extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
         decoration: BoxDecoration(
           color: ColorPalette.surface,
           borderRadius: BorderRadius.circular(24.r),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 24.r, offset: Offset(0, 8.h))],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 24.r,
+              offset: Offset(0, 8.h),
+            ),
+          ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Top Handle Bar (—)
             Container(
               width: 36.w,
               height: 4.h,
-              decoration: BoxDecoration(color: ColorPalette.divider, borderRadius: BorderRadius.circular(50.r)),
+              decoration: BoxDecoration(
+                color: ColorPalette.divider,
+                borderRadius: BorderRadius.circular(50.r),
+              ),
             ),
             verticalSpace(16),
 
-            // Circular Icon Background
             Container(
               width: 64.w,
               height: 64.w,
-              decoration: BoxDecoration(color: _iconBgColor, shape: BoxShape.circle),
-              child: Icon(_iconData, color: _iconColor, size: 32.sp),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: _resolvedIconBgColor,
+                shape: iconBorderRadius == null
+                    ? BoxShape.circle
+                    : BoxShape.rectangle,
+                borderRadius: iconBorderRadius,
+              ),
+              child: Icon(
+                _resolvedIconData,
+                color: _resolvedIconColor,
+                size: 32.sp,
+              ),
             ),
             verticalSpace(16),
 
-            // Title
             Text(
               title,
               textDirection: TextDirection.rtl,
@@ -216,7 +270,6 @@ class CustomDialog extends StatelessWidget {
             ),
             verticalSpace(8),
 
-            // Subtitle / Message
             Text(
               message,
               textDirection: TextDirection.rtl,
@@ -225,36 +278,47 @@ class CustomDialog extends StatelessWidget {
             ),
             verticalSpace(24),
 
-            // Actions Buttons
             if (_isSingleButton)
-              CustomButton(text: mainBtnText, onPressed: onPrimaryPressed ?? () => Navigator.of(context).pop())
+              CustomButton(
+                text: mainBtnText,
+                onPressed:
+                    onPrimaryPressed ?? () => Navigator.of(context).pop(),
+              )
             else
-              Row(
-                textDirection: TextDirection.rtl,
+              Column(
                 children: [
-                  // Primary Action Button (Right in RTL)
-                  Expanded(
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52.h,
                     child: type == CustomDialogType.delete
-                        ? SizedBox(
-                            height: 52.h,
-                            child: ElevatedButton(
-                              onPressed: onPrimaryPressed,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: ColorPalette.error,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
+                        ? ElevatedButton(
+                            onPressed: onPrimaryPressed,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: ColorPalette.error,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14.r),
                               ),
-                              child: Text(mainBtnText, style: AppTextStyle.font15TextLightBoldTajawal()),
+                            ),
+                            child: Text(
+                              mainBtnText,
+                              style: AppTextStyle.font15TextLightBoldTajawal(),
                             ),
                           )
-                        : CustomButton(text: mainBtnText, onPressed: onPrimaryPressed),
+                        : CustomButton(
+                            text: mainBtnText,
+                            onPressed: onPrimaryPressed,
+                          ),
                   ),
-                  horizontalSpace(12),
-                  // Secondary Action Button (Left in RTL)
-                  Expanded(
+                  verticalSpace(12),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52.h,
                     child: CustomSecondaryButton(
                       text: secondaryButtonText,
-                      onPressed: onSecondaryPressed ?? () => Navigator.of(context).pop(),
+                      onPressed:
+                          onSecondaryPressed ??
+                          () => Navigator.of(context).pop(),
                     ),
                   ),
                 ],

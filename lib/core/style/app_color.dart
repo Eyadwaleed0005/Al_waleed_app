@@ -35,10 +35,11 @@ class ColorPalette {
   static const Color textOceanBlue = Color(0xFF28729F);
   static const Color textRed = Color(0xFFB94C4C);
 
-  // ===== State Colors =====
+  // ===== State Colors ====
   static const Color disabled = Color(0xFFC2CAC4);
   static const Color success = Color(0xFF0B5C3B);
   static const Color warning = Color(0xFFB8860B);
   static const Color error = Color(0xFFC0392B);
   static const Color info = Color(0xFF28729F);
+
 }
