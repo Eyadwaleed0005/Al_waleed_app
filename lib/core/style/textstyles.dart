@@ -153,7 +153,6 @@ class AppTextStyle {
       color: ColorPalette.textBlack,
     );
   }
-
   static TextStyle font20TextBlackSemiBoldKufam() {
     return TextStyle(
       fontSize: 20.sp,

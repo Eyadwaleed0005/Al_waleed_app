@@ -1,6 +1,6 @@
 class RouteNames {
   static const String home = '/home';
-  static const String login = '/logIn';
+  static const String loginScreen = '/login';
   static const String profile = '/profile';
 
   static const String lessons = '/lessons';

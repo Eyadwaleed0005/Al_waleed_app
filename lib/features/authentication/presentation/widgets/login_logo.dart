@@ -1,4 +1,4 @@
-import 'package:al_waleed/core/style/app_asset.dart';
+import 'package:al_waleed/app/routes/app_images_routes.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,7 +24,7 @@ class CustomLogInLogo extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(28.r),
-        child: Image.asset(AppAsset.logo, fit: BoxFit.cover),
+        child: Image.asset(AppImage().logoApp, fit: BoxFit.cover),
       ),
     );
   }

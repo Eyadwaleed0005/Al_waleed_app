@@ -28,9 +28,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final PreferredSizeWidget? bottom;
 
   @override
-  Size get preferredSize => Size.fromHeight(
-        kToolbarHeight + (bottom?.preferredSize.height ?? 0),
-      );
+  Size get preferredSize =>
+      Size.fromHeight(kToolbarHeight + (bottom?.preferredSize.height ?? 0));
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +49,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: () => Navigator.of(context).pop(),
             )
           : leading,
-      title: titleWidget ??
+      title:
+          titleWidget ??
           (title != null
               ? Text(
                   title!,

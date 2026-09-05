@@ -1,5 +1,5 @@
 import 'package:al_waleed/app/routes/route_names.dart';
-import 'package:al_waleed/features/auth/presentation/screens/login_screen.dart';
+import 'package:al_waleed/features/authentication/presentation/screens/login_screen.dart';
 import 'package:al_waleed/features/home/presentation/screens/home_screen.dart';
 import 'package:al_waleed/features/lesson_quiz/presentation/screens/lesson_quiz_screen.dart';
 import 'package:al_waleed/features/lessons/presentation/screens/lesson_details_screen.dart';
@@ -23,8 +23,8 @@ class AppRoutes {
         );
       case RouteNames.home:
         return MaterialPageRoute(builder: (context) => const HomeScreen());
-      case RouteNames.login:
-        return MaterialPageRoute(builder: (context) => const LogInScreen());
+      case RouteNames.loginScreen:
+        return MaterialPageRoute(builder: (context) => const LoginScreen());
       case RouteNames.profile:
         return MaterialPageRoute(builder: (context) => const ProfileScreen());
       case RouteNames.lessons:
