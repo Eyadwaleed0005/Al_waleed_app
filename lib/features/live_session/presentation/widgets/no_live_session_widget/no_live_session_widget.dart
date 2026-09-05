@@ -1,8 +1,8 @@
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
-import 'package:al_waleed/features/live_session/presentation/screens/widgets/live_session_background.dart';
-import 'package:al_waleed/features/live_session/presentation/screens/widgets/no_live_badge_header.dart';
-import 'package:al_waleed/features/live_session/presentation/screens/widgets/no_live_session_notice_card.dart';
+import 'package:al_waleed/features/live_session/presentation/widgets/live_session_background.dart';
+import 'package:al_waleed/features/live_session/presentation/widgets/no_live_session_widget/no_live_badge_header.dart';
+import 'package:al_waleed/features/live_session/presentation/widgets/no_live_session_widget/no_live_session_notice_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -22,7 +22,6 @@ class NoLiveSessionWidget extends StatelessWidget {
                 children: [
                   NoLiveBadgeHeader(),
                   verticalSpace(26.h),
-
                   Text(
                     'لا توجد حصة مباشرة الآن',
                     style: AppTextStyle.font20TextBlackSemiBoldKufam(),
@@ -34,7 +33,6 @@ class NoLiveSessionWidget extends StatelessWidget {
                     style: AppTextStyle.font14TextSecondaryRegularTajawal(),
                   ),
                   verticalSpace(40.h),
-
                   NoSessionNoticeCard(),
                 ],
               ),

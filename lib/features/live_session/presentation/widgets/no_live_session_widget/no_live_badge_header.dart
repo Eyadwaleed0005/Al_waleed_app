@@ -15,9 +15,9 @@ class NoLiveBadgeHeader extends StatelessWidget {
         color: ColorPalette.secondary.withValues(alpha: 0.06),
         shape: BoxShape.circle,
       ),
-      child: const Icon(
+      child: Icon(
         Icons.video_call_outlined,
-        size: 60,
+        size: 60.sp,
         color: ColorPalette.secondary,
       ),
     );
