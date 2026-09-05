@@ -5,7 +5,7 @@ import 'package:al_waleed/features/lesson_quiz/presentation/screens/lesson_quiz_
 import 'package:al_waleed/features/lessons/presentation/screens/lesson_details_screen.dart';
 import 'package:al_waleed/features/lessons/presentation/screens/lesson_pdf_reader_screen.dart';
 import 'package:al_waleed/features/live_session/presentation/screens/live_session_screen.dart';
-import 'package:al_waleed/features/profile/screens/profile_screen.dart';
+import 'package:al_waleed/features/profile/presentation/screens/profile_screen.dart';
 import 'package:al_waleed/features/lessons/presentation/screens/lessons_screen.dart';
 import 'package:al_waleed/features/main_navigation/presentation/screens/main_navigation_screen.dart';
 import 'package:al_waleed/features/study_notes/presentation/screens/note_reader_screen.dart';
