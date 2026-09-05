@@ -118,6 +118,15 @@ class AppTextStyle {
     );
   }
 
+  static TextStyle font14CardBackgroundMediumKufam() {
+    return TextStyle(
+      fontSize: 14.sp,
+      fontWeight: FontWeightHelper.medium,
+      fontFamily: kufam,
+      color: ColorPalette.cardBackground,
+    );
+  }
+
   static TextStyle font11TextHighLightMediumTajawal() {
     return TextStyle(
       fontSize: 11.sp,

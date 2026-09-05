@@ -17,11 +17,11 @@ class AppRoutes {
 
   static Route<dynamic>? generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case RouteNames.main:
+      case RouteNames.mainNavigationScreen:
         return MaterialPageRoute(
           builder: (context) => const MainNavigationScreen(),
         );
-      case RouteNames.home:
+      case RouteNames.homeScreen:
         return MaterialPageRoute(builder: (context) => const HomeScreen());
       case RouteNames.loginScreen:
         return MaterialPageRoute(builder: (context) => const LoginScreen());
@@ -39,7 +39,7 @@ class AppRoutes {
         );
       case RouteNames.studyNotes:
         return MaterialPageRoute(builder: (context) => const ViewNotesScreen());
-      case RouteNames.liveSession:
+      case RouteNames.liveSessionScreen:
         return MaterialPageRoute(
           builder: (context) => const LiveSessionScreen(),
         );
