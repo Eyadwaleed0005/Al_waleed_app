@@ -1,8 +1,9 @@
+import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/features/home/presentation/screens/home_screen.dart';
 import 'package:al_waleed/features/lessons/presentation/screens/lessons_screen.dart';
 import 'package:al_waleed/features/main_navigation/presentation/cubit/bottom_navigation_cubit.dart';
 import 'package:al_waleed/features/main_navigation/presentation/widgets/custom_bottom_nav_bar.dart';
-import 'package:al_waleed/features/profile/screens/profile_screen.dart';
+import 'package:al_waleed/features/profile/presentation/screens/profile_screen.dart';
 import 'package:al_waleed/features/study_notes/presentation/screens/view_notes_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,12 +25,16 @@ class MainNavigationScreen extends StatelessWidget {
       create: (_) => BottomNavigationCubit()..changeIndex(4),
       child: Scaffold(
         extendBody: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: ColorPalette.background,
         body: BlocBuilder<BottomNavigationCubit, int>(
           builder: (context, selectedIndex) {
-            return IndexedStack(
-              index: selectedIndex.clamp(0, _screens.length - 1),
-              children: _screens,
+            final currentIndex = selectedIndex.clamp(
+              0,
+              _screens.length - 1,
+            );
+            return KeyedSubtree(
+              key: ValueKey(currentIndex),
+              child: _screens[currentIndex],
             );
           },
         ),
