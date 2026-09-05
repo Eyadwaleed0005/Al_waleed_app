@@ -1,5 +1,4 @@
-import 'package:al_waleed/core/widgets/custom_app_bar.dart';
-import 'package:al_waleed/features/live_session/presentation/screens/widgets/live_session_screen_body.dart';
+import 'package:al_waleed/features/live_session/presentation/widgets/live_session_screen_content.dart';
 import 'package:flutter/material.dart';
 
 class LiveSessionScreen extends StatelessWidget {
@@ -7,9 +6,8 @@ class LiveSessionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(title: "البث المباشر",showBackButton: true,),
-      body: LiveSessionScreenBody(),
+    return const Scaffold(
+      body: LiveSessionScreenContent(),
     );
   }
 }
