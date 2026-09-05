@@ -4,12 +4,12 @@ import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomCategoryCard extends StatelessWidget {
+class CategoryNavigationCard extends StatelessWidget {
   final String label;
   final String image;
   final VoidCallback? onTap;
 
-  const CustomCategoryCard({
+  const CategoryNavigationCard({
     super.key,
     required this.label,
     required this.image,
@@ -28,7 +28,7 @@ class CustomCategoryCard extends StatelessWidget {
             height: 105.h,
             padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 6.w),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: ColorPalette.primarySoftBackground,
               borderRadius: BorderRadius.circular(16.r),
               border: Border.all(color: ColorPalette.border),
               boxShadow: [
@@ -42,7 +42,6 @@ class CustomCategoryCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Icon background container
                 Container(
                   padding: EdgeInsets.all(8.r),
                   decoration: BoxDecoration(
@@ -52,7 +51,6 @@ class CustomCategoryCard extends StatelessWidget {
                   child: Image.asset(image, width: 22.w, height: 22.h),
                 ),
                 verticalSpace(6),
-                // Scalable Text Label
                 FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(

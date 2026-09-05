@@ -1,5 +1,5 @@
 class RouteNames {
-  static const String home = '/home';
+  static const String homeScreen = '/homeScreen';
   static const String loginScreen = '/login';
   static const String profile = '/profile';
 
@@ -8,8 +8,8 @@ class RouteNames {
   static const String lessonDetailsPdf = '/LessonPdfReader';
   static const String studyNotes = '/studyNotes';
   static const String noteReader = '/noteReader';
-  static const String main = '/main';
-  static const String liveSession = '/liveSession';
+  static const String mainNavigationScreen = '/mainNavigationScreen';
+  static const String liveSessionScreen = '/liveSessionScreen';
   static const String lessonQuiz = '/lessonQuiz';
 }
 

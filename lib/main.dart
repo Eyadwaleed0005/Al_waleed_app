@@ -16,7 +16,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final route = AppRouteObserver();
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
@@ -26,7 +25,7 @@ class MyApp extends StatelessWidget {
           title: 'الوليد',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(),
-          initialRoute: RouteNames.loginScreen,
+          initialRoute: RouteNames.mainNavigationScreen,
           onGenerateRoute: AppRoutes.generateRoute,
         );
       },
