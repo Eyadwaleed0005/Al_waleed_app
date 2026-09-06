@@ -13,10 +13,8 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    //final route = AppRouteObserver();
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
@@ -26,7 +24,7 @@ class MyApp extends StatelessWidget {
           title: 'الوليد',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(),
-          initialRoute: RouteNames.main,
+          initialRoute: RouteNames.mainNavigationScreen,
           onGenerateRoute: AppRoutes.generateRoute,
         );
       },

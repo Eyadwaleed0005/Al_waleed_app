@@ -23,7 +23,7 @@ class AppLoadingOverlay extends StatelessWidget {
         child,
         if (isVisible)
           Container(
-            color: Colors.black.withOpacity(0.4),
+            color: Colors.black.withValues(alpha: 0.4),
             child: Center(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 24.h),

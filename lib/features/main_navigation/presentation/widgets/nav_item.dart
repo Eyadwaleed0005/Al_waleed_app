@@ -13,7 +13,12 @@ class BottomNavItemData {
 }
 
 class NavItem extends StatelessWidget {
-  const NavItem({super.key, required this.data, required this.isSelected, required this.onTap});
+  const NavItem({
+    super.key,
+    required this.data,
+    required this.isSelected,
+    required this.onTap,
+  });
 
   final BottomNavItemData data;
   final bool isSelected;
@@ -25,7 +30,9 @@ class NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = isSelected ? ColorPalette.highlight : ColorPalette.textLight.withValues(alpha: 0.55);
+    final Color color = isSelected
+        ? ColorPalette.highlight
+        : ColorPalette.textLight.withValues(alpha: 0.55);
 
     return Material(
       color: Colors.transparent,
@@ -51,7 +58,11 @@ class NavItem extends StatelessWidget {
                       ? _SelectedNavBadge(iconPath: data.iconPath)
                       : ColorFiltered(
                           colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-                          child: Image.asset(data.iconPath, width: _iconSlotSize.w, height: _iconSlotSize.w),
+                          child: Image.asset(
+                            data.iconPath,
+                            width: _iconSlotSize.w,
+                            height: _iconSlotSize.w,
+                          ),
                         ),
                 ),
               ),
@@ -61,7 +72,9 @@ class NavItem extends StatelessWidget {
               data.label,
               style: AppTextStyle.font11TextSecondaryRegularTajawal().copyWith(
                 color: color,
-                fontWeight: isSelected ? FontWeightHelper.bold : FontWeightHelper.regular,
+                fontWeight: isSelected
+                    ? FontWeightHelper.bold
+                    : FontWeightHelper.regular,
               ),
             ),
           ],
@@ -71,9 +84,6 @@ class NavItem extends StatelessWidget {
   }
 }
 
-/// The circular badge shown for the selected tab: a small icon on a soft
-/// green fill, wrapped in two concentric ring borders (accent, then
-/// highlight), poking out above the bar.
 class _SelectedNavBadge extends StatelessWidget {
   const _SelectedNavBadge({required this.iconPath});
 
@@ -99,9 +109,15 @@ class _SelectedNavBadge extends StatelessWidget {
         ),
         child: Container(
           alignment: Alignment.center,
-          decoration: const BoxDecoration(shape: BoxShape.circle, color: ColorPalette.primarySoftBackground),
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: ColorPalette.primarySoftBackground,
+          ),
           child: ColorFiltered(
-            colorFilter: ColorFilter.mode(ColorPalette.primary, BlendMode.srcIn),
+            colorFilter: ColorFilter.mode(
+              ColorPalette.primary,
+              BlendMode.srcIn,
+            ),
             child: Image.asset(iconPath, width: 18.w, height: 18.w),
           ),
         ),
