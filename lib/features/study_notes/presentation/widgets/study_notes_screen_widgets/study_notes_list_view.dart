@@ -1,6 +1,6 @@
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_animations.dart';
-import 'package:al_waleed/features/study_notes/presentation/widgets/study_note_preview_card.dart';
+import 'package:al_waleed/features/study_notes/presentation/widgets/study_notes_screen_widgets/study_note_preview_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

@@ -1,7 +1,7 @@
 import 'package:al_waleed/core/style/app_animations.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/widgets/app_empty_state.dart';
-import 'package:al_waleed/features/live_session/presentation/widgets/no_live_session_widget/no_live_session_notice_card.dart';
+import 'package:al_waleed/features/live_session/presentation/widgets/live_session_screen_widgets/no_live_session_widget/no_live_session_notice_card.dart';
 import 'package:flutter/material.dart';
 
 class NoLiveSessionWidget extends StatelessWidget {
