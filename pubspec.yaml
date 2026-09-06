@@ -43,6 +43,7 @@ dependencies:
   font_awesome_flutter: ^11.0.0
   youtube_player_flutter: ^10.0.1
   cached_network_image: ^4.0.0
+  syncfusion_flutter_pdfviewer: ^34.2.6
 
 dev_dependencies:
 

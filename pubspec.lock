@@ -89,6 +89,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+  convert:
+    dependency: transitive
+    description:
+      name: convert
+      sha256: b30acd5944035672bc15c6b7a8b47d773e41e2f17de064350988c5d02adb1c68
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
   cross_file:
     dependency: transitive
     description:
@@ -121,6 +129,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  device_info_plus:
+    dependency: transitive
+    description:
+      name: device_info_plus
+      sha256: "0891702f96b2e465fe567b7ec448380e6b1c14f60af552a8536d9f583b6b8442"
+      url: "https://pub.dev"
+    source: hosted
+    version: "13.2.0"
+  device_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: device_info_plus_platform_interface
+      sha256: "04b173a92e2d9161dfead145667037c8d834db725ce2e7b942bfe18fd2f45a46"
+      url: "https://pub.dev"
+    source: hosted
+    version: "8.1.0"
   fake_async:
     dependency: transitive
     description:
@@ -770,6 +794,78 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      sha256: cecc21b0ac16cf6a85f9fa58d0a886cc1c0cc704f6e7aaef7c2a4412bde5ae0f
+      url: "https://pub.dev"
+    source: hosted
+    version: "34.2.6"
+  syncfusion_flutter_pdf:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_pdf
+      sha256: c8f4d80e2405744dc261a35d85a2255d4428b0078526583e0783d5905674c044
+      url: "https://pub.dev"
+    source: hosted
+    version: "34.2.6"
+  syncfusion_flutter_pdfviewer:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_pdfviewer
+      sha256: bae916d7778371f2cba1e2c664f400ff35326121f6117f72fe6ad7bf4d8eba6b
+      url: "https://pub.dev"
+    source: hosted
+    version: "34.2.6"
+  syncfusion_flutter_signaturepad:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_signaturepad
+      sha256: "1b6a5b3137ee6eedb3a1cbfa2e60fe41842d7ae50bc60ceaa38883dc88bf9e92"
+      url: "https://pub.dev"
+    source: hosted
+    version: "34.2.6"
+  syncfusion_pdfviewer_linux:
+    dependency: transitive
+    description:
+      name: syncfusion_pdfviewer_linux
+      sha256: "889c8145fe2df8097d0bb49cf208247808f675bf7a42eec62c006ec9311dd18f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "34.2.6"
+  syncfusion_pdfviewer_macos:
+    dependency: transitive
+    description:
+      name: syncfusion_pdfviewer_macos
+      sha256: fa3fd218ea25fe4dc0e769eb09729b05275688f3245b9cd5d297a1dee2ed4cfb
+      url: "https://pub.dev"
+    source: hosted
+    version: "34.2.6"
+  syncfusion_pdfviewer_platform_interface:
+    dependency: transitive
+    description:
+      name: syncfusion_pdfviewer_platform_interface
+      sha256: d502cf402d8ff71a124f7cbba3d40ae1c2ebaeaa653de8a257115cdc010e094d
+      url: "https://pub.dev"
+    source: hosted
+    version: "34.2.6"
+  syncfusion_pdfviewer_web:
+    dependency: transitive
+    description:
+      name: syncfusion_pdfviewer_web
+      sha256: f8922dc812d7ce7810639cd83c5635e8ca02c63869c5afea9fe1821771e71fc8
+      url: "https://pub.dev"
+    source: hosted
+    version: "34.2.6"
+  syncfusion_pdfviewer_windows:
+    dependency: transitive
+    description:
+      name: syncfusion_pdfviewer_windows
+      sha256: f54b332f990b703b7891abb566f9baffdb9058eb92b6f259f365abe0a117ba39
+      url: "https://pub.dev"
+    source: hosted
+    version: "34.2.6"
   synchronized:
     dependency: transitive
     description:
@@ -962,6 +1058,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.4.0"
+  win32_registry:
+    dependency: transitive
+    description:
+      name: win32_registry
+      sha256: "73b1d78920a9d6e03f8b4e43e612b87bf3152a0e5c5e5150267762b7c4116904"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.3"
   xdg_directories:
     dependency: transitive
     description:

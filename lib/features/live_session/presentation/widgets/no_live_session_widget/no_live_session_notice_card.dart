@@ -1,4 +1,4 @@
-
+import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:flutter/material.dart';
@@ -17,18 +17,20 @@ class NoSessionNoticeCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            '.ارجع في موعد الحصة المعلن',
+            'ارجع في موعد الحصة المعلن',
+            textDirection: TextDirection.rtl,
             style: AppTextStyle.font12TextLightMediumTajawal().copyWith(
               color: ColorPalette.textBlack,
             ),
           ),
-          const Icon(
+          horizontalSpace(16),
+          Icon(
             Icons.access_time_rounded,
             color: ColorPalette.secondary,
-            size: 30,
+            size: 30.r,
           ),
         ],
       ),

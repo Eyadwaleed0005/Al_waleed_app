@@ -7,6 +7,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
     this.title,
+    this.titleColor,
+    this.backButtonColor,
     this.titleWidget,
     this.actions,
     this.leading,
@@ -18,6 +20,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   final String? title;
+  final Color? titleColor;
+  final Color? backButtonColor;
   final Widget? titleWidget;
   final List<Widget>? actions;
   final Widget? leading;
@@ -43,7 +47,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ? IconButton(
               icon: Icon(
                 Icons.arrow_back_ios_new_rounded,
-                color: ColorPalette.textPrimary,
+                color: backButtonColor ?? ColorPalette.textPrimary,
                 size: 20.sp,
               ),
               onPressed: () => Navigator.of(context).pop(),
@@ -54,7 +58,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           (title != null
               ? Text(
                   title!,
-                  style: AppTextStyle.font18TextPrimarySemiBoldKufam(),
+                  style: AppTextStyle.font18TextPrimarySemiBoldKufam().copyWith(
+                    color: titleColor,
+                  ),
                 )
               : null),
       actions: actions,

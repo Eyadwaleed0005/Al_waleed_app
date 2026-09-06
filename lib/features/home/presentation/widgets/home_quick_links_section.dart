@@ -9,6 +9,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class HomeQuickLinksSection extends StatelessWidget {
   const HomeQuickLinksSection({super.key});
 
+  static const int _studyNotesIndex = 1;
+  static const int _lessonsIndex = 3;
+  static const int _examsIndex = 4;
+
   void _changeNavigationIndex(BuildContext context, int index) {
     context.read<BottomNavigationCubit>().changeIndex(index);
   }
@@ -29,15 +33,15 @@ class HomeQuickLinksSection extends StatelessWidget {
               label: 'الامتحانات',
               image: AppImage().exam,
               onTap: () {
-                _changeNavigationIndex(context, 3);
+                _changeNavigationIndex(context, _examsIndex);
               },
             ),
             horizontalSpace(10),
             CategoryNavigationCard(
-              label: 'المذاكرات',
+              label: 'المذكرات',
               image: AppImage().studyNotes,
               onTap: () {
-                _changeNavigationIndex(context, 2);
+                _changeNavigationIndex(context, _studyNotesIndex);
               },
             ),
             horizontalSpace(10),
@@ -45,7 +49,7 @@ class HomeQuickLinksSection extends StatelessWidget {
               label: 'الدروس',
               image: AppImage().bookOpen,
               onTap: () {
-                _changeNavigationIndex(context, 1);
+                _changeNavigationIndex(context, _lessonsIndex);
               },
             ),
           ],
