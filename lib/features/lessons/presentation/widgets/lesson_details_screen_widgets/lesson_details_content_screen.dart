@@ -5,9 +5,9 @@ import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:al_waleed/core/widgets/background/background_student_layout.dart';
 import 'package:al_waleed/core/widgets/custom_app_bar.dart';
-import 'package:al_waleed/features/lessons/presentation/widgets/lesson_content_tile.dart';
-import 'package:al_waleed/features/lessons/presentation/widgets/lesson_overview_card.dart';
-import 'package:al_waleed/features/lessons/presentation/widgets/lesson_video_card.dart';
+import 'package:al_waleed/features/lessons/presentation/widgets/lesson_details_screen_widgets/lesson_material_tile.dart';
+import 'package:al_waleed/features/lessons/presentation/widgets/lesson_details_screen_widgets/lesson_overview_card.dart';
+import 'package:al_waleed/features/lessons/presentation/widgets/lesson_details_screen_widgets/lesson_video_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -51,7 +51,7 @@ class LessonDetailsContentScreen extends StatelessWidget {
                 style: AppTextStyle.font20TextPrimarySemiBoldKufam(),
               ),
               verticalSpace(14),
-              LessonContentTile(
+              LessonMaterialTile(
                 title: 'ملخص الدرس',
                 subtitle: 'ملف PDF · مقدمة الكيمياء العضوية',
                 icon: AppImage().readerPdf,
@@ -60,7 +60,7 @@ class LessonDetailsContentScreen extends StatelessWidget {
                 },
               ),
               verticalSpace(14),
-              LessonContentTile(
+              LessonMaterialTile(
                 title: 'اختبار الكيمياء العضوية',
                 subtitle: 'سؤال · ٤ درجات',
                 icon: AppImage().exam,
