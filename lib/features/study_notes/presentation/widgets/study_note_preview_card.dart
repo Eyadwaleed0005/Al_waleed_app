@@ -5,19 +5,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class StudyNoteCard extends StatelessWidget {
-  const StudyNoteCard({
+class StudyNotePreviewCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+  final Color? accentColor;
+
+  const StudyNotePreviewCard({
     super.key,
     required this.title,
-    required this.subject,
+    required this.subtitle,
     required this.onTap,
     this.accentColor,
   });
-
-  final String title;
-  final String subject;
-  final VoidCallback onTap;
-  final Color? accentColor;
 
   @override
   Widget build(BuildContext context) {
@@ -67,19 +67,20 @@ class StudyNoteCard extends StatelessWidget {
                         ),
                         verticalSpace(6),
                         Text(
-                          subject,
+                          subtitle,
                           textAlign: TextAlign.right,
                           textDirection: TextDirection.rtl,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: AppTextStyle.font14TextSecondaryRegularTajawal(),
+                          style:
+                              AppTextStyle.font14TextSecondaryRegularTajawal(),
                         ),
                         verticalSpace(20),
-                        Row(
+                        const Row(
                           textDirection: TextDirection.ltr,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [_ViewButton(), _PdfBadge()],
+                          children: [_ViewNoteButton(), _PdfFileBadge()],
                         ),
                       ],
                     ),
@@ -94,8 +95,8 @@ class StudyNoteCard extends StatelessWidget {
   }
 }
 
-class _ViewButton extends StatelessWidget {
-  const _ViewButton();
+class _ViewNoteButton extends StatelessWidget {
+  const _ViewNoteButton();
 
   @override
   Widget build(BuildContext context) {
@@ -105,30 +106,25 @@ class _ViewButton extends StatelessWidget {
         color: ColorPalette.primarySoftBackground,
         borderRadius: BorderRadius.circular(30.r),
       ),
-      child: Text(
-        'عرض',
-        style: AppTextStyle.font15TextLightBoldTajawal().copyWith(
-          color: ColorPalette.primary,
-        ),
-      ),
+      child: Text('عرض', style: AppTextStyle.font15TextPrimaryBoldTajawal()),
     );
   }
 }
 
-class _PdfBadge extends StatelessWidget {
-  const _PdfBadge();
+class _PdfFileBadge extends StatelessWidget {
+  const _PdfFileBadge();
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Icon(CupertinoIcons.doc_text, color: ColorPalette.textRed, size: 30.sp),
         verticalSpace(3),
         Text(
-          'PDF ملف',
-          style: AppTextStyle.font12TextSecondaryRegularTajawal().copyWith(
-            color: ColorPalette.textSecondary,
-          ),
+          'ملف PDF',
+          textDirection: TextDirection.rtl,
+          style: AppTextStyle.font12TextSecondaryRegularTajawal(),
         ),
       ],
     );

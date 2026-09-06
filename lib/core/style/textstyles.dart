@@ -91,6 +91,15 @@ class AppTextStyle {
     );
   }
 
+  static TextStyle font15TextPrimaryBoldTajawal() {
+    return TextStyle(
+      fontSize: 15.sp,
+      fontWeight: FontWeightHelper.bold,
+      fontFamily: tajawal,
+      color: ColorPalette.primary,
+    );
+  }
+
   static TextStyle font13TextSecondaryRegularTajawal() {
     return TextStyle(
       fontSize: 13.sp,
