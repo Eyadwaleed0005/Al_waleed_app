@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class QuizQuestionCard extends StatelessWidget {
-  const QuizQuestionCard({super.key, required this.questionText, this.imageUrl});
+  const QuizQuestionCard({
+    super.key,
+    required this.questionText,
+    this.imageUrl,
+  });
 
   final String questionText;
   final String? imageUrl;
@@ -19,7 +23,13 @@ class QuizQuestionCard extends StatelessWidget {
         color: ColorPalette.surface,
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(color: ColorPalette.border, width: 1.w),
-        boxShadow: [BoxShadow(color: ColorPalette.primary.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 6))],
+        boxShadow: [
+          BoxShadow(
+            color: ColorPalette.primary.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -65,7 +75,8 @@ class _QuizImage extends StatelessWidget {
               child: Center(
                 child: CircularProgressIndicator(
                   value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                      ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
                       : null,
                   color: ColorPalette.primary,
                   strokeWidth: 2.5,
@@ -80,9 +91,16 @@ class _QuizImage extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.broken_image_outlined, color: ColorPalette.textMuted, size: 32.sp),
+                    Icon(
+                      Icons.broken_image_outlined,
+                      color: ColorPalette.textMuted,
+                      size: 32.sp,
+                    ),
                     SizedBox(height: 4.h),
-                    Text('تعذّر تحميل الصورة', style: AppTextStyle.font12TextSecondaryRegularTajawal()),
+                    Text(
+                      'تعذّر تحميل الصورة',
+                      style: AppTextStyle.font12TextSecondaryRegularTajawal(),
+                    ),
                   ],
                 ),
               ),
