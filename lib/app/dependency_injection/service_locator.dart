@@ -6,14 +6,9 @@ import 'package:get_it/get_it.dart';
 final GetIt getIt = GetIt.instance;
 
 void setupServiceLocator() {
-  // Network
-
   getIt.registerLazySingleton<NetworkInfo>(
     () => InternetConnectionNetworkInfo(),
   );
-
-  // Network status
-
   getIt.registerLazySingleton<NetworkStatusCubit>(
     () => NetworkStatusCubit(networkInfo: getIt<NetworkInfo>()),
   );
