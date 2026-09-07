@@ -4,7 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class QuizHeader extends StatelessWidget implements PreferredSizeWidget {
-  const QuizHeader({super.key, required this.title, this.trailingBadge, this.onBack, this.showBackButton = true});
+  const QuizHeader({
+    super.key,
+    required this.title,
+    this.trailingBadge,
+    this.onBack,
+    this.showBackButton = true,
+  });
 
   final String title;
   final Widget? trailingBadge;
@@ -18,8 +24,7 @@ class QuizHeader extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: ColorPalette.surface,
-        border: Border(bottom: BorderSide(color: ColorPalette.paleSage, width: 1.0)),
+        color: ColorPalette.primary,
       ),
       child: SafeArea(
         bottom: false,
@@ -36,18 +41,23 @@ class QuizHeader extends StatelessWidget implements PreferredSizeWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyle.font17TextPrimarySemiBoldKufam().copyWith(
-                    color: ColorPalette.primary,
+                    color: ColorPalette.surface,
                     fontWeight: FontWeight.w700,
                   ),
                   textDirection: TextDirection.rtl,
                 ),
               ),
-              if (trailingBadge != null) Positioned(right: 14.w, child: trailingBadge!),
+              if (trailingBadge != null)
+                Positioned(right: 14.w, child: trailingBadge!),
               if (showBackButton)
                 Positioned(
                   left: 6.w,
                   child: IconButton(
-                    icon: Icon(Icons.arrow_back_ios_new_rounded, color: ColorPalette.primary, size: 20.sp),
+                    icon: Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      color: ColorPalette.surface,
+                      size: 20.sp,
+                    ),
                     onPressed: onBack ?? () => Navigator.of(context).pop(),
                   ),
                 ),
@@ -68,10 +78,16 @@ class QuizProgressBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-      decoration: BoxDecoration(color: ColorPalette.primary, borderRadius: BorderRadius.circular(20.r)),
+      decoration: BoxDecoration(
+        color: ColorPalette.darkCharcoal,
+        borderRadius: BorderRadius.circular(20.r),
+      ),
       child: Text(
         text,
-        style: AppTextStyle.font14TextLightBoldTajawal().copyWith(color: ColorPalette.textLight, fontSize: 13.sp),
+        style: AppTextStyle.font14TextLightBoldTajawal().copyWith(
+          color: ColorPalette.textLight,
+          fontSize: 13.sp,
+        ),
         textDirection: TextDirection.rtl,
       ),
     );
