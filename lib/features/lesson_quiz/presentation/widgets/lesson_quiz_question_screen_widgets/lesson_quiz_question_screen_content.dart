@@ -1,18 +1,16 @@
 import 'package:al_waleed/core/helper/arabic_numbers_helper.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
-import 'package:al_waleed/core/style/app_color.dart';
-import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:al_waleed/core/widgets/background/background_student_layout.dart';
 import 'package:al_waleed/core/widgets/custom_button.dart';
-import 'package:al_waleed/features/lesson_quiz/presentation/widgets/lesson_quiz_question_screen_widgets/quiz_answer_option.dart';
 import 'package:al_waleed/features/lesson_quiz/presentation/widgets/lesson_quiz_question_screen_widgets/quiz_auto_save_notice.dart';
 import 'package:al_waleed/features/lesson_quiz/presentation/widgets/lesson_quiz_question_screen_widgets/quiz_header.dart';
 import 'package:al_waleed/features/lesson_quiz/presentation/widgets/lesson_quiz_question_screen_widgets/quiz_progress.dart';
+import 'package:al_waleed/features/lesson_quiz/presentation/widgets/lesson_quiz_question_screen_widgets/quiz_question_content_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class LessonQuizQuestionScreen extends StatelessWidget {
-  const LessonQuizQuestionScreen({super.key});
+class LessonQuizQuestionScreenContent extends StatelessWidget {
+  const LessonQuizQuestionScreenContent({super.key});
 
   static const List<String> _answers = [
     'الصوديوم',
@@ -45,44 +43,9 @@ class LessonQuizQuestionScreen extends StatelessWidget {
                       children: [
                         const QuizProgress(current: 1, total: 2),
                         verticalSpace(16),
-                        Container(
-                          padding: EdgeInsets.all(20.w),
-                          decoration: BoxDecoration(
-                            color: ColorPalette.surface,
-                            borderRadius: BorderRadius.circular(24.r),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: ColorPalette.ligthBlackShadow,
-                                blurRadius: 16,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                'أي العناصر التالية يُعد من العناصر الانتقالية؟',
-                                textAlign: TextAlign.right,
-                                textDirection: TextDirection.rtl,
-                                style:
-                                    AppTextStyle.font18TextPrimarySemiBoldKufam()
-                                        .copyWith(
-                                          color: ColorPalette.textPrimary,
-                                        ),
-                              ),
-                              verticalSpace(16),
-                              ..._answers.map(
-                                (answer) => Padding(
-                                  padding: EdgeInsets.only(bottom: 10.h),
-                                  child: QuizAnswerOption(
-                                    title: answer,
-                                    onTap: () {},
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                        const QuizQuestionContentCard(
+                          questionText: 'أي العناصر التالية يُعد من العناصر الانتقالية؟',
+                          answers: _answers,
                         ),
                         verticalSpace(14),
                         const QuizAutoSaveNotice(),
