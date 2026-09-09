@@ -38,7 +38,7 @@ class CustomSearchBar extends StatelessWidget {
       onChanged: onChanged,
       onSubmitted: onSubmitted,
       textDirection: TextDirection.rtl,
-      textAlign: TextAlign.right,
+      textAlign: TextAlign.center,
       style: AppTextStyle.font14TextSecondaryRegularTajawal().copyWith(
         color: ColorPalette.textPrimary,
       ),
@@ -46,18 +46,7 @@ class CustomSearchBar extends StatelessWidget {
         hintText: hintText,
         hintTextDirection: TextDirection.rtl,
         hintStyle: AppTextStyle.font14TextSecondaryRegularTajawal(),
-        prefixIcon:
-            prefixIcon ??
-            Padding(
-              padding: EdgeInsets.all(12.w),
-              child: Image.asset(
-                AppImage().search,
-                width: 20.w,
-                height: 20.w,
-                fit: BoxFit.contain,
-              ),
-            ),
-        suffixIcon: controller != null && (controller?.text.isNotEmpty ?? false)
+        prefixIcon: controller != null && (controller?.text.isNotEmpty ?? false)
             ? IconButton(
                 icon: Icon(
                   Icons.close_rounded,
@@ -70,6 +59,18 @@ class CustomSearchBar extends StatelessWidget {
                 },
               )
             : null,
+
+        suffixIcon:
+            prefixIcon ??
+            Padding(
+              padding: EdgeInsets.all(12.w),
+              child: Image.asset(
+                AppImage().search,
+                width: 20.w,
+                height: 20.w,
+                fit: BoxFit.contain,
+              ),
+            ),
         filled: true,
         fillColor: ColorPalette.surface,
         contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),

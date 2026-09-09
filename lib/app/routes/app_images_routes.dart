@@ -15,7 +15,10 @@ class AppImage {
 
   // ===== images =====
   late final String teacherBanner = '${baseImages}teacher_banner.png';
-  late final String logoApp = '${baseImages}logo.png';
+  late final String logoApp = '${baseImages}app_icon.png';
+  late final String liveSessionBannerIllustration = '${baseImages}live_session_banner_illustration.png';
+  late final String lessonTestTubes = '${baseImages}lesson_test_tubes.png';
+
 
   // ===== icons =====
   late final String homeIcon = '${baseIcons}home.png';
@@ -24,6 +27,8 @@ class AppImage {
   late final String bookOpenBig = '${baseIcons}BookOpenBig.png';
   late final String exam = '${baseIcons}exams.png';
   late final String studyNotes = '${baseIcons}study_notes.png';
+  late final String readerPdf = '${baseIcons}reader_pdf.png';
+  late final String emptyBookOpen = '${baseIcons}empty_book_open.png';
   late final String emptyNotesIcon = '${baseIcons}empty_notes.png';
   late final String profile = '${baseIcons}profile.png';
 

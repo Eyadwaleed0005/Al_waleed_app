@@ -1,0 +1,71 @@
+import 'package:al_waleed/core/helper/spacer.dart';
+import 'package:al_waleed/core/style/app_color.dart';
+import 'package:al_waleed/core/style/textstyles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class CategoryNavigationCard extends StatelessWidget {
+  final String label;
+  final String image;
+  final VoidCallback? onTap;
+
+  const CategoryNavigationCard({
+    super.key,
+    required this.label,
+    required this.image,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16.r),
+          child: Container(
+            height: 105.h,
+            padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 6.w),
+            decoration: BoxDecoration(
+              color: ColorPalette.primarySoftBackground,
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(color: ColorPalette.border),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(8.r),
+                  decoration: BoxDecoration(
+                    color: ColorPalette.primarySoftBackground,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Image.asset(image, width: 22.w, height: 22.h),
+                ),
+                verticalSpace(6),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyle.font14TextPrimaryMediumKufam(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
