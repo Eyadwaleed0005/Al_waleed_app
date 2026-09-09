@@ -22,7 +22,7 @@ class AppRoutes {
       case RouteNames.home:
         return MaterialPageRoute(builder: (context) => const HomeScreen());
       case RouteNames.login:
-        return MaterialPageRoute(builder: (context) => const LogInScreen());
+        return MaterialPageRoute(builder: (context) => const LoginScreen());
       case RouteNames.profile:
         return MaterialPageRoute(builder: (context) => const ProfileScreen());
       case RouteNames.lessons:
@@ -30,7 +30,9 @@ class AppRoutes {
       case RouteNames.studyNotes:
         return MaterialPageRoute(builder: (context) => const ViewNotesScreen());
       case RouteNames.liveSession:
-        return MaterialPageRoute(builder: (context) => const LiveSessionScreen());  
+        return MaterialPageRoute(
+          builder: (context) => const LiveSessionScreen(),
+        );
       case RouteNames.noteReader:
         final note = settings.arguments as StudyNoteEntity;
         return MaterialPageRoute(

@@ -11,14 +11,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 
-class LogInScreenBody extends StatefulWidget {
-  const LogInScreenBody({super.key});
+class LoginScreenContent extends StatefulWidget {
+  const LoginScreenContent({super.key});
 
   @override
-  State<LogInScreenBody> createState() => _LogInScreenBodyState();
+  State<LoginScreenContent> createState() => _LoginScreenContentState();
 }
 
-class _LogInScreenBodyState extends State<LogInScreenBody> {
+class _LoginScreenContentState extends State<LoginScreenContent> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();

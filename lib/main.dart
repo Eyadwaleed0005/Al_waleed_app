@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
           title: 'الوليد',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(),
-          initialRoute: RouteNames.main,
+          initialRoute: RouteNames.login,
           onGenerateRoute: AppRoutes.generateRoute,
         );
       },
