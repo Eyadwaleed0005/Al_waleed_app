@@ -15,6 +15,8 @@ class ColorPalette {
   static const Color mutedSlate = Color(0xFF556355);
   static const Color lightGray = Color(0xFF98A399);
   static const Color lightYellow = Color(0xFFEEE9CB);
+  static const Color sageGray = Color(0xFFE0E7E2);
+  static const Color fogWhite = Color(0xFFF4F7F5);
 
   // ===== Primary & Brand Semantics =====
   static const Color primary = emeraldGreen;

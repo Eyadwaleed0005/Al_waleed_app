@@ -6,7 +6,10 @@ import 'package:al_waleed/features/live_session/presentation/cubits/live_session
 
 import 'package:al_waleed/features/live_session/presentation/screens/live_session_screen.dart';
 import 'package:al_waleed/features/main_navigation/presentation/screens/main_navigation_screen.dart';
-
+import 'package:al_waleed/features/profile/presentation/screens/profile_screen.dart';
+import 'package:al_waleed/features/study_notes/domain/entities/study_note_entity.dart';
+import 'package:al_waleed/features/study_notes/presentation/screens/study_note_pdf_reader_screen.dart';
+import 'package:al_waleed/features/study_notes/presentation/screens/study_notes_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,14 +34,32 @@ class AppRoutes {
         );
 
       case RouteNames.liveSessionScreen:
-        final String gradeId = settings.arguments as String;
         return MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (context) =>
-                getIt.get<LiveSessionCubit>()
-                  ..getLiveSession(gradeId: gradeId),
-            child:  LiveSessionScreen(gradeId: gradeId),
-          ),
+          settings: settings,
+          builder: (_) => const LiveSessionScreen(),
+        );
+
+      case RouteNames.studyNotePdfReaderScreen:
+        final note = settings.arguments as StudyNoteEntity?;
+
+        if (note == null) {
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (_) => const Scaffold(
+              body: Center(child: Text('تعذر فتح المذكرة')),
+            ),
+          );
+        }
+
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => StudyNotePdfReaderScreen(note: note),
+        );
+
+      case RouteNames.lessonQuiz:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const LessonQuizScreen(),
         );
 
       default:
