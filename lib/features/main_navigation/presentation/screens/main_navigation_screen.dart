@@ -11,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class MainNavigationScreen extends StatelessWidget {
   const MainNavigationScreen({super.key});
 
-  static const List<Widget> _screens = [
+  static final List<Widget> _screens = [
     ProfileScreen(),
     StudyNotesScreen(),
     HomeScreen(),

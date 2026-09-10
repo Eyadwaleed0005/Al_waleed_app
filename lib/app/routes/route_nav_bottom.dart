@@ -1,38 +1,39 @@
-/*import 'package:al_waleed/app/routes/app_images_routes.dart';
+/* import 'package:al_waleed/app/routes/app_images_routes.dart';
 import 'package:flutter/material.dart';
 
 class RouteNavBottom {
   RouteNavBottom._();
 
   static List<String> get icons => [
-    AppImage().home,
-    AppImage().students,
+    AppImage().exam,
     AppImage().bookOpen,
-    AppImage().exams,
-    AppImage().liveSession,
+    AppImage().homeIcon,
+    AppImage().studyNotes,
+    AppImage().profile,
   ];
 
   static const List<String> titles = [
+    'الامتحان',
+    'الدروس',
     'الرئيسية',
-    'الطلاب',
-    'المحتوى',
-    'الامتحانات',
-    'الحصة',
+    'المذكرات',
+    'حسابي',
   ];
 
   static List<Widget> screens({
-    required Widget homeScreen,
-    required Widget students,
-    required Widget studyNotesScreen,
     required Widget examsScreen,
-    required Widget liveSessionScreen,
+    required Widget lessonsScreen,
+    required Widget homeScreen,
+    required Widget studyNotesScreen,
+    required Widget profileScreen,
   }) {
     return [
-      homeScreen,
-      students,
-      studyNotesScreen,
       examsScreen,
-      liveSessionScreen,
+      lessonsScreen,
+      homeScreen,
+      studyNotesScreen,
+      profileScreen,
     ];
   }
-}*/
+}
+ */
