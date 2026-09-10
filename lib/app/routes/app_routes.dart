@@ -1,6 +1,6 @@
 import 'package:al_waleed/app/dependency_injection/service_locator.dart';
 import 'package:al_waleed/app/routes/route_names.dart';
-import 'package:al_waleed/features/authentication/presentation/auth_cubit/login_cubit/login_cubit.dart';
+import 'package:al_waleed/features/authentication/presentation/cubit/login_cubit/login_cubit.dart';
 import 'package:al_waleed/features/authentication/presentation/screens/login_screen.dart';
 import 'package:al_waleed/features/live_session/presentation/cubits/live_session_cubit/live_session_cubit.dart';
 
@@ -33,11 +33,11 @@ class AppRoutes {
           ),
         );
 
-      case RouteNames.liveSessionScreen:
+     /* case RouteNames.liveSessionScreen:
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => const LiveSessionScreen(),
-        );
+        );*/
 
       case RouteNames.studyNotePdfReaderScreen:
         final note = settings.arguments as StudyNoteEntity?;
@@ -56,11 +56,11 @@ class AppRoutes {
           builder: (_) => StudyNotePdfReaderScreen(note: note),
         );
 
-      case RouteNames.lessonQuiz:
+     /* case RouteNames.lessonQuiz:
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => const LessonQuizScreen(),
-        );
+        );*/
 
       default:
         return null;

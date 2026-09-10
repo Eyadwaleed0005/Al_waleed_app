@@ -1,3 +1,4 @@
-class SecureStorageKeys {
-  static const String token = 'token';
+abstract final class SecureStorageKeys {
+  const SecureStorageKeys._();
+  static const String gradeId = 'gradeId';
 }

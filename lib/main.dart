@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           title: 'الوليد',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(),
-          initialRoute: getIt.get<FirebaseAuth>().currentUser!=null? RouteNames.mainNavigationScreen : RouteNames.loginScreen,
+          initialRoute:RouteNames.loginScreen,
           onGenerateRoute: AppRoutes.generateRoute,
         );
       },
@@ -39,4 +39,3 @@ class MyApp extends StatelessWidget {
   }
  
 }
-

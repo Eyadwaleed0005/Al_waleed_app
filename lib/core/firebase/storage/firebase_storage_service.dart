@@ -102,8 +102,7 @@ class FirebaseStorageService implements StorageService {
           if (uploadedMetadata != null) {
             return uploadedMetadata;
           }
-
-          return reference.getMetadata();
+          return await reference.getMetadata();
         } finally {
           await progressSubscription?.cancel();
         }

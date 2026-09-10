@@ -6,7 +6,7 @@ import 'package:al_waleed/core/widgets/custom_button.dart';
 import 'package:al_waleed/core/widgets/custom_operation_result_dialog.dart';
 import 'package:al_waleed/core/widgets/custom_secondary_button.dart';
 import 'package:al_waleed/core/widgets/custom_text_form_field.dart';
-import 'package:al_waleed/features/authentication/presentation/auth_cubit/login_cubit/login_cubit.dart';
+import 'package:al_waleed/features/authentication/presentation/cubit/login_cubit/login_cubit.dart';
 import 'package:al_waleed/features/authentication/presentation/validation/login_validation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
