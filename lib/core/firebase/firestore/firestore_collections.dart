@@ -12,4 +12,5 @@ abstract final class FirestoreCollections {
   static const String examResults = 'examResults';
 
   static const String liveSessions = 'liveSessions';
+
 }

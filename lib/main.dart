@@ -18,7 +18,6 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
@@ -32,10 +31,11 @@ class MyApp extends StatelessWidget {
           title: 'الوليد',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(),
-          initialRoute: RouteNames.mainNavigationScreen,
+          initialRoute:RouteNames.loginScreen,
           onGenerateRoute: AppRoutes.generateRoute,
         );
       },
     );
   }
+ 
 }

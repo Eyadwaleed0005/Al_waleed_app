@@ -1,4 +1,6 @@
 import 'package:al_waleed/app/routes/route_names.dart';
+import 'package:al_waleed/core/cache/shared_preferences/shared_preference_keys.dart';
+import 'package:al_waleed/core/cache/shared_preferences/shared_preferences.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_animations.dart';
 import 'package:al_waleed/features/home/presentation/widgets/live_session_banner.dart';
@@ -12,18 +14,19 @@ class HomeBanners extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        AppAnimations.screenSection(
-          delay: 250,
-          child: const TeacherBanner(),
-        ),
+        AppAnimations.screenSection(delay: 250, child: const TeacherBanner()),
         verticalSpace(35),
         AppAnimations.screenSection(
           delay: 450,
           child: LiveSessionBanner(
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                RouteNames.liveSessionScreen,
+            onTap: () async {
+              final gradeId = await SharedPreferencesHelper.getString(
+                key: SharedPreferenceKeys.gradeId,
               );
+
+              Navigator.of(
+                context,
+              ).pushNamed(RouteNames.liveSessionScreen, arguments: gradeId);
             },
           ),
         ),
