@@ -7,27 +7,11 @@ import 'package:al_waleed/features/study_notes/data/models/study_note_model.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseStudyNotesRemoteDataSource implements StudyNotesRemoteDataSource {
-  const FirebaseStudyNotesRemoteDataSource({required this._firestoreService});
+  const FirebaseStudyNotesRemoteDataSource({
+    required this._firestoreService,
+  });
 
   final FirestoreService _firestoreService;
-
-  @override
-  Future<List<StudyNoteModel>> getStudyNotes({
-    String? gradeId,
-    bool? isPublished,
-  }) {
-    return FirebaseErrorHandler.execute(() async {
-      final snapshot = await _firestoreService.getCollection(
-        collectionPath: FirestoreCollections.studyNotes,
-        queryBuilder: _getNotesQuery(
-          gradeId: gradeId,
-          isPublished: isPublished,
-        ),
-      );
-
-      return _mapStudyNotes(snapshot);
-    });
-  }
 
   @override
   Future<StudyNoteModel> getStudyNoteById({required String noteId}) {

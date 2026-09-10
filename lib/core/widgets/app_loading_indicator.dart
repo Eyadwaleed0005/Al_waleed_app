@@ -1,4 +1,5 @@
-/*import 'package:flutter/material.dart';
+import 'package:al_waleed/core/style/app_color.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppLoadingIndicator extends StatelessWidget {
@@ -24,4 +25,4 @@ class AppLoadingIndicator extends StatelessWidget {
       ),
     );
   }
-}*/
+}

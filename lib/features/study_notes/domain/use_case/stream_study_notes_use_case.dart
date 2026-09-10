@@ -4,7 +4,9 @@ import 'package:al_waleed/features/study_notes/domain/repositories/study_notes_r
 import 'package:dartz/dartz.dart';
 
 class StreamStudyNotesUseCase {
-  const StreamStudyNotesUseCase({required this._repository});
+  const StreamStudyNotesUseCase({
+    required this._repository,
+  });
 
   final StudyNotesRepository _repository;
 

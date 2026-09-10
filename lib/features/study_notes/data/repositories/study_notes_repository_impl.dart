@@ -7,26 +7,11 @@ import 'package:al_waleed/features/study_notes/domain/repositories/study_notes_r
 import 'package:dartz/dartz.dart';
 
 class StudyNotesRepositoryImpl implements StudyNotesRepository {
-  const StudyNotesRepositoryImpl({required this._remoteDataSource});
+  const StudyNotesRepositoryImpl({
+    required this._remoteDataSource,
+  });
 
   final StudyNotesRemoteDataSource _remoteDataSource;
-
-  @override
-  Future<Either<AppErrorModel, List<StudyNoteEntity>>> getStudyNotes({
-    String? gradeId,
-    bool? isPublished,
-  }) async {
-    try {
-      final models = await _remoteDataSource.getStudyNotes(
-        gradeId: gradeId,
-        isPublished: isPublished,
-      );
-
-      return Right(_mapModelsToEntities(models));
-    } on FirebaseRemoteException catch (error) {
-      return Left(error.errorModel);
-    }
-  }
 
   @override
   Future<Either<AppErrorModel, StudyNoteEntity>> getStudyNoteById({

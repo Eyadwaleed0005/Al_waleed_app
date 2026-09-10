@@ -3,11 +3,6 @@ import 'package:al_waleed/features/study_notes/domain/entities/study_note_entity
 import 'package:dartz/dartz.dart';
 
 abstract class StudyNotesRepository {
-  Future<Either<AppErrorModel, List<StudyNoteEntity>>> getStudyNotes({
-    String? gradeId,
-    bool? isPublished,
-  });
-
   Future<Either<AppErrorModel, StudyNoteEntity>> getStudyNoteById({
     required String noteId,
   });

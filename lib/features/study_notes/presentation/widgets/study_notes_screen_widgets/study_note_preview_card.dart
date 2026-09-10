@@ -1,23 +1,33 @@
+import 'package:al_waleed/core/helper/app_date_time_formatter.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
+import 'package:al_waleed/features/study_notes/domain/entities/study_note_entity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class StudyNotePreviewCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-  final Color? accentColor;
-
   const StudyNotePreviewCard({
     super.key,
-    required this.title,
-    required this.subtitle,
+    required this.note,
     required this.onTap,
-    this.accentColor,
   });
+
+  final StudyNoteEntity note;
+  final VoidCallback onTap;
+
+  String get _formattedUpdatedAt {
+    final updatedAt = note.updatedAt;
+
+    if (updatedAt == null) {
+      return 'ملف PDF';
+    }
+
+    final formattedDate = AppDateTimeFormatter.formatDate(updatedAt);
+
+    return 'ملف PDF · محدث في $formattedDate';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +57,7 @@ class StudyNotePreviewCard extends StatelessWidget {
             child: Row(
               textDirection: TextDirection.rtl,
               children: [
-                Container(
-                  width: 5.w,
-                  color: accentColor ?? ColorPalette.highlight,
-                ),
+                Container(width: 5.w, color: ColorPalette.highlight),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(20.w),
@@ -58,7 +65,7 @@ class StudyNotePreviewCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          title,
+                          note.name,
                           textAlign: TextAlign.right,
                           textDirection: TextDirection.rtl,
                           maxLines: 1,
@@ -67,7 +74,9 @@ class StudyNotePreviewCard extends StatelessWidget {
                         ),
                         verticalSpace(6),
                         Text(
-                          subtitle,
+                          note.description.isEmpty
+                              ? _formattedUpdatedAt
+                              : note.description,
                           textAlign: TextAlign.right,
                           textDirection: TextDirection.rtl,
                           maxLines: 1,
@@ -76,11 +85,14 @@ class StudyNotePreviewCard extends StatelessWidget {
                               AppTextStyle.font14TextSecondaryRegularTajawal(),
                         ),
                         verticalSpace(20),
-                        const Row(
+                        Row(
                           textDirection: TextDirection.ltr,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [_ViewNoteButton(), _PdfFileBadge()],
+                          children: [
+                            const _ViewNoteButton(),
+                            const _PdfFileBadge(),
+                          ],
                         ),
                       ],
                     ),
@@ -119,7 +131,11 @@ class _PdfFileBadge extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(CupertinoIcons.doc_text, color: ColorPalette.textRed, size: 30.sp),
+        Icon(
+          CupertinoIcons.doc_text,
+          color: ColorPalette.textRed,
+          size: 30.sp,
+        ),
         verticalSpace(3),
         Text(
           'ملف PDF',

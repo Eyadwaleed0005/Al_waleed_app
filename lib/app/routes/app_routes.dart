@@ -8,6 +8,7 @@ import 'package:al_waleed/features/lessons/presentation/screens/lessons_screen.d
 import 'package:al_waleed/features/live_session/presentation/screens/live_session_screen.dart';
 import 'package:al_waleed/features/main_navigation/presentation/screens/main_navigation_screen.dart';
 import 'package:al_waleed/features/profile/presentation/screens/profile_screen.dart';
+import 'package:al_waleed/features/study_notes/domain/entities/study_note_entity.dart';
 import 'package:al_waleed/features/study_notes/presentation/screens/study_note_pdf_reader_screen.dart';
 import 'package:al_waleed/features/study_notes/presentation/screens/study_notes_screen.dart';
 import 'package:flutter/material.dart';
@@ -72,9 +73,20 @@ class AppRoutes {
         );
 
       case RouteNames.studyNotePdfReaderScreen:
+        final note = settings.arguments as StudyNoteEntity?;
+
+        if (note == null) {
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (_) => const Scaffold(
+              body: Center(child: Text('تعذر فتح المذكرة')),
+            ),
+          );
+        }
+
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => const StudyNotePdfReaderScreen(),
+          builder: (_) => StudyNotePdfReaderScreen(note: note),
         );
 
       case RouteNames.lessonQuiz:
