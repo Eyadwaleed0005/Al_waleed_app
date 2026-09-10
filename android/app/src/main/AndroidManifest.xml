@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+   
     <application
         android:label="al_waleed"
         android:name="${applicationName}"
@@ -36,6 +37,16 @@
          https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
 
          In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+  <queries>
+    <intent>
+        <action android:name="intent.action.VIEW" />
+        <data android:scheme="https" />
+    </intent>
+    <intent>
+        <action android:name="intent.action.VIEW" />
+        <data android:scheme="http" />
+    </intent>
+</queries>
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>

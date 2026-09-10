@@ -28,7 +28,16 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  bloc: ^9.2.1
+  cached_network_image: ^4.0.0
+  cloud_firestore: ^6.9.0
+  cloud_functions: ^6.3.6
   cupertino_icons: ^1.0.8
+  dartz: ^0.10.1
+  equatable: ^2.1.0
+  firebase_auth: ^6.6.1
+  firebase_core: ^4.14.0
+  firebase_storage: ^13.5.0
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.2
@@ -37,12 +46,10 @@ dependencies:
   flutter_screenutil: ^5.9.3
   flutter_secure_storage: ^11.0.0
   flutter_svg: ^2.3.0
+  font_awesome_flutter: ^11.0.0
   get_it: ^9.2.1
   internet_connection_checker_plus: ^3.1.1
   shared_preferences: ^2.5.5
-  font_awesome_flutter: ^11.0.0
-  youtube_player_flutter: ^10.0.1
-  cached_network_image: ^4.0.0
   syncfusion_flutter_pdfviewer: ^34.2.6
   firebase_core: ^4.14.0
   firebase_auth: ^6.6.1
@@ -53,12 +60,6 @@ dependencies:
 
 
 dev_dependencies:
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter

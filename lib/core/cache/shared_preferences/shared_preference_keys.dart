@@ -6,4 +6,8 @@ abstract final class SharedPreferenceKeys {
 
   static const String dashboardSummaryUpdatedAt =
       'dashboard_summary_updated_at';
+
+static const String gradeId = 'grade_id'; 
+
+
 }
