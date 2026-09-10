@@ -1,4 +1,4 @@
-
+import 'package:al_waleed/core/firebase/firestore/firestore_fields.dart';
 import 'package:al_waleed/features/live_session/domain/entity/live_session_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -16,21 +16,23 @@ class LiveSessionModel extends LiveSessionEntity {
 
     return LiveSessionModel(
       gradeId: doc.id,
-      platformType: data['platformType'] as String? ?? '',
-      meetingUrl: data['meetingUrl'] as String? ?? '',
-      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      platformType: data[FirestoreFields.platformType] as String? ?? '',
+      meetingUrl: data[FirestoreFields.meetingUrl] as String? ?? '',
+      createdAt:
+          (data[FirestoreFields.createdAt] as Timestamp?)?.toDate() ??
+          DateTime.now(),
+      updatedAt:
+          (data[FirestoreFields.updatedAt] as Timestamp?)?.toDate() ??
+          DateTime.now(),
     );
   }
 
-
   Map<String, dynamic> toMap() {
     return {
-      'platformType': platformType,
-      'meetingUrl': meetingUrl,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
+      FirestoreFields.platformType: platformType,
+      FirestoreFields.meetingUrl: meetingUrl,
+      FirestoreFields.createdAt: Timestamp.fromDate(createdAt),
+      FirestoreFields.updatedAt: Timestamp.fromDate(updatedAt),
     };
   }
- 
 }

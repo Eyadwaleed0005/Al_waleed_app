@@ -7,14 +7,31 @@ part 'live_session_state.dart';
 
 class LiveSessionCubit extends Cubit<LiveSessionState> {
   final LiveSessionUseCase liveSessionUseCase;
+
   LiveSessionCubit({required this.liveSessionUseCase})
     : super(LiveSessionInitial());
+
   Future<void> getLiveSession({required String gradeId}) async {
     emit(LiveSessionLoading());
+
     final result = await liveSessionUseCase.getLiveSession(gradeId: gradeId);
+
     result.fold(
-      (fail) => emit(LiveSessionFailure(errorMessage: fail.message)),
-      (session) => emit(LiveSessionSuccess(liveSessionEntity: session)),
+      (failure) {
+        emit(LiveSessionFailure(errorMessage: failure.message));
+      },
+      (liveSession) {
+        final hasAvailableSession =
+            liveSession.gradeId == gradeId &&
+            liveSession.meetingUrl.trim().isNotEmpty;
+
+        if (!hasAvailableSession) {
+          emit(LiveSessionEmpty());
+          return;
+        }
+
+        emit(LiveSessionSuccess(liveSessionEntity: liveSession));
+      },
     );
   }
 }

@@ -15,6 +15,7 @@ import 'package:al_waleed/features/authentication/data/repositories/login_repo_i
 import 'package:al_waleed/features/authentication/domain/repositories/login_repo.dart';
 import 'package:al_waleed/features/authentication/domain/usecase/login_usecase.dart';
 import 'package:al_waleed/features/authentication/presentation/cubit/login_cubit/login_cubit.dart';
+import 'package:al_waleed/features/live_session/data/data_source/firebase_live_session_remote_data_source.dart';
 
 // Study Notes
 import 'package:al_waleed/features/study_notes/data/data_sources/firebase_study_notes_remote_data_source.dart';
@@ -25,6 +26,13 @@ import 'package:al_waleed/features/study_notes/domain/use_case/get_study_note_by
 import 'package:al_waleed/features/study_notes/domain/use_case/stream_study_notes_use_case.dart';
 import 'package:al_waleed/features/study_notes/presentation/cubit/study_notes_cubit.dart';
 
+// Live Session
+import 'package:al_waleed/features/live_session/data/data_source/live_session_remote_data_source.dart';
+import 'package:al_waleed/features/live_session/data/repo/live_session_repo_impl.dart';
+import 'package:al_waleed/features/live_session/domain/repo/live_session_repo.dart';
+import 'package:al_waleed/features/live_session/domain/usecase/live_session_usecase.dart';
+import 'package:al_waleed/features/live_session/presentation/cubits/live_session_cubit/live_session_cubit.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 
@@ -34,10 +42,11 @@ void setupServiceLocator() {
   _registerCoreDependencies();
   _registerAuthenticationDependencies();
   _registerStudyNotesDependencies();
+  _registerLiveSessionDependencies();
 }
 
 void _registerCoreDependencies() {
-  // Firebase
+  // Firebase Authentication
   getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
 
   // Network
@@ -49,11 +58,12 @@ void _registerCoreDependencies() {
     () => NetworkStatusCubit(networkInfo: getIt<NetworkInfo>()),
   );
 
-  // Core services
+  // Firestore
   getIt.registerLazySingleton<FirestoreService>(
     () => FirebaseFirestoreService(networkInfo: getIt<NetworkInfo>()),
   );
 
+  // Firebase Storage
   getIt.registerLazySingleton<StorageService>(
     () => FirebaseStorageService(networkInfo: getIt<NetworkInfo>()),
   );
@@ -119,5 +129,31 @@ void _registerStudyNotesDependencies() {
     () => StudyNotesCubit(
       streamStudyNotesUseCase: getIt<StreamStudyNotesUseCase>(),
     ),
+  );
+}
+
+void _registerLiveSessionDependencies() {
+  // Remote data source
+  getIt.registerLazySingleton<LiveSessionRemoteDataSource>(
+    () => FirebaseLiveSessionRemoteDataSource(
+      firestoreService: getIt<FirestoreService>(),
+    ),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<LiveSessionRepo>(
+    () => LiveSessionRepoImpl(
+      liveSessionRemoteDataSource: getIt<LiveSessionRemoteDataSource>(),
+    ),
+  );
+
+  // Use case
+  getIt.registerLazySingleton<LiveSessionUseCase>(
+    () => LiveSessionUseCase(liveSessionRepo: getIt<LiveSessionRepo>()),
+  );
+
+  // Cubit
+  getIt.registerFactory<LiveSessionCubit>(
+    () => LiveSessionCubit(liveSessionUseCase: getIt<LiveSessionUseCase>()),
   );
 }
