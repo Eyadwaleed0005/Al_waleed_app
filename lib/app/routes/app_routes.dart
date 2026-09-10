@@ -1,16 +1,14 @@
+import 'package:al_waleed/app/dependency_injection/service_locator.dart';
 import 'package:al_waleed/app/routes/route_names.dart';
+import 'package:al_waleed/features/authentication/presentation/auth_cubit/login_cubit/login_cubit.dart';
 import 'package:al_waleed/features/authentication/presentation/screens/login_screen.dart';
-import 'package:al_waleed/features/home/presentation/screens/home_screen.dart';
-import 'package:al_waleed/features/lesson_quiz/presentation/screens/lesson_quiz_screen.dart';
-import 'package:al_waleed/features/lessons/presentation/screens/lesson_details_screen.dart';
-import 'package:al_waleed/features/lessons/presentation/screens/lesson_pdf_reader_screen.dart';
-import 'package:al_waleed/features/lessons/presentation/screens/lessons_screen.dart';
+import 'package:al_waleed/features/live_session/presentation/cubits/live_session_cubit/live_session_cubit.dart';
+
 import 'package:al_waleed/features/live_session/presentation/screens/live_session_screen.dart';
 import 'package:al_waleed/features/main_navigation/presentation/screens/main_navigation_screen.dart';
-import 'package:al_waleed/features/profile/presentation/screens/profile_screen.dart';
-import 'package:al_waleed/features/study_notes/presentation/screens/study_note_pdf_reader_screen.dart';
-import 'package:al_waleed/features/study_notes/presentation/screens/study_notes_screen.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppRoutes {
   const AppRoutes._();
@@ -23,64 +21,24 @@ class AppRoutes {
           builder: (_) => const MainNavigationScreen(),
         );
 
-      case RouteNames.homeScreen:
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => const HomeScreen(),
-        );
-
       case RouteNames.loginScreen:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => const LoginScreen(),
-        );
-
-      case RouteNames.profileScreen:
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => const ProfileScreen(),
-        );
-
-      case RouteNames.lessons:
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => const LessonsScreen(),
-        );
-
-      case RouteNames.lessonDetails:
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => const LessonDetailsScreen(),
-        );
-
-      case RouteNames.lessonDetailsPdf:
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => const LessonPdfReaderScreen(),
-        );
-
-      case RouteNames.studyNotesScreen:
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => const StudyNotesScreen(),
+          builder: (_) => BlocProvider(
+            create: (context) => getIt.get<LoginCubit>(),
+            child: const LoginScreen(),
+          ),
         );
 
       case RouteNames.liveSessionScreen:
+        final String gradeId = settings.arguments as String;
         return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => const LiveSessionScreen(),
-        );
-
-      case RouteNames.studyNotePdfReaderScreen:
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => const StudyNotePdfReaderScreen(),
-        );
-
-      case RouteNames.lessonQuiz:
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => const LessonQuizScreen(),
+          builder: (context) => BlocProvider(
+            create: (context) =>
+                getIt.get<LiveSessionCubit>()
+                  ..getLiveSession(gradeId: gradeId),
+            child:  LiveSessionScreen(gradeId: gradeId),
+          ),
         );
 
       default:
