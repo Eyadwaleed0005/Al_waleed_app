@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LiveSessionScreenContent extends StatelessWidget {
-  const LiveSessionScreenContent({super.key});
+  final String gradeId;
+
+  const LiveSessionScreenContent({super.key, required this.gradeId});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,7 @@ class LiveSessionScreenContent extends StatelessWidget {
               verticalSpace(24),
               AppAnimations.screenSection(
                 delay: 450,
-                child: const LiveSessionCard(),
+                child: LiveSessionCard(gradeId: gradeId),
               ),
               verticalSpace(20),
             ],

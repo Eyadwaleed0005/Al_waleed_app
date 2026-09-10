@@ -1,3 +1,5 @@
+import 'package:al_waleed/core/cache/shared_preferences/shared_preference_keys.dart';
+import 'package:al_waleed/core/cache/shared_preferences/shared_preferences.dart';
 import 'package:al_waleed/core/errors/error_model/app_error_model.dart';
 import 'package:al_waleed/core/errors/exceptions/firebase_remote_exception.dart';
 import 'package:al_waleed/core/firebase/firestore/firestore_collections.dart';
@@ -43,7 +45,8 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
         throw FirebaseRemoteException(
           errorModel: const AppErrorModel(
             code: 'device-already-logged-in',
-            message: 'الحساب مفتوح بالفعل على جهاز آخر. لا يمكنك تسجيل الدخول من أكثر من جهاز.',
+            message:
+                'الحساب مفتوح بالفعل على جهاز آخر. لا يمكنك تسجيل الدخول من أكثر من جهاز.',
             type: AppErrorType.server,
             isRetryable: false,
           ),
@@ -57,6 +60,13 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
       data: {FirestoreFields.isLoggedIn: true},
     );
 
+    final data = userDoc.data();
+    final String gradeId = data?[FirestoreFields.gradeId];
+
+    await SharedPreferencesHelper.saveString(
+      key: SharedPreferenceKeys.gradeId,
+      value: gradeId,
+    );
     return LoginModel(id: uid, email: email);
   }
 }
