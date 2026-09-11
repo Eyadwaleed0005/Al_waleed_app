@@ -31,7 +31,7 @@ dependencies:
   font_awesome_flutter: ^11.0.0
   get_it: ^9.2.1
   internet_connection_checker_plus: ^3.1.2
-  screen_protector: ^1.5.3
+  no_screenshot: ^2.0.1
   shared_preferences: ^2.5.5
   syncfusion_flutter_pdfviewer: ^34.2.7
 
