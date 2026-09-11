@@ -1,3 +1,4 @@
+import 'package:al_waleed/core/firebase/firestore/firestore_fields.dart';
 import 'package:al_waleed/features/profile/domain/entities/profile_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -31,21 +32,24 @@ class StudentProfileModel extends StudentProfileEntity {
 
   factory StudentProfileModel.fromJson(Map<String, dynamic> json) {
     return StudentProfileModel(
-      name: json['name'],
-      gradeId: json['gradeId'],
-      email: json['email'],
-      subscriptionStartAt: _requiredDate(json, 'subscriptionStartAt'),
-      subscriptionEndAt: _requiredDate(json, 'subscriptionEndAt'),
+      name: json[FirestoreFields.name],
+      gradeId: json[FirestoreFields.gradeId],
+      email: json[FirestoreFields.email],
+      subscriptionStartAt: _requiredDate(
+        json,
+        FirestoreFields.subscriptionStartAt,
+      ),
+      subscriptionEndAt: _requiredDate(json, FirestoreFields.subscriptionEndAt),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
-      'gradeId': gradeId,
-      'email': email,
-      'subscriptionStartAt': subscriptionStartAt,
-      'subscriptionEndAt': subscriptionEndAt,
+      FirestoreFields.name: name,
+      FirestoreFields.gradeId: gradeId,
+      FirestoreFields.email: email,
+      FirestoreFields.subscriptionStartAt: subscriptionStartAt,
+      FirestoreFields.subscriptionEndAt: subscriptionEndAt,
     };
   }
 
@@ -64,11 +68,11 @@ class GradeModel extends GradeEntity {
   GradeModel({required super.name});
 
   factory GradeModel.fromJson(Map<String, dynamic> json) {
-    return GradeModel(name: json['name']);
+    return GradeModel(name: json[FirestoreFields.name]);
   }
 
   Map<String, dynamic> toJson() {
-    return {'name': name};
+    return {FirestoreFields.name: name};
   }
 
   GradeEntity toEntity() {
