@@ -1,8 +1,5 @@
 class AppFormattedDateTime {
-  const AppFormattedDateTime({
-    required this.date,
-    required this.time,
-  });
+  const AppFormattedDateTime({required this.date, required this.time});
 
   final String date;
   final String time;
@@ -29,19 +26,14 @@ abstract final class AppDateTimeFormatter {
   static const String _englishDigits = '0123456789';
   static const String _arabicDigits = '٠١٢٣٤٥٦٧٨٩';
 
-  static AppFormattedDateTime separate(
-    DateTime dateTime,
-  ) {
+  static AppFormattedDateTime separate(DateTime dateTime) {
     return AppFormattedDateTime(
       date: formatDate(dateTime),
       time: formatTime(dateTime),
     );
   }
 
-  static String formatDate(
-    DateTime dateTime, {
-    bool useArabicDigits = true,
-  }) {
+  static String formatDate(DateTime dateTime, {bool useArabicDigits = true}) {
     final localDateTime = dateTime.toLocal();
 
     final day = localDateTime.day.toString();
@@ -49,6 +41,25 @@ abstract final class AppDateTimeFormatter {
     final year = localDateTime.year.toString();
 
     final formattedDate = '$day $month $year';
+
+    if (!useArabicDigits) {
+      return formattedDate;
+    }
+
+    return _convertToArabicDigits(formattedDate);
+  }
+
+  static String formatDateWithSlash(
+    DateTime dateTime, {
+    bool useArabicDigits = true,
+  }) {
+    final localDateTime = dateTime.toLocal();
+
+    final day = localDateTime.day.toString();
+    final month = localDateTime.month - 1;
+    final year = localDateTime.year.toString();
+
+    final formattedDate = '$day / $month / $year';
 
     if (!useArabicDigits) {
       return formattedDate;
@@ -100,15 +111,9 @@ abstract final class AppDateTimeFormatter {
     DateTime dateTime, {
     bool useArabicDigits = true,
   }) {
-    final date = formatDate(
-      dateTime,
-      useArabicDigits: useArabicDigits,
-    );
+    final date = formatDate(dateTime, useArabicDigits: useArabicDigits);
 
-    final time = formatTime(
-      dateTime,
-      useArabicDigits: useArabicDigits,
-    );
+    final time = formatTime(dateTime, useArabicDigits: useArabicDigits);
 
     return '$date، الساعة $time';
   }

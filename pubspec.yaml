@@ -33,6 +33,17 @@ dependencies:
   internet_connection_checker_plus: ^3.1.2
   no_screenshot: ^2.0.1
   shared_preferences: ^2.5.5
+  font_awesome_flutter: ^11.0.0
+  youtube_player_flutter: ^10.0.1
+  cached_network_image: ^4.0.0
+  syncfusion_flutter_pdfviewer: ^34.2.6
+  firebase_core: ^4.14.0
+  firebase_auth: ^6.6.1
+  cloud_firestore: ^6.9.0
+  firebase_storage: ^13.5.0
+  cloud_functions: ^6.3.6
+  dartz: ^0.10.1
+  shimmer: ^4.0.0
   syncfusion_flutter_pdfviewer: ^34.2.7
 
 dev_dependencies:
