@@ -8,6 +8,7 @@ enum AppErrorType {
   timeout,
   rateLimit,
   server,
+  unsupportedPlatform,
   unknown,
 }
 
