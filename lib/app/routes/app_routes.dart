@@ -2,6 +2,10 @@ import 'package:al_waleed/app/dependency_injection/service_locator.dart';
 import 'package:al_waleed/app/routes/route_names.dart';
 import 'package:al_waleed/features/authentication/presentation/cubit/login_cubit/login_cubit.dart';
 import 'package:al_waleed/features/authentication/presentation/screens/login_screen.dart';
+import 'package:al_waleed/features/lessons/domain/entities/lesson_entity.dart';
+import 'package:al_waleed/features/lessons/presentation/screens/lesson_details_screen.dart';
+import 'package:al_waleed/features/lessons/presentation/screens/lesson_pdf_reader_screen.dart';
+import 'package:al_waleed/features/lessons/presentation/screens/lessons_screen.dart';
 import 'package:al_waleed/features/live_session/presentation/screens/live_session_screen.dart';
 import 'package:al_waleed/features/main_navigation/presentation/screens/main_navigation_screen.dart';
 import 'package:al_waleed/features/study_notes/domain/entities/study_note_entity.dart';
@@ -51,6 +55,45 @@ class AppRoutes {
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => StudyNotePdfReaderScreen(note: note),
+        );
+
+      case RouteNames.lessons:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const LessonsScreen(),
+        );
+
+      case RouteNames.lessonDetails:
+        final lesson = settings.arguments as LessonEntity?;
+
+        if (lesson == null) {
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (_) =>
+                const Scaffold(body: Center(child: Text('تعذر فتح الدرس'))),
+          );
+        }
+
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => LessonDetailsScreen(lesson: lesson),
+        );
+
+      case RouteNames.lessonDetailsPdf:
+        final lesson = settings.arguments as LessonEntity?;
+
+        if (lesson == null) {
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (_) => const Scaffold(
+              body: Center(child: Text('تعذر فتح ملف الدرس')),
+            ),
+          );
+        }
+
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => LessonPdfReaderScreen(lesson: lesson),
         );
 
       /* case RouteNames.lessonQuiz:

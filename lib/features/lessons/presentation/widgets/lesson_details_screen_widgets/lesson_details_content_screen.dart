@@ -5,6 +5,7 @@ import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:al_waleed/core/widgets/background/background_student_layout.dart';
 import 'package:al_waleed/core/widgets/custom_app_bar.dart';
+import 'package:al_waleed/features/lessons/domain/entities/lesson_entity.dart';
 import 'package:al_waleed/features/lessons/presentation/widgets/lesson_details_screen_widgets/lesson_material_tile.dart';
 import 'package:al_waleed/features/lessons/presentation/widgets/lesson_details_screen_widgets/lesson_overview_card.dart';
 import 'package:al_waleed/features/lessons/presentation/widgets/lesson_details_screen_widgets/lesson_video_card.dart';
@@ -12,7 +13,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LessonDetailsContentScreen extends StatelessWidget {
-  const LessonDetailsContentScreen({super.key});
+  const LessonDetailsContentScreen({
+    super.key,
+    required this.lesson,
+  });
+
+  final LessonEntity lesson;
 
   @override
   Widget build(BuildContext context) {
@@ -28,46 +34,55 @@ class LessonDetailsContentScreen extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 actions: [
                   Text(
-                    'الكيمياء العضوية',
-                    style: AppTextStyle.font18TextPrimarySemiBoldKufam(),
+                    lesson.title,
+                    style:
+                        AppTextStyle.font18TextPrimarySemiBoldKufam(),
                     textAlign: TextAlign.right,
                   ),
                 ],
               ),
-              Text(
-                'أنواع المواد العضوية',
-                style: AppTextStyle.font14TextSecondaryRegularTajawal(),
-              ),
+              // Text(
+              //   lesson.description,
+              //   style:
+              //       AppTextStyle.font14TextSecondaryRegularTajawal(),
+              // ),
               verticalSpace(12),
-              const LessonVideoCard(
-                videoUrl: 'https://youtu.be/M6uaEUYMwo0?si=piLQ0iJoczQBifwQ',
+              if (lesson.hasYoutubeVideo) ...[
+                LessonVideoCard(videoUrl: lesson.youtubeUrl),
+                verticalSpace(20),
+              ],
+              LessonOverviewCard(
+                description: lesson.description,
               ),
-              verticalSpace(20),
-              const LessonOverviewCard(),
               verticalSpace(76),
               Text(
                 'محتوى الدرس',
                 textAlign: TextAlign.right,
-                style: AppTextStyle.font20TextPrimarySemiBoldKufam(),
+                style:
+                    AppTextStyle.font20TextPrimarySemiBoldKufam(),
               ),
               verticalSpace(14),
-              LessonMaterialTile(
-                title: 'ملخص الدرس',
-                subtitle: 'ملف PDF · مقدمة الكيمياء العضوية',
-                icon: AppImage().readerPdf,
-                onTap: () {
-                  Navigator.of(context).pushNamed(RouteNames.lessonDetailsPdf);
-                },
-              ),
+              if (lesson.hasPdfFile)
+                LessonMaterialTile(
+                  title: 'ملف الدرس',
+                  subtitle: lesson.pdfFileName.isEmpty
+                      ? 'ملف PDF'
+                      : 'ملف PDF · ${lesson.pdfFileName}',
+                  icon: AppImage().readerPdf,
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      RouteNames.lessonDetailsPdf,
+                      arguments: lesson,
+                    );
+                  },
+                ),
               verticalSpace(14),
               LessonMaterialTile(
                 title: 'اختبار الكيمياء العضوية',
                 subtitle: 'سؤال · ٤ درجات',
                 icon: AppImage().exam,
                 iconBackground: ColorPalette.accent,
-                onTap: () {
-                  Navigator.of(context).pushNamed(RouteNames.lessonQuiz);
-                },
+                onTap: () {},
               ),
             ],
           ),

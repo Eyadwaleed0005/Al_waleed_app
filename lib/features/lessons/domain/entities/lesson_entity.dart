@@ -24,4 +24,12 @@ class LessonEntity {
   final int pdfFileSize;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+
+  bool get hasYoutubeVideo {
+    return youtubeUrl.trim().isNotEmpty;
+  }
+
+  bool get hasPdfFile {
+    return pdfStoragePath.trim().isNotEmpty;
+  }
 }

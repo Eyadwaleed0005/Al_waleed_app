@@ -1,17 +1,19 @@
 import 'package:al_waleed/app/routes/app_images_routes.dart';
-import 'package:al_waleed/core/style/app_color.dart';
-import 'package:al_waleed/core/style/textstyles.dart';
-import 'package:al_waleed/core/widgets/app_empty_state.dart';
+import 'package:al_waleed/app/routes/route_names.dart';
 import 'package:al_waleed/core/widgets/background/background_student_layout.dart';
 import 'package:al_waleed/core/widgets/custom_app_bar.dart';
-import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_widgets/lessons_screen_list.dart';
+import 'package:al_waleed/features/lessons/presentation/cubit/lessons_cubit.dart';
+import 'package:al_waleed/features/lessons/presentation/cubit/lessons_state.dart';
+import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_widgets/lessons_screen_states/lessons_empty_view.dart';
+import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_widgets/lessons_screen_states/lessons_error_view.dart';
+import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_widgets/lessons_screen_states/lessons_loading_view.dart';
+import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_widgets/lessons_screen_states/lessons_success_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LessonsScreenContent extends StatelessWidget {
-  final bool isEmpty;
-
-  const LessonsScreenContent({super.key, this.isEmpty = false});
+  const LessonsScreenContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,22 +36,40 @@ class LessonsScreenContent extends StatelessWidget {
                 ],
               ),
               Expanded(
-                child: isEmpty
-                    ? AppEmptyState(
-                        title: 'لا توجد دروس متاحة حالياً',
-                        titleStyle:
-                            AppTextStyle.font20TextPrimarySemiBoldKufam(),
-                        iconContainerSize: 136,
-                        iconBackgroundColor: ColorPalette.disabled,
-                        iconTitleSpacing: 36,
-                        iconWidget: Image.asset(
-                          AppImage().emptyBookOpen,
-                          width: 102.w,
-                          height: 102.h,
-                          fit: BoxFit.contain,
-                        ),
-                      )
-                    : const LessonsScreenList(),
+                child: BlocBuilder<LessonsCubit, LessonsState>(
+                  builder: (context, state) {
+                    if (state is LessonsInitial ||
+                        state is LessonsLoading) {
+                      return const LessonsLoadingView();
+                    }
+                    if (state is LessonsFailure) {
+                      return LessonsErrorView(
+                        errorMessage: state.error.message,
+                        onRetry: context.read<LessonsCubit>().retry,
+                      );
+                    }
+                    if (state is LessonsEmpty) {
+                      return const LessonsEmptyView();
+                    }
+                    if (state is LessonsDataSuccess) {
+                      return LessonsSuccessView(
+                        lessons: state.lessons,
+                        query: state.query,
+                        hasNoResults: state.hasNoResults,
+                        onLessonTap: (lesson) {
+                          Navigator.of(context).pushNamed(
+                            RouteNames.lessonDetails,
+                            arguments: lesson,
+                          );
+                        },
+                        onSearchChanged: context.read<LessonsCubit>().search,
+                        onSearchClear: () =>
+                            context.read<LessonsCubit>().search(''),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
               ),
             ],
           ),

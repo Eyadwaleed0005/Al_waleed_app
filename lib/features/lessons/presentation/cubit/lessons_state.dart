@@ -25,6 +25,14 @@ final class LessonsFailure extends LessonsState {
 
 final class LessonsDataSuccess extends LessonsState {
   final List<LessonEntity> lessons;
+  final String query;
 
-  const LessonsDataSuccess({required this.lessons});
+  const LessonsDataSuccess({
+    required this.lessons,
+    this.query = '',
+  });
+
+  bool get hasActiveQuery => query.trim().isNotEmpty;
+
+  bool get hasNoResults => hasActiveQuery && lessons.isEmpty;
 }

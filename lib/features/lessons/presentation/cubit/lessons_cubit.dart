@@ -10,15 +10,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class LessonsCubit extends Cubit<LessonsState> {
   final StreamLessonsUseCase _streamLessonsUseCase;
 
-  LessonsCubit({required StreamLessonsUseCase streamLessonsUseCase})
-    : _streamLessonsUseCase = streamLessonsUseCase,
-      super(const LessonsInitial());
+  LessonsCubit({
+    required StreamLessonsUseCase streamLessonsUseCase,
+  }) : _streamLessonsUseCase = streamLessonsUseCase,
+       super(const LessonsInitial());
 
   StreamSubscription<Either<AppErrorModel, List<LessonEntity>>>?
   _lessonsSubscription;
 
   bool _isInitializing = false;
   bool _isClosing = false;
+
+  List<LessonEntity> _allLessons = const <LessonEntity>[];
+
+  String _query = '';
+
+  String get query => _query;
 
   bool get _canEmit => !_isClosing && !isClosed;
 
@@ -31,6 +38,9 @@ class LessonsCubit extends Cubit<LessonsState> {
       await _cancelSubscription();
 
       if (!_canEmit) return;
+
+      _allLessons = const <LessonEntity>[];
+      _query = '';
 
       emit(const LessonsLoading());
 
@@ -49,7 +59,9 @@ class LessonsCubit extends Cubit<LessonsState> {
   void _watchLessons() {
     if (!_canEmit) return;
 
-    _lessonsSubscription = _streamLessonsUseCase().listen(_onLessonsResult);
+    _lessonsSubscription = _streamLessonsUseCase().listen(
+      _onLessonsResult,
+    );
   }
 
   void _onLessonsResult(
@@ -60,19 +72,50 @@ class LessonsCubit extends Cubit<LessonsState> {
     result.fold(_emitFailure, _emitLessons);
   }
 
+  void search(String query) {
+    if (!_canEmit) return;
+
+    final normalizedQuery = query.trim();
+    if (normalizedQuery == _query) return;
+
+    _query = normalizedQuery;
+
+    _emitFilteredLessons();
+  }
+
   void _emitLessons(List<LessonEntity> lessons) {
     if (!_canEmit) return;
 
-    if (lessons.isEmpty) {
+    _allLessons = List<LessonEntity>.unmodifiable(lessons);
+
+    if (_allLessons.isEmpty) {
       emit(const LessonsEmpty());
       return;
     }
 
+    _emitFilteredLessons();
+  }
+
+  void _emitFilteredLessons() {
+    if (!_canEmit) return;
+
+    final filtered = _query.isEmpty
+        ? _allLessons
+        : _allLessons.where(_matchesQuery).toList(growable: false);
+
     emit(
       LessonsDataSuccess(
-        lessons: List<LessonEntity>.unmodifiable(lessons),
+        lessons: List<LessonEntity>.unmodifiable(filtered),
+        query: _query,
       ),
     );
+  }
+
+  bool _matchesQuery(LessonEntity lesson) {
+    final query = _query.toLowerCase();
+
+    return lesson.title.toLowerCase().contains(query) ||
+        lesson.description.toLowerCase().contains(query);
   }
 
   void _emitFailure(AppErrorModel error) {
