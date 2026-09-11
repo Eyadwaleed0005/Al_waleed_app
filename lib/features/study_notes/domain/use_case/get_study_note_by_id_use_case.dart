@@ -4,9 +4,9 @@ import 'package:al_waleed/features/study_notes/domain/repositories/study_notes_r
 import 'package:dartz/dartz.dart';
 
 class GetStudyNoteByIdUseCase {
-  const GetStudyNoteByIdUseCase({required this._repository});
-
   final StudyNotesRepository _repository;
+
+  const GetStudyNoteByIdUseCase({required this._repository});
 
   Future<Either<AppErrorModel, StudyNoteEntity>> call({
     required String noteId,

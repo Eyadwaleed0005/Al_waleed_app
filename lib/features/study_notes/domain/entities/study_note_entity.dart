@@ -17,11 +17,9 @@ class StudyNoteEntity {
   final String description;
   final String gradeId;
   final bool isPublished;
-
   final String pdfStoragePath;
   final String pdfFileName;
   final int pdfFileSize;
-
   final DateTime? createdAt;
   final DateTime? updatedAt;
 }

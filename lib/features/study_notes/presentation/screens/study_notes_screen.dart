@@ -11,13 +11,11 @@ class StudyNotesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: AppSystemUi.light(),
-      child: BlocProvider(
-        create: (_) => getIt<StudyNotesCubit>(),
-        child: const Scaffold(
-          body: StudyNotesScreenContent(),
-        ),
+    return BlocProvider(
+      create: (_) => getIt<StudyNotesCubit>()..initialize(),
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: AppSystemUi.light(),
+        child: const Scaffold(body: StudyNotesScreenContent()),
       ),
     );
   }
