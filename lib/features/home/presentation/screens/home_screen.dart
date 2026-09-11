@@ -9,7 +9,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: AppSystemUi.light(),
+      value: AppSystemUi.dark(),
       child: const Scaffold(body: HomeScreenContent()),
     );
   }

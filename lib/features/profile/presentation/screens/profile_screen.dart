@@ -20,7 +20,7 @@ class ProfileScreen extends StatelessWidget {
         BlocProvider<LogoutCubit>(create: (_) => getIt<LogoutCubit>()),
       ],
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: AppSystemUi.light(),
+        value: AppSystemUi.dark(),
         child: const Scaffold(body: ProfileScreenContent()),
       ),
     );

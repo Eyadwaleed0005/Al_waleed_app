@@ -8,7 +8,7 @@ class LessonsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
-    value: AppSystemUi.light(),
+    value: AppSystemUi.dark(),
     child: Scaffold(body: LessonsScreenContent(isEmpty: false)),
   );
 }
