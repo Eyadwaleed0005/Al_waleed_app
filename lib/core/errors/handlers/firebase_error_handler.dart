@@ -1,10 +1,13 @@
 import 'dart:async';
+
 import 'package:al_waleed/core/errors/error_model/app_error_model.dart';
 import 'package:al_waleed/core/errors/exceptions/firebase_remote_exception.dart';
+import 'package:al_waleed/core/errors/handlers/firebase_auth_error_handler.dart';
 import 'package:al_waleed/core/errors/handlers/firebase_functions_error_handler.dart';
 import 'package:al_waleed/core/errors/handlers/firebase_storage_error_handler.dart';
 import 'package:al_waleed/core/errors/handlers/firestore_error_handler.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 abstract final class FirebaseErrorHandler {
@@ -35,6 +38,10 @@ abstract final class FirebaseErrorHandler {
     }
   }
 
+  static Never throwAuthCode(String code) {
+    throw FirebaseRemoteException(errorModel: handleAuthCode(code));
+  }
+
   static Never throwFirestoreCode(String code) {
     throw FirebaseRemoteException(errorModel: handleFirestoreCode(code));
   }
@@ -50,6 +57,10 @@ abstract final class FirebaseErrorHandler {
   static AppErrorModel handle(Object error) {
     if (error is FirebaseRemoteException) {
       return error.errorModel;
+    }
+
+    if (error is FirebaseAuthException) {
+      return FirebaseAuthErrorHandler.handle(error);
     }
 
     if (error is FirebaseFunctionsException) {
@@ -73,6 +84,10 @@ abstract final class FirebaseErrorHandler {
     }
 
     return _unknownError();
+  }
+
+  static AppErrorModel handleAuthCode(String code) {
+    return FirebaseAuthErrorHandler.handleCode(code);
   }
 
   static AppErrorModel handleFirestoreCode(String code) {

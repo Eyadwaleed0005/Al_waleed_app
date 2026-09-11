@@ -21,12 +21,7 @@ class LiveSessionBadgeHeader extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                'LIVE',
-                style: AppTextStyle.font11TextHighlightBoldTajawal().copyWith(
-                  color: ColorPalette.error,
-                ),
-              ),
+              Text('LIVE', style: AppTextStyle.font11TextErrorBoldTajawal()),
               horizontalSpace(8.w),
               Badge(),
             ],

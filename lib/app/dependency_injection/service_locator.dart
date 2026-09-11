@@ -14,6 +14,11 @@ import 'package:al_waleed/features/profile/presentation/cubit/profile_cubit.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:al_waleed/app/dependency_injection/core_dependencies.dart';
+import 'package:al_waleed/app/dependency_injection/features/authentication_dependencies.dart';
+import 'package:al_waleed/app/dependency_injection/features/live_session_dependencies.dart';
+import 'package:al_waleed/app/dependency_injection/features/secure_screen_dependencies.dart';
+import 'package:al_waleed/app/dependency_injection/features/study_notes_dependencies.dart';
 import 'package:get_it/get_it.dart';
 
 final GetIt getIt = GetIt.instance;
@@ -71,4 +76,10 @@ void setupServiceLocator() {
   getIt.registerFactory<ProfileCubit>(
     () => ProfileCubit(getStudentProfileUseCase: getIt<GetProfileUseCase>()),
   );
+}
+  registerCoreDependencies(getIt);
+  registerAuthenticationDependencies(getIt);
+  registerSecureScreenDependencies(getIt);
+  registerStudyNotesDependencies(getIt);
+  registerLiveSessionDependencies(getIt);
 }

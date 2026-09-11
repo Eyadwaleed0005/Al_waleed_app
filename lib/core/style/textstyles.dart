@@ -64,6 +64,15 @@ class AppTextStyle {
     );
   }
 
+    static TextStyle font13PrimaryRegularTajawal() {
+    return TextStyle(
+      fontSize: 13.sp,
+      fontWeight: FontWeightHelper.regular,
+      fontFamily: tajawal,
+      color: ColorPalette.primary,
+    );
+  }
+
   static TextStyle font15TextBlackRegularTajawal() {
     return TextStyle(
       fontSize: 15.sp,
@@ -304,6 +313,15 @@ class AppTextStyle {
       fontWeight: FontWeightHelper.bold,
       fontFamily: tajawal,
       color: ColorPalette.textHighLight,
+    );
+  }
+
+    static TextStyle font11TextErrorBoldTajawal() {
+    return TextStyle(
+      fontSize: 11.sp,
+      fontWeight: FontWeightHelper.bold,
+      fontFamily: tajawal,
+      color: ColorPalette.error,
     );
   }
 
