@@ -27,4 +27,5 @@ abstract final class SecureStorageHelper {
   static Future<void> clearAll() async {
     await _storage.deleteAll();
   }
+
 }

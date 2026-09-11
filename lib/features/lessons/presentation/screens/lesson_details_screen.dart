@@ -7,7 +7,7 @@ class LessonDetailsScreen extends StatelessWidget {
   const LessonDetailsScreen({super.key});
   @override
   Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
-    value: AppSystemUi.light(),
+    value: AppSystemUi.dark(),
     child: Scaffold(body: LessonDetailsContentScreen()),
   );
 }

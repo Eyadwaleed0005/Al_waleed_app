@@ -15,6 +15,7 @@ import 'package:al_waleed/features/authentication/data/repositories/logout_repos
 import 'package:al_waleed/features/authentication/domain/repositories/logout_repository.dart';
 import 'package:al_waleed/features/authentication/domain/usecase/logout_usecase.dart';
 import 'package:al_waleed/features/authentication/presentation/cubit/logout_cubit/logout_cubit.dart';
+import 'package:al_waleed/features/notifications/domain/use_cases/unsubscribe_notification_grade_topic_use_case.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
@@ -56,9 +57,7 @@ void _registerRemoteDataSources(GetIt getIt) {
 
 void _registerRepositories(GetIt getIt) {
   getIt.registerLazySingleton<LoginRepo>(
-    () => LoginRepoImpl(
-      loginRemoteDataSource: getIt<LoginRemoteDataSource>(),
-    ),
+    () => LoginRepoImpl(loginRemoteDataSource: getIt<LoginRemoteDataSource>()),
   );
 
   getIt.registerLazySingleton<LogoutRepository>(
@@ -71,28 +70,24 @@ void _registerRepositories(GetIt getIt) {
 
 void _registerUseCases(GetIt getIt) {
   getIt.registerLazySingleton<LoginUseCase>(
-    () => LoginUseCase(
-      repo: getIt<LoginRepo>(),
-    ),
+    () => LoginUseCase(repo: getIt<LoginRepo>()),
   );
 
   getIt.registerLazySingleton<LogoutUseCase>(
-    () => LogoutUseCase(
-      repository: getIt<LogoutRepository>(),
-    ),
+    () => LogoutUseCase(repository: getIt<LogoutRepository>()),
   );
 }
 
 void _registerCubits(GetIt getIt) {
   getIt.registerFactory<LoginCubit>(
-    () => LoginCubit(
-      loginUseCase: getIt<LoginUseCase>(),
-    ),
+    () => LoginCubit(loginUseCase: getIt<LoginUseCase>()),
   );
 
   getIt.registerFactory<LogoutCubit>(
     () => LogoutCubit(
       logoutUseCase: getIt<LogoutUseCase>(),
+      unsubscribeNotificationGradeTopicUseCase:
+          getIt<UnsubscribeNotificationGradeTopicUseCase>(),
     ),
   );
 }
