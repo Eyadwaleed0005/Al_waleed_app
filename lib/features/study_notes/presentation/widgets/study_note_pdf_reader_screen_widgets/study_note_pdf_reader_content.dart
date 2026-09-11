@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class StudyNotePdfReaderContent extends StatelessWidget {
-  const StudyNotePdfReaderContent({super.key, required this.note});
-
   final StudyNoteEntity note;
+
+  const StudyNotePdfReaderContent({super.key, required this.note});
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +34,7 @@ class StudyNotePdfReaderContent extends StatelessWidget {
           ),
         ],
       ),
-      body: BackgroundStudentLayout(
-        child: StudyNotePdfBody(note: note),
-      ),
+      body: BackgroundStudentLayout(child: StudyNotePdfBody(note: note)),
     );
   }
 }

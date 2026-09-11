@@ -31,11 +31,10 @@ class MyApp extends StatelessWidget {
           title: 'الوليد',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(),
-          initialRoute:RouteNames.loginScreen,
+          initialRoute:RouteNames.mainNavigationScreen,
           onGenerateRoute: AppRoutes.generateRoute,
         );
       },
     );
   }
- 
 }

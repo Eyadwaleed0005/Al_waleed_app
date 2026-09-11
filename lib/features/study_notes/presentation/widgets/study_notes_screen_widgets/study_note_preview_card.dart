@@ -131,11 +131,7 @@ class _PdfFileBadge extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          CupertinoIcons.doc_text,
-          color: ColorPalette.textRed,
-          size: 30.sp,
-        ),
+        Icon(CupertinoIcons.doc_text, color: ColorPalette.textRed, size: 30.sp),
         verticalSpace(3),
         Text(
           'ملف PDF',

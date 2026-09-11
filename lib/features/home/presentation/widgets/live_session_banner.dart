@@ -5,10 +5,13 @@ import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'live_session_active_badge.dart';
+
 class LiveSessionBanner extends StatelessWidget {
+  final bool isLive;
   final VoidCallback? onTap;
 
-  const LiveSessionBanner({super.key, this.onTap});
+  const LiveSessionBanner({super.key, this.isLive = false, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,14 @@ class LiveSessionBanner extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               ),
+
+              if (isLive)
+                Positioned(
+                  top: 14.h,
+                  left: 20.w,
+                  child: const LiveSessionActiveBadge(),
+                ),
+
               Positioned(
                 top: 55.h,
                 left: 20.w,
@@ -49,6 +60,7 @@ class LiveSessionBanner extends StatelessWidget {
                   style: AppTextStyle.font17TextPrimarySemiBoldKufam(),
                 ),
               ),
+
               Positioned(
                 bottom: 25.h,
                 left: 20.w,

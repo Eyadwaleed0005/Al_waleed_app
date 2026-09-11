@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as developer;
 import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:al_waleed/core/connection/network/network_info.dart';
+import 'package:al_waleed/core/firebase/storage/storage_service.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
-import 'storage_service.dart';
 
 class FirebaseStorageService implements StorageService {
   FirebaseStorageService({
@@ -54,7 +56,6 @@ class FirebaseStorageService implements StorageService {
         }
 
         final localFile = File(normalizedLocalFilePath);
-
         final fileExists = await localFile.exists();
 
         if (!fileExists) {
@@ -82,9 +83,7 @@ class FirebaseStorageService implements StorageService {
           progressSubscription = uploadTask.snapshotEvents.listen((snapshot) {
             final totalBytes = snapshot.totalBytes;
 
-            if (totalBytes <= 0) {
-              return;
-            }
+            if (totalBytes <= 0) return;
 
             final progress = snapshot.bytesTransferred / totalBytes;
 
@@ -102,10 +101,50 @@ class FirebaseStorageService implements StorageService {
           if (uploadedMetadata != null) {
             return uploadedMetadata;
           }
+
           return await reference.getMetadata();
         } finally {
           await progressSubscription?.cancel();
         }
+      },
+    );
+  }
+
+  @override
+  Future<Uint8List> getFileData({
+    required String storagePath,
+    required int maxSize,
+  }) {
+    final normalizedStoragePath = _normalizeStoragePath(storagePath);
+
+    return _execute(
+      operation: 'GET FILE DATA',
+      path: normalizedStoragePath,
+      requestData: {'maxSize': maxSize},
+      action: () async {
+        await _requireInternetConnection();
+
+        if (maxSize <= 0) {
+          throw FirebaseException(
+            plugin: 'firebase_storage',
+            code: 'invalid-max-size',
+            message: 'The maximum download size must be greater than zero.',
+          );
+        }
+
+        final reference = _firebaseStorage.ref().child(normalizedStoragePath);
+
+        final fileData = await reference.getData(maxSize);
+
+        if (fileData == null) {
+          throw FirebaseException(
+            plugin: 'firebase_storage',
+            code: 'download-failed',
+            message: 'The file data could not be downloaded.',
+          );
+        }
+
+        return fileData;
       },
     );
   }
@@ -153,8 +192,26 @@ class FirebaseStorageService implements StorageService {
     );
   }
 
+  @override
+  Future<String> getDownloadUrl({required String storagePath}) {
+    final normalizedStoragePath = _normalizeStoragePath(storagePath);
+
+    return _execute(
+      operation: 'GET DOWNLOAD URL',
+      path: normalizedStoragePath,
+      action: () async {
+        await _requireInternetConnection();
+
+        return _firebaseStorage
+            .ref()
+            .child(normalizedStoragePath)
+            .getDownloadURL();
+      },
+    );
+  }
+
   Future<void> _requireInternetConnection() async {
-    bool isConnected = false;
+    bool isConnected;
 
     try {
       isConnected = await _networkInfo.isConnected;
@@ -162,9 +219,7 @@ class FirebaseStorageService implements StorageService {
       isConnected = false;
     }
 
-    if (isConnected) {
-      return;
-    }
+    if (isConnected) return;
 
     throw FirebaseException(
       plugin: 'firebase_storage',
@@ -234,9 +289,7 @@ class FirebaseStorageService implements StorageService {
     required String path,
     Object? data,
   }) {
-    if (!_canLog) {
-      return;
-    }
+    if (!_canLog) return;
 
     final buffer = StringBuffer()
       ..writeln('┌───────────── STORAGE REQUEST ─────────────')
@@ -260,9 +313,7 @@ class FirebaseStorageService implements StorageService {
     Object? response,
     Duration? duration,
   }) {
-    if (!_canLog) {
-      return;
-    }
+    if (!_canLog) return;
 
     final buffer = StringBuffer()
       ..writeln('┌──────────── STORAGE RESPONSE ─────────────')
@@ -291,9 +342,7 @@ class FirebaseStorageService implements StorageService {
     required StackTrace stackTrace,
     Duration? duration,
   }) {
-    if (!_canLog) {
-      return;
-    }
+    if (!_canLog) return;
 
     final buffer = StringBuffer()
       ..writeln('┌───────────── STORAGE ERROR ───────────────')
@@ -319,6 +368,10 @@ class FirebaseStorageService implements StorageService {
   Object? _formatResponse(Object? response) {
     if (response == null) {
       return {'status': 'success'};
+    }
+
+    if (response is Uint8List) {
+      return {'status': 'success', 'downloadedBytes': response.lengthInBytes};
     }
 
     if (response is FullMetadata) {
@@ -357,6 +410,10 @@ class FirebaseStorageService implements StorageService {
       return value.toIso8601String();
     }
 
+    if (value is Uint8List) {
+      return {'type': 'Uint8List', 'lengthInBytes': value.lengthInBytes};
+    }
+
     if (value is Map) {
       return value.map((key, item) {
         return MapEntry(key.toString(), _convertToLoggableValue(item));
@@ -376,23 +433,5 @@ class FirebaseStorageService implements StorageService {
 
   bool get _canLog {
     return enableLogging && kDebugMode;
-  }
-
-  @override
-  Future<String> getDownloadUrl({required String storagePath}) {
-    final normalizedStoragePath = _normalizeStoragePath(storagePath);
-
-    return _execute(
-      operation: 'GET DOWNLOAD URL',
-      path: normalizedStoragePath,
-      action: () async {
-        await _requireInternetConnection();
-
-        return _firebaseStorage
-            .ref()
-            .child(normalizedStoragePath)
-            .getDownloadURL();
-      },
-    );
   }
 }

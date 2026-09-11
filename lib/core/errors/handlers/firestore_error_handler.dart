@@ -2,8 +2,17 @@ import 'package:al_waleed/core/errors/error_model/app_error_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 abstract final class FirestoreErrorHandler {
+  const FirestoreErrorHandler._();
+
   static AppErrorModel handle(FirebaseException error) {
-    return handleCode(error.code);
+    final code = _normalizeCode(error.code);
+    final message = (error.message ?? '').trim().toLowerCase();
+
+    if (_isOfflineError(code: code, message: message)) {
+      return _noInternetError();
+    }
+
+    return handleCode(code);
   }
 
   static AppErrorModel handleCode(String errorCode) {
@@ -54,12 +63,9 @@ abstract final class FirestoreErrorHandler {
         );
 
       case 'no-internet':
-        return _error(
-          code: code,
-          message: 'لا يوجد اتصال بالإنترنت، تحقق من الشبكة وحاول مرة أخرى.',
-          type: AppErrorType.network,
-          isRetryable: true,
-        );
+      case 'network-error':
+      case 'network-request-failed':
+        return _noInternetError();
 
       case 'deadline-exceeded':
         return _error(
@@ -72,17 +78,8 @@ abstract final class FirestoreErrorHandler {
       case 'unavailable':
         return _error(
           code: code,
-          message: 'خدمة Firebase غير متاحة حاليًا، حاول مرة أخرى.',
+          message: 'الخدمة غير متاحة حاليًا، حاول مرة أخرى.',
           type: AppErrorType.server,
-          isRetryable: true,
-        );
-
-      case 'network-error':
-      case 'network-request-failed':
-        return _error(
-          code: code,
-          message: 'حدث خطأ في الاتصال، تحقق من الإنترنت.',
-          type: AppErrorType.network,
           isRetryable: true,
         );
 
@@ -147,6 +144,33 @@ abstract final class FirestoreErrorHandler {
     }
   }
 
+  static bool _isOfflineError({required String code, required String message}) {
+    if (code == 'no-internet' ||
+        code == 'network-error' ||
+        code == 'network-request-failed') {
+      return true;
+    }
+
+    if (code != 'unavailable') {
+      return false;
+    }
+
+    return message.contains('client is offline') ||
+        message.contains('device is offline') ||
+        message.contains('network is unreachable') ||
+        message.contains('failed to connect') ||
+        message.contains('no internet');
+  }
+
+  static AppErrorModel _noInternetError() {
+    return const AppErrorModel(
+      code: 'no-internet',
+      message: 'لا يوجد اتصال بالإنترنت، تحقق من الشبكة وحاول مرة أخرى.',
+      type: AppErrorType.network,
+      isRetryable: true,
+    );
+  }
+
   static AppErrorModel _error({
     required String code,
     required String message,
@@ -163,6 +187,7 @@ abstract final class FirestoreErrorHandler {
 
   static String _normalizeCode(String code) {
     return code
+        .trim()
         .toLowerCase()
         .replaceFirst('cloud_firestore/', '')
         .replaceFirst('firestore/', '')

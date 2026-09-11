@@ -3,7 +3,7 @@ import 'package:al_waleed/features/live_session/domain/entity/live_session_entit
 import 'package:dartz/dartz.dart';
 
 abstract class LiveSessionRepo {
-  Future<Either<AppErrorModel, LiveSessionEntity>> getLiveSession(
-    {required String gradeId}
-  );
+  Future<Either<AppErrorModel, LiveSessionEntity>> getLiveSession({
+    required String gradeId,
+  });
 }

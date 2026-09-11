@@ -4,19 +4,11 @@ import 'package:al_waleed/features/study_notes/domain/repositories/study_notes_r
 import 'package:dartz/dartz.dart';
 
 class StreamStudyNotesUseCase {
-  const StreamStudyNotesUseCase({
-    required this._repository,
-  });
+  final StudyNotesRepository repository;
 
-  final StudyNotesRepository _repository;
+  const StreamStudyNotesUseCase({required this.repository});
 
-  Stream<Either<AppErrorModel, List<StudyNoteEntity>>> call({
-    String? gradeId,
-    bool? isPublished,
-  }) {
-    return _repository.streamStudyNotes(
-      gradeId: gradeId,
-      isPublished: isPublished,
-    );
+  Stream<Either<AppErrorModel, List<StudyNoteEntity>>> call() {
+    return repository.streamStudyNotes();
   }
 }

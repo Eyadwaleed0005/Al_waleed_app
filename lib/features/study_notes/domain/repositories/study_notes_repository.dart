@@ -7,8 +7,5 @@ abstract class StudyNotesRepository {
     required String noteId,
   });
 
-  Stream<Either<AppErrorModel, List<StudyNoteEntity>>> streamStudyNotes({
-    String? gradeId,
-    bool? isPublished,
-  });
+  Stream<Either<AppErrorModel, List<StudyNoteEntity>>> streamStudyNotes();
 }

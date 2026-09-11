@@ -13,14 +13,18 @@ final class StudyNotesLoading extends StudyNotesState {
   const StudyNotesLoading();
 }
 
-final class StudyNotesFailure extends StudyNotesState {
-  const StudyNotesFailure({required this.error});
+final class StudyNotesEmpty extends StudyNotesState {
+  const StudyNotesEmpty();
+}
 
+final class StudyNotesFailure extends StudyNotesState {
   final AppErrorModel error;
+
+  const StudyNotesFailure({required this.error});
 }
 
 final class StudyNotesDataSuccess extends StudyNotesState {
-  const StudyNotesDataSuccess({required this.notes});
-
   final List<StudyNoteEntity> notes;
+
+  const StudyNotesDataSuccess({required this.notes});
 }

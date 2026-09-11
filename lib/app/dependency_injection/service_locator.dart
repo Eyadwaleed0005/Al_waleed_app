@@ -35,6 +35,10 @@ import 'package:al_waleed/features/study_notes/domain/use_case/stream_study_note
 import 'package:al_waleed/features/study_notes/presentation/cubit/study_notes_cubit.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:al_waleed/app/dependency_injection/core_dependencies.dart';
+import 'package:al_waleed/app/dependency_injection/features/authentication_dependencies.dart';
+import 'package:al_waleed/app/dependency_injection/features/live_session_dependencies.dart';
+import 'package:al_waleed/app/dependency_injection/features/study_notes_dependencies.dart';
 import 'package:get_it/get_it.dart';
 
 final GetIt getIt = GetIt.instance;
@@ -173,4 +177,9 @@ void _registerStudyNotesDependencies() {
       streamStudyNotesUseCase: getIt<StreamStudyNotesUseCase>(),
     ),
   );
+}
+  registerCoreDependencies(getIt);
+  registerAuthenticationDependencies(getIt);
+  registerStudyNotesDependencies(getIt);
+  registerLiveSessionDependencies(getIt);
 }
