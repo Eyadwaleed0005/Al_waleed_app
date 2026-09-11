@@ -10,7 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-enum CustomOperationResultType { success, failure }
+enum CustomOperationResultType {
+  success,
+  failure,
+}
 
 class CustomOperationResultDialog extends StatefulWidget {
   const CustomOperationResultDialog({
@@ -19,7 +22,9 @@ class CustomOperationResultDialog extends StatefulWidget {
     required this.title,
     required this.message,
     required this.actionText,
+    this.secondaryActionText,
     this.onActionPressed,
+    this.onSecondaryActionPressed,
     this.email,
     this.password,
     this.successIcon = Icons.check_circle_outline_rounded,
@@ -31,11 +36,13 @@ class CustomOperationResultDialog extends StatefulWidget {
   final String title;
   final String message;
   final String actionText;
+  final String? secondaryActionText;
 
   final String? email;
   final String? password;
 
   final VoidCallback? onActionPressed;
+  final VoidCallback? onSecondaryActionPressed;
 
   final IconData successIcon;
   final IconData failureIcon;
@@ -56,15 +63,24 @@ class _CustomOperationResultDialogState
   }
 
   bool get hasEmail {
-    return isSuccess && widget.email != null && widget.email!.trim().isNotEmpty;
+    return isSuccess &&
+        widget.email != null &&
+        widget.email!.trim().isNotEmpty;
   }
 
   bool get hasPassword {
-    return isSuccess && widget.password != null && widget.password!.isNotEmpty;
+    return isSuccess &&
+        widget.password != null &&
+        widget.password!.isNotEmpty;
   }
 
   bool get hasCredentials {
     return hasEmail || hasPassword;
+  }
+
+  bool get hasSecondaryAction {
+    return widget.secondaryActionText != null &&
+        widget.secondaryActionText!.trim().isNotEmpty;
   }
 
   @override
@@ -158,6 +174,28 @@ class _CustomOperationResultDialogState
     );
   }
 
+  void _handlePrimaryAction() {
+    final action = widget.onActionPressed;
+
+    if (action != null) {
+      action();
+      return;
+    }
+
+    Navigator.of(context).pop();
+  }
+
+  void _handleSecondaryAction() {
+    final action = widget.onSecondaryActionPressed;
+
+    if (action != null) {
+      action();
+      return;
+    }
+
+    Navigator.of(context).pop();
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -168,11 +206,13 @@ class _CustomOperationResultDialogState
 
   @override
   Widget build(BuildContext context) {
-    final statusColor =
-        isSuccess ? ColorPalette.success : ColorPalette.error;
+    final statusColor = isSuccess
+        ? ColorPalette.success
+        : ColorPalette.error;
 
-    final icon =
-        isSuccess ? widget.successIcon : widget.failureIcon;
+    final icon = isSuccess
+        ? widget.successIcon
+        : widget.failureIcon;
 
     return AppAnimations.operationDialogEntrance(
       child: Dialog(
@@ -220,29 +260,23 @@ class _CustomOperationResultDialogState
                     color: statusColor,
                   ),
                 ),
-
                 verticalSpace(22),
-
                 Text(
                   widget.title,
                   textAlign: TextAlign.center,
-                  style:
-                      AppTextStyle.font18TextPrimarySemiBoldKufam(),
+                  style: AppTextStyle
+                      .font18TextPrimarySemiBoldKufam(),
                 ),
-
                 verticalSpace(10),
-
                 Text(
                   widget.message,
                   textAlign: TextAlign.center,
                   textDirection: TextDirection.rtl,
-                  style:
-                      AppTextStyle.font14TextSecondaryRegularTajawal(),
+                  style: AppTextStyle
+                      .font14TextSecondaryRegularTajawal(),
                 ),
-
                 if (hasCredentials) ...[
                   verticalSpace(24),
-
                   if (hasEmail)
                     CustomTextFormField(
                       controller: _emailController,
@@ -257,10 +291,8 @@ class _CustomOperationResultDialogState
                       ),
                       onSuffixTap: _copyEmail,
                     ),
-
                   if (hasEmail && hasPassword)
                     verticalSpace(12),
-
                   if (hasPassword)
                     CustomTextFormField(
                       controller: _passwordController,
@@ -276,9 +308,7 @@ class _CustomOperationResultDialogState
                       ),
                       onSuffixTap: _copyPassword,
                     ),
-
                   verticalSpace(16),
-
                   CustomSecondaryButton(
                     text: hasPassword
                         ? 'نسخ بيانات الدخول'
@@ -287,17 +317,18 @@ class _CustomOperationResultDialogState
                     onPressed: _copyCredentials,
                   ),
                 ],
-
                 verticalSpace(26),
-
                 CustomButton(
                   text: widget.actionText,
-                  onPressed:
-                      widget.onActionPressed ??
-                      () {
-                        Navigator.of(context).pop();
-                      },
+                  onPressed: _handlePrimaryAction,
                 ),
+                if (hasSecondaryAction) ...[
+                  verticalSpace(12),
+                  CustomSecondaryButton(
+                    text: widget.secondaryActionText!,
+                    onPressed: _handleSecondaryAction,
+                  ),
+                ],
               ],
             ),
           ),

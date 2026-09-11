@@ -6,18 +6,20 @@ import 'package:al_waleed/features/profile/domain/repositories/student_profile_r
 import 'package:dartz/dartz.dart';
 
 class StudentProfileRepositoryImpl implements StudentProfileRepository {
-  final StudentProfileDataSource dataSource;
+  final StudentProfileDataSource _dataSource;
 
-  StudentProfileRepositoryImpl({required this.dataSource});
+  const StudentProfileRepositoryImpl({
+    required StudentProfileDataSource dataSource,
+  }) : _dataSource = dataSource;
 
   @override
-  Future<Either<AppErrorModel, ProfileEntity>> getStudentProfile() async {
+  Stream<Either<AppErrorModel, ProfileEntity>> streamStudentProfile() async* {
     try {
-      final model = await dataSource.getStudentProfile();
-
-      return right(model.toEntity());
-    } catch (e) {
-      return left(FirebaseErrorHandler.handle(e));
+      await for (final profileModel in _dataSource.streamStudentProfile()) {
+        yield Right(profileModel.toEntity());
+      }
+    } catch (error) {
+      yield Left(FirebaseErrorHandler.handle(error));
     }
   }
 }

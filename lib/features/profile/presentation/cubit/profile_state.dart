@@ -1,33 +1,29 @@
 part of 'profile_cubit.dart';
 
-sealed class ProfileState {}
-
-class GetProfileInitial extends ProfileState {}
-
-class GetProfileLoading extends ProfileState {}
-
-class GetProfileSuccess extends ProfileState {
-  final ProfileEntity profile;
-  GetProfileSuccess({required this.profile});
+sealed class ProfileState {
+  const ProfileState();
 }
 
-class GetProfileFailure extends ProfileState {
-  final String errorMsg;
-  GetProfileFailure({required this.errorMsg});
+final class ProfileInitial extends ProfileState {
+  const ProfileInitial();
 }
 
-class LogoutInitial extends ProfileState {}
-
-class LogoutLoading extends ProfileState {
-  final ProfileEntity profile;
-
-  LogoutLoading({required this.profile});
+final class ProfileLoading extends ProfileState {
+  const ProfileLoading();
 }
 
-class LogoutSuccess extends ProfileState {}
-
-class LogoutFailure extends ProfileState {
-  final String errorMsg;
+final class ProfileSuccess extends ProfileState {
   final ProfileEntity profile;
-  LogoutFailure({required this.errorMsg, required this.profile});
+
+  const ProfileSuccess({
+    required this.profile,
+  });
+}
+
+final class ProfileFailure extends ProfileState {
+  final AppErrorModel error;
+
+  const ProfileFailure({
+    required this.error,
+  });
 }

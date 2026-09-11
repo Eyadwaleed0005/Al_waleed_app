@@ -3,26 +3,34 @@ import 'package:al_waleed/features/profile/domain/entities/profile_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileModel extends ProfileEntity {
-  ProfileModel({required super.studentProfile, required super.grade});
+  const ProfileModel({required super.studentProfile, required super.grade});
 
-  factory ProfileModel.fromJson(Map<String, dynamic> json) {
+  factory ProfileModel.fromFirestore({
+    required Map<String, dynamic> studentData,
+    required Map<String, dynamic> gradeData,
+  }) {
     return ProfileModel(
-      studentProfile: StudentProfileModel.fromJson(json['studentProfile']),
-      grade: GradeModel.fromJson(json['grade']),
+      studentProfile: StudentProfileModel.fromFirestore(studentData),
+      grade: GradeModel.fromFirestore(gradeData),
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'studentProfile': studentProfile, 'grade': grade};
-  }
-
   ProfileEntity toEntity() {
-    return ProfileEntity(studentProfile: studentProfile, grade: grade);
+    return ProfileEntity(
+      studentProfile: StudentProfileEntity(
+        name: studentProfile.name,
+        gradeId: studentProfile.gradeId,
+        email: studentProfile.email,
+        subscriptionStartAt: studentProfile.subscriptionStartAt,
+        subscriptionEndAt: studentProfile.subscriptionEndAt,
+      ),
+      grade: GradeEntity(name: grade.name),
+    );
   }
 }
 
 class StudentProfileModel extends StudentProfileEntity {
-  StudentProfileModel({
+  const StudentProfileModel({
     required super.name,
     required super.gradeId,
     required super.email,
@@ -30,27 +38,29 @@ class StudentProfileModel extends StudentProfileEntity {
     required super.subscriptionEndAt,
   });
 
-  factory StudentProfileModel.fromJson(Map<String, dynamic> json) {
+  factory StudentProfileModel.fromFirestore(Map<String, dynamic> data) {
     return StudentProfileModel(
-      name: json[FirestoreFields.name],
-      gradeId: json[FirestoreFields.gradeId],
-      email: json[FirestoreFields.email],
-      subscriptionStartAt: _requiredDate(
-        json,
-        FirestoreFields.subscriptionStartAt,
+      name: _ProfileFieldReader.requiredString(
+        data: data,
+        field: FirestoreFields.name,
       ),
-      subscriptionEndAt: _requiredDate(json, FirestoreFields.subscriptionEndAt),
+      gradeId: _ProfileFieldReader.requiredString(
+        data: data,
+        field: FirestoreFields.gradeId,
+      ),
+      email: _ProfileFieldReader.requiredString(
+        data: data,
+        field: FirestoreFields.email,
+      ),
+      subscriptionStartAt: _ProfileFieldReader.requiredDate(
+        data: data,
+        field: FirestoreFields.subscriptionStartAt,
+      ),
+      subscriptionEndAt: _ProfileFieldReader.requiredDate(
+        data: data,
+        field: FirestoreFields.subscriptionEndAt,
+      ),
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      FirestoreFields.name: name,
-      FirestoreFields.gradeId: gradeId,
-      FirestoreFields.email: email,
-      FirestoreFields.subscriptionStartAt: subscriptionStartAt,
-      FirestoreFields.subscriptionEndAt: subscriptionEndAt,
-    };
   }
 
   StudentProfileEntity toEntity() {
@@ -65,14 +75,15 @@ class StudentProfileModel extends StudentProfileEntity {
 }
 
 class GradeModel extends GradeEntity {
-  GradeModel({required super.name});
+  const GradeModel({required super.name});
 
-  factory GradeModel.fromJson(Map<String, dynamic> json) {
-    return GradeModel(name: json[FirestoreFields.name]);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {FirestoreFields.name: name};
+  factory GradeModel.fromFirestore(Map<String, dynamic> data) {
+    return GradeModel(
+      name: _ProfileFieldReader.requiredString(
+        data: data,
+        field: FirestoreFields.name,
+      ),
+    );
   }
 
   GradeEntity toEntity() {
@@ -80,16 +91,63 @@ class GradeModel extends GradeEntity {
   }
 }
 
-String _requiredDate(Map<String, dynamic> json, String field) {
-  final value = json[field];
+abstract final class _ProfileFieldReader {
+  const _ProfileFieldReader._();
 
-  if (value is Timestamp) {
-    return value.toDate().toIso8601String();
+  static String requiredString({
+    required Map<String, dynamic> data,
+    required String field,
+  }) {
+    final value = data[field];
+
+    if (value is! String) {
+      throw const FormatException();
+    }
+
+    final normalizedValue = value.trim();
+
+    if (normalizedValue.isEmpty) {
+      throw const FormatException();
+    }
+
+    return normalizedValue;
   }
 
-  if (value is DateTime) {
-    return value.toIso8601String();
+  static DateTime requiredDate({
+    required Map<String, dynamic> data,
+    required String field,
+  }) {
+    final value = data[field];
+    final date = _parseDate(value);
+
+    if (date == null) {
+      throw const FormatException();
+    }
+
+    return date.toUtc();
   }
 
-  throw FormatException('Missing or invalid $field.');
+  static DateTime? _parseDate(Object? value) {
+    if (value is Timestamp) {
+      return value.toDate();
+    }
+
+    if (value is DateTime) {
+      return value;
+    }
+
+    if (value is int) {
+      return DateTime.fromMillisecondsSinceEpoch(value, isUtc: true);
+    }
+
+    if (value is num) {
+      return DateTime.fromMillisecondsSinceEpoch(value.toInt(), isUtc: true);
+    }
+
+    if (value is String) {
+      return DateTime.tryParse(value);
+    }
+
+    return null;
+  }
 }

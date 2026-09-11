@@ -6,16 +6,19 @@ import 'package:flutter/material.dart';
 
 class ProfileInfoCard extends StatelessWidget {
   final ProfileEntity profile;
+
   const ProfileInfoCard({super.key, required this.profile});
 
   @override
   Widget build(BuildContext context) {
+    final studentProfile = profile.studentProfile;
+
     return CustomAppCard(
       child: Column(
         children: [
           ProfileInfoTile(
             label: 'البريد الإلكتروني',
-            value: profile.studentProfile.email,
+            value: studentProfile.email,
             icon: Icons.email_outlined,
             isCopyable: true,
           ),
@@ -27,7 +30,7 @@ class ProfileInfoCard extends StatelessWidget {
           ProfileInfoTile(
             label: 'بداية الاشتراك',
             value: AppDateTimeFormatter.formatDateWithSlash(
-              DateTime.parse(profile.studentProfile.subscriptionStartAt),
+              studentProfile.subscriptionStartAt,
               useArabicDigits: false,
             ),
             icon: Icons.calendar_today_outlined,
@@ -35,7 +38,7 @@ class ProfileInfoCard extends StatelessWidget {
           ProfileInfoTile(
             label: 'نهاية الاشتراك',
             value: AppDateTimeFormatter.formatDateWithSlash(
-              DateTime.parse(profile.studentProfile.subscriptionEndAt),
+              studentProfile.subscriptionEndAt,
               useArabicDigits: false,
             ),
             icon: Icons.calendar_month_outlined,

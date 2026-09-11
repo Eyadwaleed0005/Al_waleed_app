@@ -1,17 +1,21 @@
 class ProfileEntity {
   final StudentProfileEntity studentProfile;
   final GradeEntity grade;
-  ProfileEntity({required this.studentProfile, required this.grade});
+
+  const ProfileEntity({
+    required this.studentProfile,
+    required this.grade,
+  });
 }
 
 class StudentProfileEntity {
   final String name;
   final String gradeId;
   final String email;
-  final String subscriptionStartAt;
-  final String subscriptionEndAt;
+  final DateTime subscriptionStartAt;
+  final DateTime subscriptionEndAt;
 
-  StudentProfileEntity({
+  const StudentProfileEntity({
     required this.name,
     required this.gradeId,
     required this.email,
@@ -23,5 +27,7 @@ class StudentProfileEntity {
 class GradeEntity {
   final String name;
 
-  GradeEntity({required this.name});
+  const GradeEntity({
+    required this.name,
+  });
 }

@@ -1,66 +1,77 @@
-import 'package:al_waleed/core/cache/secure_storage/secure_storage.dart';
-import 'package:al_waleed/core/cache/shared_preferences/shared_preferences.dart';
-import 'package:al_waleed/core/firebase/firestore/firestore_collections.dart';
-import 'package:al_waleed/core/firebase/firestore/firestore_fields.dart';
+import 'dart:async';
+
+import 'package:al_waleed/core/errors/error_model/app_error_model.dart';
 import 'package:al_waleed/features/profile/domain/entities/profile_entity.dart';
-import 'package:al_waleed/features/profile/domain/usecase/get_student_profile_use_case.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:al_waleed/features/profile/domain/usecase/stream_student_profile_use_case.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  final GetProfileUseCase getStudentProfileUseCase;
-  ProfileCubit({required this.getStudentProfileUseCase})
-    : super(LogoutInitial());
+  final StreamStudentProfileUseCase _streamStudentProfileUseCase;
 
-  Future<void> getStudentProfile() async {
-    emit(GetProfileLoading());
+  ProfileCubit({
+    required StreamStudentProfileUseCase streamStudentProfileUseCase,
+  }) : _streamStudentProfileUseCase = streamStudentProfileUseCase,
+       super(const ProfileInitial());
 
-    final result = await getStudentProfileUseCase.call();
-    result.fold(
-      (failure) {
-        emit(GetProfileFailure(errorMsg: failure.message));
-      },
-      (profile) {
-        emit(GetProfileSuccess(profile: profile));
-      },
-    );
+  StreamSubscription<Either<AppErrorModel, ProfileEntity>>?
+  _profileSubscription;
+
+  bool _isInitializing = false;
+
+  Future<void> initialize() async {
+    if (_isInitializing || isClosed) return;
+
+    _isInitializing = true;
+
+    try {
+      await _cancelProfileSubscription();
+
+      if (isClosed) return;
+
+      emit(const ProfileLoading());
+
+      _profileSubscription = _streamStudentProfileUseCase().listen(
+        _onProfileResult,
+      );
+    } finally {
+      _isInitializing = false;
+    }
   }
 
-  Future<void> logout() async {
-    final ProfileEntity? profile = switch (state) {
-      GetProfileSuccess s => s.profile,
-      LogoutFailure s => s.profile,
-      _ => null,
-    };
-    if (profile == null) {
-      return;
-    }
+  Future<void> retry() {
+    return initialize();
+  }
 
-    emit(LogoutLoading(profile: profile));
-    try {
-      await SecureStorageHelper.clearAll();
-      await SharedPreferencesHelper.clearAll();
-      final uid = FirebaseAuth.instance.currentUser?.uid;
-      if (uid != null) {
-        await FirebaseFirestore.instance
-            .collection(FirestoreCollections.students)
-            .doc(uid)
-            .update({FirestoreFields.isLoggedIn: false});
-      }
+  void _onProfileResult(Either<AppErrorModel, ProfileEntity> result) {
+    if (isClosed) return;
 
-      await FirebaseAuth.instance.signOut();
-      if (!isClosed) {
-        emit(LogoutSuccess());
-      }
-    } catch (e) {
-      if (!isClosed) {
-        emit(
-          LogoutFailure(errorMsg: e.toString(), profile: profile),
-        );
-      }
-    }
+    result.fold(_emitFailure, _emitSuccess);
+  }
+
+  void _emitSuccess(ProfileEntity profile) {
+    if (isClosed) return;
+
+    emit(ProfileSuccess(profile: profile));
+  }
+
+  void _emitFailure(AppErrorModel error) {
+    if (isClosed) return;
+
+    emit(ProfileFailure(error: error));
+  }
+
+  Future<void> _cancelProfileSubscription() async {
+    await _profileSubscription?.cancel();
+    _profileSubscription = null;
+  }
+
+  @override
+  Future<void> close() async {
+    await _cancelProfileSubscription();
+
+    return super.close();
   }
 }
