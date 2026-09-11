@@ -19,9 +19,13 @@ class AppRoutes {
   static Route<dynamic>? generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RouteNames.mainNavigationScreen:
+        final initialIndex = settings.arguments is int
+            ? settings.arguments! as int
+            : 2;
+
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => const MainNavigationScreen(),
+          builder: (_) => MainNavigationScreen(initialIndex: initialIndex),
         );
 
       case RouteNames.loginScreen:

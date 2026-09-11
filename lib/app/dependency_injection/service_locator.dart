@@ -3,6 +3,7 @@ import 'package:al_waleed/app/dependency_injection/features/authentication_depen
 import 'package:al_waleed/app/dependency_injection/features/lessons_dependencies.dart';
 import 'package:al_waleed/app/dependency_injection/features/live_session_dependencies.dart';
 import 'package:al_waleed/app/dependency_injection/features/main_navigation_dependencies.dart';
+import 'package:al_waleed/app/dependency_injection/features/notification_dependencies.dart';
 import 'package:al_waleed/app/dependency_injection/features/profile_dependencies.dart';
 import 'package:al_waleed/app/dependency_injection/features/secure_screen_dependencies.dart';
 import 'package:al_waleed/app/dependency_injection/features/study_notes_dependencies.dart';
@@ -19,4 +20,5 @@ void setupServiceLocator() {
   registerLessonsDependencies(getIt);
   registerLiveSessionDependencies(getIt);
   registerProfileDependencies(getIt);
+  registerNotificationDependencies(getIt);
 }

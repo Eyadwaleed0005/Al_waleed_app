@@ -59,7 +59,7 @@ class _StudyNotePdfReaderScreenState
     return SecureScreenScope(
       cubit: getIt<SecureScreenCubit>(),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: AppSystemUi.light(),
+        value: AppSystemUi.dark(),
         child: BlocProvider<StudyNotePdfCubit>(
           create: (_) =>
               getIt<StudyNotePdfCubit>()..loadPdf(note: widget.note),
