@@ -1,6 +1,6 @@
 import 'package:al_waleed/app/dependency_injection/service_locator.dart';
-import 'package:al_waleed/app/routes/app_routes.dart';
-import 'package:al_waleed/app/routes/route_names.dart';
+import 'package:al_waleed/app/routes/screen_routes/app_routes.dart';
+import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/features/notifications/presentation/cubit/notification_cubit.dart';
 import 'package:al_waleed/features/notifications/presentation/services/firebase_notification_background_handler.dart';
 import 'package:al_waleed/features/notifications/presentation/services/notification_navigation_handler.dart';
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
             title: 'الوليد',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(),
-            initialRoute: RouteNames.loginScreen,
+            initialRoute: RouteNames.splashScreen,
             onGenerateRoute: AppRoutes.generateRoute,
             builder: (context, appChild) {
               return NotificationNavigationHandler(

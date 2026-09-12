@@ -1,4 +1,4 @@
-import 'package:al_waleed/app/routes/route_names.dart';
+import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/widgets/custom_search_bar.dart';
 import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_widgets/lesson_preview_card.dart';
