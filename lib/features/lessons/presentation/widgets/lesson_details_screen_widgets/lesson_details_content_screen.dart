@@ -27,35 +27,32 @@ class LessonDetailsContentScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               CustomAppBar(
+                title: lesson.title,
                 showBackButton: true,
                 backgroundColor: Colors.transparent,
-                actions: [
-                  Text(
-                    lesson.title,
-                    style: AppTextStyle.font18TextPrimarySemiBoldKufam(),
-                    textAlign: TextAlign.right,
-                  ),
-                ],
               ),
-              // Text(
-              //   lesson.description,
-              //   style:
-              //       AppTextStyle.font14TextSecondaryRegularTajawal(),
-              // ),
+
               verticalSpace(12),
+
               if (lesson.hasYoutubeVideo) ...[
                 LessonVideoCard(videoUrl: lesson.youtubeUrl),
                 verticalSpace(20),
               ],
+
               LessonOverviewCard(description: lesson.description),
+
               verticalSpace(76),
+
               Text(
                 'محتوى الدرس',
                 textAlign: TextAlign.right,
+                textDirection: TextDirection.rtl,
                 style: AppTextStyle.font20TextPrimarySemiBoldKufam(),
               ),
+
               verticalSpace(14),
-              if (lesson.hasPdfFile)
+
+              if (lesson.hasPdfFile) ...[
                 LessonMaterialTile(
                   title: 'ملف الدرس',
                   subtitle: lesson.pdfFileName.isEmpty
@@ -68,7 +65,9 @@ class LessonDetailsContentScreen extends StatelessWidget {
                     ).pushNamed(RouteNames.lessonDetailsPdf, arguments: lesson);
                   },
                 ),
-              verticalSpace(14),
+                verticalSpace(14),
+              ],
+
               LessonMaterialTile(
                 title: 'اختبار الكيمياء العضوية',
                 subtitle: 'سؤال · ٤ درجات',
