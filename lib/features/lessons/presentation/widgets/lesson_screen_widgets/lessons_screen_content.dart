@@ -1,5 +1,5 @@
 import 'package:al_waleed/app/routes/app_images_routes.dart';
-import 'package:al_waleed/app/routes/route_names.dart';
+import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/core/widgets/background/background_student_layout.dart';
 import 'package:al_waleed/core/widgets/custom_app_bar.dart';
 import 'package:al_waleed/features/lessons/presentation/cubit/lessons_cubit.dart';

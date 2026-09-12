@@ -12,8 +12,7 @@ class LessonVideoCard extends StatefulWidget {
   final String videoUrl;
 
   @override
-  State<LessonVideoCard> createState() =>
-      _LessonVideoCardState();s
+  State<LessonVideoCard> createState() => _LessonVideoCardState();
 }
 
 class _LessonVideoCardState extends State<LessonVideoCard> {
@@ -26,8 +25,7 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
   @override
   void didUpdateWidget(LessonVideoCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.videoUrl != widget.videoUrl &&
-        _isPlayerActive) {
+    if (oldWidget.videoUrl != widget.videoUrl && _isPlayerActive) {
       _playerController?.close();
       _playerController = null;
       _isPlayerActive = false;
@@ -95,9 +93,7 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
 
     // youtu.be/VIDEO_ID
     if (uri.host.contains('youtu.be')) {
-      return uri.pathSegments.isNotEmpty
-          ? uri.pathSegments.first
-          : '';
+      return uri.pathSegments.isNotEmpty ? uri.pathSegments.first : '';
     }
 
     // youtube.com/watch?v=VIDEO_ID
@@ -107,23 +103,16 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
     }
 
     // youtube.com/embed|shorts|live|v/VIDEO_ID
-    for (final segment in const [
-      'embed',
-      'shorts',
-      'live',
-      'v',
-    ]) {
+    for (final segment in const ['embed', 'shorts', 'live', 'v']) {
       final segmentIndex = uri.pathSegments.indexOf(segment);
 
-      if (segmentIndex != -1 &&
-          uri.pathSegments.length > segmentIndex + 1) {
+      if (segmentIndex != -1 && uri.pathSegments.length > segmentIndex + 1) {
         return uri.pathSegments[segmentIndex + 1];
       }
     }
 
     // A raw video id was passed directly (no path segments or queries).
-    if (!normalizedUrl.contains('/') &&
-        !normalizedUrl.contains('?')) {
+    if (!normalizedUrl.contains('/') && !normalizedUrl.contains('?')) {
       return normalizedUrl;
     }
 
@@ -139,9 +128,7 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
       aspectRatio: _cardAspectRatio,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18.r),
-        child: _isPlayerActive
-            ? _buildPlayer()
-            : _buildThumbnailPreview(),
+        child: _isPlayerActive ? _buildPlayer() : _buildThumbnailPreview(),
       ),
     );
   }
@@ -158,9 +145,7 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
             imageUrl: _thumbnailUrl(videoId),
             fit: BoxFit.cover,
             errorWidget: (_, _, _) => const DecoratedBox(
-              decoration: BoxDecoration(
-                color: ColorPalette.info,
-              ),
+              decoration: BoxDecoration(color: ColorPalette.info),
             ),
           ),
 
@@ -170,10 +155,7 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
               decoration: BoxDecoration(
                 color: ColorPalette.primary,
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: ColorPalette.textSoftSaga,
-                  width: 3,
-                ),
+                border: Border.all(color: ColorPalette.textSoftSaga, width: 3),
               ),
               child: Icon(
                 Icons.play_arrow_rounded,
