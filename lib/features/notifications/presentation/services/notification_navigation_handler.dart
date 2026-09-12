@@ -1,4 +1,4 @@
-import 'package:al_waleed/app/routes/route_names.dart';
+import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/features/notifications/domain/entities/app_notification_type.dart';
 import 'package:al_waleed/features/notifications/presentation/cubit/notification_cubit.dart';
 import 'package:al_waleed/features/notifications/presentation/cubit/notification_state.dart';
