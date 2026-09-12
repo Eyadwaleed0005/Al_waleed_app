@@ -1,3 +1,5 @@
+import 'package:al_waleed/core/connection/cubit/network_status_cubit.dart';
+import 'package:al_waleed/core/connection/network/network_info.dart';
 import 'package:al_waleed/core/firebase/firestore/firestore_service.dart';
 import 'package:al_waleed/core/firebase/storage/storage_service.dart';
 
@@ -82,15 +84,21 @@ void _registerRepositories(GetIt getIt) {
 
 void _registerUseCases(GetIt getIt) {
   getIt.registerLazySingleton<GetLessonByIdUseCase>(
-    () => GetLessonByIdUseCase(repository: getIt<LessonsRepository>()),
+    () => GetLessonByIdUseCase(
+      repository: getIt<LessonsRepository>(),
+    ),
   );
 
   getIt.registerLazySingleton<StreamLessonsUseCase>(
-    () => StreamLessonsUseCase(repository: getIt<LessonsRepository>()),
+    () => StreamLessonsUseCase(
+      repository: getIt<LessonsRepository>(),
+    ),
   );
 
   getIt.registerLazySingleton<GetLessonPdfUseCase>(
-    () => GetLessonPdfUseCase(repository: getIt<LessonPdfRepository>()),
+    () => GetLessonPdfUseCase(
+      repository: getIt<LessonPdfRepository>(),
+    ),
   );
 }
 
@@ -106,4 +114,12 @@ void _registerCubits(GetIt getIt) {
       getLessonPdfUseCase: getIt<GetLessonPdfUseCase>(),
     ),
   );
+
+  if (!getIt.isRegistered<NetworkStatusCubit>()) {
+    getIt.registerFactory<NetworkStatusCubit>(
+      () => NetworkStatusCubit(
+        networkInfo: getIt<NetworkInfo>(),
+      ),
+    );
+  }
 }

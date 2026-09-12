@@ -1,5 +1,6 @@
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_animations.dart';
+import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/widgets/app_empty_state.dart';
 import 'package:al_waleed/core/widgets/custom_search_bar.dart';
 import 'package:al_waleed/features/lessons/domain/entities/lesson_entity.dart';
@@ -49,7 +50,7 @@ class _LessonsScreenListState extends State<LessonsScreenList> {
       children: [
         CustomSearchBar(
           controller: _searchController,
-          hintText: 'ابحث عن درس...',
+          hintText: 'ابحث عن درس',
           onChanged: widget.onSearchChanged,
           onClear: () {
             _searchController.clear();
@@ -82,6 +83,9 @@ class _LessonsScreenListState extends State<LessonsScreenList> {
         title: 'لا توجد نتائج مطابقة لبحثك',
         subtitle: 'جرّب تعديل كلمة البحث أو امسحها لعرض جميع الدروس',
         icon: Icons.search_off_rounded,
+        iconContainerSize: 112,
+        iconBackgroundColor: ColorPalette.accent.withOpacity(0.55),
+        iconTitleSpacing: 28,
       ),
     );
   }

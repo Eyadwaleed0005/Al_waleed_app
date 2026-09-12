@@ -2,6 +2,7 @@ import 'package:al_waleed/app/routes/app_images_routes.dart';
 import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/core/widgets/background/background_student_layout.dart';
 import 'package:al_waleed/core/widgets/custom_app_bar.dart';
+import 'package:al_waleed/core/widgets/custom_search_bar.dart';
 import 'package:al_waleed/features/lessons/presentation/cubit/lessons_cubit.dart';
 import 'package:al_waleed/features/lessons/presentation/cubit/lessons_state.dart';
 import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_widgets/lessons_screen_states/lessons_empty_view.dart';
@@ -38,19 +39,21 @@ class LessonsScreenContent extends StatelessWidget {
               Expanded(
                 child: BlocBuilder<LessonsCubit, LessonsState>(
                   builder: (context, state) {
-                    if (state is LessonsInitial ||
-                        state is LessonsLoading) {
-                      return const LessonsLoadingView();
+                    if (state is LessonsInitial || state is LessonsLoading) {
+                      return _buildLoadingView();
                     }
+
                     if (state is LessonsFailure) {
                       return LessonsErrorView(
                         errorMessage: state.error.message,
                         onRetry: context.read<LessonsCubit>().retry,
                       );
                     }
+
                     if (state is LessonsEmpty) {
                       return const LessonsEmptyView();
                     }
+
                     if (state is LessonsDataSuccess) {
                       return LessonsSuccessView(
                         lessons: state.lessons,
@@ -63,10 +66,12 @@ class LessonsScreenContent extends StatelessWidget {
                           );
                         },
                         onSearchChanged: context.read<LessonsCubit>().search,
-                        onSearchClear: () =>
-                            context.read<LessonsCubit>().search(''),
+                        onSearchClear: () {
+                          context.read<LessonsCubit>().search('');
+                        },
                       );
                     }
+
                     return const SizedBox.shrink();
                   },
                 ),
@@ -75,6 +80,16 @@ class LessonsScreenContent extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLoadingView() {
+    return Column(
+      children: [
+        const AbsorbPointer(child: CustomSearchBar(hintText: 'ابحث عن درس...')),
+        SizedBox(height: 48.h),
+        const Expanded(child: LessonsLoadingView()),
+      ],
     );
   }
 }

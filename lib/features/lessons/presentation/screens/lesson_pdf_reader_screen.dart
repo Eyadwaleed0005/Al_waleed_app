@@ -12,42 +12,36 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LessonPdfReaderScreen extends StatefulWidget {
+  const LessonPdfReaderScreen({super.key, required this.lesson});
+
   final LessonEntity lesson;
 
-  const LessonPdfReaderScreen({
-    super.key,
-    required this.lesson,
-  });
-
   @override
-  State<LessonPdfReaderScreen> createState() => _LessonPdfReaderScreenState();
+  State<LessonPdfReaderScreen> createState() {
+    return _LessonPdfReaderScreenState();
+  }
 }
 
-class _LessonPdfReaderScreenState
-    extends State<LessonPdfReaderScreen> {
+class _LessonPdfReaderScreenState extends State<LessonPdfReaderScreen> {
   @override
   void initState() {
     super.initState();
 
     unawaited(
-      SystemChrome.setPreferredOrientations(
-        const [
-          DeviceOrientation.portraitUp,
-          DeviceOrientation.landscapeLeft,
-          DeviceOrientation.landscapeRight,
-        ],
-      ),
+      SystemChrome.setPreferredOrientations(const [
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]),
     );
   }
 
   @override
   void dispose() {
     unawaited(
-      SystemChrome.setPreferredOrientations(
-        const [
-          DeviceOrientation.portraitUp,
-        ],
-      ),
+      SystemChrome.setPreferredOrientations(const [
+        DeviceOrientation.portraitUp,
+      ]),
     );
 
     super.dispose();
@@ -60,8 +54,9 @@ class _LessonPdfReaderScreenState
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: AppSystemUi.light(),
         child: BlocProvider<LessonPdfCubit>(
-          create: (_) =>
-              getIt<LessonPdfCubit>()..loadPdf(lesson: widget.lesson),
+          create: (_) {
+            return getIt<LessonPdfCubit>()..loadPdf(lesson: widget.lesson);
+          },
           child: LessonPdfReaderContent(lesson: widget.lesson),
         ),
       ),

@@ -13,10 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LessonDetailsContentScreen extends StatelessWidget {
-  const LessonDetailsContentScreen({
-    super.key,
-    required this.lesson,
-  });
+  const LessonDetailsContentScreen({super.key, required this.lesson});
 
   final LessonEntity lesson;
 
@@ -35,8 +32,7 @@ class LessonDetailsContentScreen extends StatelessWidget {
                 actions: [
                   Text(
                     lesson.title,
-                    style:
-                        AppTextStyle.font18TextPrimarySemiBoldKufam(),
+                    style: AppTextStyle.font18TextPrimarySemiBoldKufam(),
                     textAlign: TextAlign.right,
                   ),
                 ],
@@ -51,15 +47,12 @@ class LessonDetailsContentScreen extends StatelessWidget {
                 LessonVideoCard(videoUrl: lesson.youtubeUrl),
                 verticalSpace(20),
               ],
-              LessonOverviewCard(
-                description: lesson.description,
-              ),
+              LessonOverviewCard(description: lesson.description),
               verticalSpace(76),
               Text(
                 'محتوى الدرس',
                 textAlign: TextAlign.right,
-                style:
-                    AppTextStyle.font20TextPrimarySemiBoldKufam(),
+                style: AppTextStyle.font20TextPrimarySemiBoldKufam(),
               ),
               verticalSpace(14),
               if (lesson.hasPdfFile)
@@ -70,10 +63,9 @@ class LessonDetailsContentScreen extends StatelessWidget {
                       : 'ملف PDF · ${lesson.pdfFileName}',
                   icon: AppImage().readerPdf,
                   onTap: () {
-                    Navigator.of(context).pushNamed(
-                      RouteNames.lessonDetailsPdf,
-                      arguments: lesson,
-                    );
+                    Navigator.of(
+                      context,
+                    ).pushNamed(RouteNames.lessonDetailsPdf, arguments: lesson);
                   },
                 ),
               verticalSpace(14),
