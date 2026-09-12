@@ -1,6 +1,7 @@
 import 'package:al_waleed/app/dependency_injection/core_dependencies.dart';
 import 'package:al_waleed/app/dependency_injection/features/app_startup_dependencies.dart';
 import 'package:al_waleed/app/dependency_injection/features/authentication_dependencies.dart';
+import 'package:al_waleed/app/dependency_injection/features/lessons_dependencies.dart';
 import 'package:al_waleed/app/dependency_injection/features/live_session_dependencies.dart';
 import 'package:al_waleed/app/dependency_injection/features/main_navigation_dependencies.dart';
 import 'package:al_waleed/app/dependency_injection/features/notification_dependencies.dart';
@@ -17,6 +18,7 @@ void setupServiceLocator() {
   registerMainNavigationDependencies(getIt);
   registerSecureScreenDependencies(getIt);
   registerStudyNotesDependencies(getIt);
+  registerLessonsDependencies(getIt);
   registerLiveSessionDependencies(getIt);
   registerProfileDependencies(getIt);
   registerNotificationDependencies(getIt);
