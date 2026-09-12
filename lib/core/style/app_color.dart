@@ -23,6 +23,8 @@ class ColorPalette {
   static const Color primaryHover = forestGreenHover;
   static const Color primaryPressed = darkForestGreen;
   static const Color primarySoftBackground = paleMint;
+  static const Color deepSurface = Color(0xFF021C14);
+
 
   static const Color secondary = oceanBlue;
   static const Color accent = softSage;

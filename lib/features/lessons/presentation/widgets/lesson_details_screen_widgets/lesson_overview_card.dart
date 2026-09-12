@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LessonOverviewCard extends StatelessWidget {
-  const LessonOverviewCard({super.key});
+  const LessonOverviewCard({super.key, required this.description});
+
+  final String description;
+
   @override
   Widget build(BuildContext context) => Container(
     padding: EdgeInsets.all(18.w),
@@ -30,7 +33,7 @@ class LessonOverviewCard extends StatelessWidget {
         ),
         verticalSpace(10),
         Text(
-          'مقدمة منظمة للكيمياء العضوية تشمل الهيدروكربونات، الكحولات، الفينولات، الأحماض العضوية والاسترات.',
+          description,
           textAlign: TextAlign.right,
           style: AppTextStyle.font14TextSecondaryRegularTajawal().copyWith(
             height: 1.7,

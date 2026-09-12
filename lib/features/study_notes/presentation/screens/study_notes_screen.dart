@@ -14,7 +14,7 @@ class StudyNotesScreen extends StatelessWidget {
     return BlocProvider(
       create: (_) => getIt<StudyNotesCubit>()..initialize(),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: AppSystemUi.light(),
+        value: AppSystemUi.dark(),
         child: const Scaffold(body: StudyNotesScreenContent()),
       ),
     );

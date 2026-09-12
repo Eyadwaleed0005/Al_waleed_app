@@ -22,8 +22,10 @@ class FirebaseLoginRemoteDataSource implements LoginRemoteDataSource {
   @override
   Future<LoginModel> login({required String email, required String password}) {
     return FirebaseErrorHandler.execute<LoginModel>(() async {
+      final normalizedEmail = email.trim();
+
       final userCredential = await firebaseAuth.signInWithEmailAndPassword(
-        email: email.trim(),
+        email: normalizedEmail,
         password: password,
       );
 
@@ -35,57 +37,65 @@ class FirebaseLoginRemoteDataSource implements LoginRemoteDataSource {
         );
       }
 
-      final userDocument = await firestoreService.getDocument(
-        collectionPath: FirestoreCollections.students,
-        documentId: user.uid,
-      );
-
-      final studentData = userDocument.data();
-
-      if (!userDocument.exists || studentData == null) {
-        await firebaseAuth.signOut();
-
-        FirebaseErrorHandler.throwAuthCode(
-          FirebaseAuthErrorHandler.studentRecordNotFoundCode,
+      try {
+        final userDocument = await firestoreService.getDocument(
+          collectionPath: FirestoreCollections.students,
+          documentId: user.uid,
         );
-      }
 
-      final bool isActive = studentData[FirestoreFields.isActive] == true;
+        final studentData = userDocument.data();
 
-      if (!isActive) {
-        await firebaseAuth.signOut();
+        if (!userDocument.exists || studentData == null) {
+          FirebaseErrorHandler.throwAuthCode(
+            FirebaseAuthErrorHandler.studentRecordNotFoundCode,
+          );
+        }
 
-        FirebaseErrorHandler.throwAuthCode(
-          FirebaseAuthErrorHandler.subscriptionExpiredCode,
+        final isActive = studentData[FirestoreFields.isActive] == true;
+
+        if (!isActive) {
+          FirebaseErrorHandler.throwAuthCode(
+            FirebaseAuthErrorHandler.subscriptionExpiredCode,
+          );
+        }
+
+        final isLoggedIn = studentData[FirestoreFields.isLoggedIn] == true;
+
+        if (isLoggedIn) {
+          FirebaseErrorHandler.throwAuthCode(
+            FirebaseAuthErrorHandler.deviceAlreadyLoggedInCode,
+          );
+        }
+
+        final gradeIdValue = studentData[FirestoreFields.gradeId];
+
+        if (gradeIdValue is! String || gradeIdValue.trim().isEmpty) {
+          FirebaseErrorHandler.throwAuthCode(
+            FirebaseAuthErrorHandler.missingGradeIdCode,
+          );
+        }
+
+        final gradeId = gradeIdValue.trim();
+
+        await loginLocalDataSource.saveGradeId(gradeId: gradeId);
+
+        await firestoreService.patchData(
+          collectionPath: FirestoreCollections.students,
+          documentId: user.uid,
+          data: {FirestoreFields.isLoggedIn: true},
         );
+
+        return LoginModel(id: user.uid, email: user.email ?? normalizedEmail);
+      } catch (_) {
+        await _signOutSafely();
+        rethrow;
       }
-
-      final bool isLoggedIn = studentData[FirestoreFields.isLoggedIn] == true;
-
-      if (isLoggedIn) {
-        await firebaseAuth.signOut();
-
-        FirebaseErrorHandler.throwAuthCode(
-          FirebaseAuthErrorHandler.deviceAlreadyLoggedInCode,
-        );
-      }
-
-      final gradeIdValue = studentData[FirestoreFields.gradeId];
-      if (gradeIdValue is! String || gradeIdValue.trim().isEmpty) {
-        await firebaseAuth.signOut();
-        FirebaseErrorHandler.throwAuthCode(
-          FirebaseAuthErrorHandler.missingGradeIdCode,
-        );
-      }
-
-      final gradeId = gradeIdValue.trim();
-      await firestoreService.patchData(
-        collectionPath: FirestoreCollections.students,
-        documentId: user.uid,
-        data: {FirestoreFields.isLoggedIn: true},
-      );
-      await loginLocalDataSource.saveGradeId(gradeId: gradeId);
-      return LoginModel(id: user.uid, email: user.email ?? email.trim());
     });
+  }
+
+  Future<void> _signOutSafely() async {
+    try {
+      await firebaseAuth.signOut();
+    } catch (_) {}
   }
 }

@@ -1,5 +1,5 @@
 import 'package:al_waleed/app/dependency_injection/service_locator.dart';
-import 'package:al_waleed/app/routes/route_names.dart';
+import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/core/cache/secure_storage/secure_storage.dart';
 import 'package:al_waleed/core/cache/secure_storage/secure_storage_keys.dart';
 import 'package:al_waleed/core/helper/spacer.dart';

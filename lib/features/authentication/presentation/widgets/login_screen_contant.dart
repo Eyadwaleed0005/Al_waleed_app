@@ -17,7 +17,7 @@ class LoginScreenContant extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: AppSystemUi.light(),
+      value: AppSystemUi.dark(),
       child: LoginBackground(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 24.w),

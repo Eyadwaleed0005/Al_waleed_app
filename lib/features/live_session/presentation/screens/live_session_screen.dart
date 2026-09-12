@@ -22,7 +22,7 @@ class LiveSessionScreen extends StatelessWidget {
           gradeId: gradeId,
         ),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: AppSystemUi.light(),
+        value: AppSystemUi.dark(),
         child: Scaffold(
           body: LiveSessionScreenContent(
             gradeId: gradeId,

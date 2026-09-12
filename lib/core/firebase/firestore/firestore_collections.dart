@@ -1,16 +1,16 @@
 abstract final class FirestoreCollections {
+  const FirestoreCollections._();
+
   static const String grades = 'grades';
   static const String students = 'students';
-
   static const String lessons = 'lessons';
   static const String lessonQuestions = 'lessonQuestions';
-
   static const String studyNotes = 'study_notes';
-
   static const String exams = 'exams';
   static const String examQuestions = 'examQuestions';
   static const String examResults = 'examResults';
-
   static const String liveSessions = 'liveSessions';
 
+  // App configuration
+  static const String appConfig = 'appConfig';
 }

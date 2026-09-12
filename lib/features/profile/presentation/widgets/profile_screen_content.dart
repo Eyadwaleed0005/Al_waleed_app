@@ -1,94 +1,71 @@
-import 'package:al_waleed/core/helper/spacer.dart';
-import 'package:al_waleed/core/style/app_animations.dart';
-import 'package:al_waleed/core/style/app_color.dart';
-import 'package:al_waleed/core/style/textstyles.dart';
-import 'package:al_waleed/core/widgets/custom_app_bar.dart';
-import 'package:al_waleed/core/widgets/custom_button.dart';
-import 'package:al_waleed/core/widgets/custom_dialog.dart';
-import 'package:al_waleed/features/profile/presentation/widgets/profile_background.dart';
-import 'package:al_waleed/features/profile/presentation/widgets/profile_info_card.dart';
+import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
+import 'package:al_waleed/core/widgets/custom_operation_result_dialog.dart';
+import 'package:al_waleed/features/authentication/presentation/cubit/logout_cubit/logout_cubit.dart';
+import 'package:al_waleed/features/authentication/presentation/cubit/logout_cubit/logout_state.dart';
+import 'package:al_waleed/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:al_waleed/features/profile/presentation/widgets/profile_screen_states/profile_error_view.dart';
+import 'package:al_waleed/features/profile/presentation/widgets/profile_screen_states/profile_loading_view.dart';
+import 'package:al_waleed/features/profile/presentation/widgets/profile_screen_states/profile_success_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileScreenContent extends StatelessWidget {
   const ProfileScreenContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ProfileBackground(
-      child: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          child: Column(
-            children: [
-              AppAnimations.screenSection(
-                delay: 100,
-                child: CustomAppBar(
-                  title: 'حسابي',
-                  backgroundColor: Colors.transparent,
-                  showBackButton: false,
-                  actions: [
-                    Icon(
-                      Icons.person_outline_rounded,
-                      size: 28.r,
-                      color: ColorPalette.primary,
-                    ),
-                  ],
-                ),
-              ),
-              verticalSpace(50),
-              AppAnimations.screenSection(
-                delay: 250,
-                child: Column(
-                  children: [
-                    Text(
-                      'محمد جلال عبد الفتاح',
-                      style: AppTextStyle.font20TextBlackSemiBoldKufam(),
-                      textAlign: TextAlign.center,
-                    ),
-                    verticalSpace(6),
-                    Text(
-                      'طالب الصف الثالث الثانوي',
-                      style: AppTextStyle.font12TextSecondaryRegularTajawal(),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-              verticalSpace(32),
-              AppAnimations.screenSection(
-                delay: 450,
-                child: const ProfileInfoCard(),
-              ),
-              verticalSpace(32),
-              AppAnimations.screenSection(
-                delay: 650,
-                child: CustomButton(
-                  text: 'تسجيل الخروج',
-                  foreground: ColorPalette.error,
-                  borderColor: ColorPalette.error.withValues(alpha: .3),
-                  background: ColorPalette.cardBackground,
-                  onPressed: () {
-                    CustomDialog.showDelete(
-                      context,
-                      icon: Icons.logout_outlined,
-                      iconBorderRadius: BorderRadius.circular(16.r),
-                      title: 'هل أنت متأكد من أنك تريد تسجيل الخروج؟',
-                      message:
-                          'ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى حسابك.',
-                      primaryText: 'تسجيل الخروج',
-                      secondaryText: 'إلغاء',
-                      onDelete: () {
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
-                ),
-              ),
-              verticalSpace(20),
-            ],
-          ),
-        ),
+    return BlocListener<LogoutCubit, LogoutState>(
+      listenWhen: (previous, current) {
+        return current is LogoutSuccess || current is LogoutFailure;
+      },
+      listener: (context, state) {
+        if (state is LogoutSuccess) {
+          Navigator.of(
+            context,
+          ).pushNamedAndRemoveUntil(RouteNames.loginScreen, (route) => false);
+
+          return;
+        }
+
+        if (state is LogoutFailure) {
+          showDialog<void>(
+            context: context,
+            barrierDismissible: false,
+            builder: (dialogContext) {
+              return CustomOperationResultDialog(
+                type: CustomOperationResultType.failure,
+                title: 'تعذر تسجيل الخروج',
+                message: state.error.message,
+                actionText: 'إعادة المحاولة',
+                secondaryActionText: 'إلغاء',
+                failureIcon: Icons.logout_rounded,
+                onActionPressed: () {
+                  Navigator.of(dialogContext).pop();
+                  context.read<LogoutCubit>().logout();
+                },
+                onSecondaryActionPressed: () {
+                  Navigator.of(dialogContext).pop();
+                },
+              );
+            },
+          );
+        }
+      },
+      child: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
+          if (state is ProfileFailure) {
+            return ProfileErrorView(
+              errorMessage: state.error.message,
+              onRetry: context.read<ProfileCubit>().retry,
+            );
+          }
+
+          if (state is ProfileSuccess) {
+            return ProfileSuccessView(profile: state.profile);
+          }
+
+          return const ProfileLoadingView();
+        },
       ),
     );
   }

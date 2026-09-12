@@ -8,6 +8,9 @@ environment:
   sdk: ^3.12.2
 
 dependencies:
+  flutter:
+    sdk: flutter
+
   bloc: ^9.2.1
   cached_network_image: ^4.0.0
   cloud_firestore: ^6.9.0
@@ -18,10 +21,6 @@ dependencies:
   firebase_auth: ^6.6.1
   firebase_core: ^4.14.0
   firebase_storage: ^13.5.0
-
-  flutter:
-    sdk: flutter
-
   flutter_animate: ^4.5.2
   flutter_bloc: ^9.1.1
   flutter_image_compress: ^2.5.1
@@ -33,11 +32,20 @@ dependencies:
   internet_connection_checker_plus: ^3.1.2
   no_screenshot: ^2.0.1
   shared_preferences: ^2.5.5
+  shimmer: ^4.0.0
   syncfusion_flutter_pdfviewer: ^34.2.7
+  youtube_player_flutter: ^10.0.1
+  firebase_messaging: ^16.6.0
+  flutter_local_notifications: ^22.3.0
+  firebase_remote_config: ^6.6.0
+  package_info_plus: ^10.2.1
+  url_launcher: ^6.3.2
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
 
+  flutter_native_splash: ^2.4.8
   flutter_test:
     sdk: flutter
 
