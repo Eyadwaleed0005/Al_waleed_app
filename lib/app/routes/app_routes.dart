@@ -2,6 +2,8 @@ import 'package:al_waleed/app/dependency_injection/service_locator.dart';
 import 'package:al_waleed/app/routes/route_names.dart';
 import 'package:al_waleed/features/authentication/presentation/cubit/login_cubit/login_cubit.dart';
 import 'package:al_waleed/features/authentication/presentation/screens/login_screen.dart';
+import 'package:al_waleed/features/lesson_quiz/presentation/screens/lesson_quiz_screen.dart';
+import 'package:al_waleed/features/lessons/presentation/screens/lesson_details_screen.dart';
 import 'package:al_waleed/features/live_session/presentation/screens/live_session_screen.dart';
 import 'package:al_waleed/features/main_navigation/presentation/screens/main_navigation_screen.dart';
 import 'package:al_waleed/features/study_notes/domain/entities/study_note_entity.dart';
@@ -58,7 +60,10 @@ class AppRoutes {
           settings: settings,
           builder: (_) => const LessonQuizScreen(),
         );*/
-
+      case RouteNames.lessonDetails:
+        return MaterialPageRoute(builder: (_) => LessonDetailsScreen());
+    case RouteNames.lessonQuiz:
+        return MaterialPageRoute(builder: (_) => LessonQuizScreen()); 
       default:
         return null;
     }
