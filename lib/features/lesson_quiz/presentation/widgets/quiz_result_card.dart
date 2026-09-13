@@ -1,8 +1,14 @@
 import 'dart:math';
+import 'package:al_waleed/app/dependency_injection/service_locator.dart';
+import 'package:al_waleed/core/helper/arabic_numbers_helper.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
+import 'package:al_waleed/features/lessons/presentation/cubit/lessons_cubit.dart';
+import 'package:al_waleed/features/lessons/presentation/cubit/lessons_state.dart';
+import 'package:al_waleed/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class QuizResultCard extends StatelessWidget {
@@ -10,14 +16,18 @@ class QuizResultCard extends StatelessWidget {
     super.key,
     required this.score,
     required this.total,
+    required this.earnedPoints,
+    required this.totalPoints,
   });
 
   final int score;
   final int total;
+  final int earnedPoints;
+  final int totalPoints;
 
   @override
   Widget build(BuildContext context) {
-    final percentage = total == 0 ? 0.0 : score / total;
+    final percentage = totalPoints == 0 ? 0.0 : earnedPoints / totalPoints;
     final isPassing = percentage >= 0.5;
 
     return Container(
@@ -53,21 +63,42 @@ class QuizResultCard extends StatelessWidget {
             ),
           ),
           verticalSpace(16),
-          Text(
-            isPassing ? 'أحسنت يا جلال!' : 'حاول مرة أخرى!',
-            style: AppTextStyle.font20TextPrimarySemiBoldKufam().copyWith(
-              color: ColorPalette.primary,
-              fontWeight: FontWeight.w700,
+          BlocProvider(
+            create: (context) => getIt<ProfileCubit>()..initialize(),
+            child: BlocBuilder<ProfileCubit, ProfileState>(
+              builder: (context, state) {
+                String studentName = 'صديقي';
+                if (state is ProfileSuccess) {
+                  studentName = state.profile.studentProfile.name;
+                }
+
+                return Text(
+                  isPassing ? '  أحسنت يا $studentName !' : 'حاول مرة أخرى!',
+                  style: AppTextStyle.font20TextPrimarySemiBoldKufam().copyWith(
+                    color: ColorPalette.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  textDirection: TextDirection.rtl,
+                );
+              },
             ),
-            textDirection: TextDirection.rtl,
           ),
           verticalSpace(4),
-          Text(
-            'اختبار الكيمياء العضوية',
-            style: AppTextStyle.font13TextSecondaryRegularTajawal().copyWith(
-              color: ColorPalette.textSecondary,
+          BlocProvider(
+            create: (context) => getIt.get<LessonsCubit>()..initialize(),
+            child: BlocBuilder<LessonsCubit, LessonsState>(
+              builder: (context, state) {
+                if (state is LessonsDataSuccess && state.lessons.isNotEmpty) {
+                  return Text(
+                    state.lessons.first.title,
+                    style: AppTextStyle.font13TextSecondaryRegularTajawal()
+                        .copyWith(color: ColorPalette.textSecondary),
+                    textDirection: TextDirection.rtl,
+                  );
+                }
+                return const SizedBox.shrink();
+              },
             ),
-            textDirection: TextDirection.rtl,
           ),
           verticalSpace(24),
           SizedBox(
@@ -89,7 +120,7 @@ class QuizResultCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '${score * 2} / ${total * 2}',
+                        '${toArabicNumbers(earnedPoints)} / ${toArabicNumbers(totalPoints)}',
                         style: TextStyle(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.w800,
@@ -100,7 +131,7 @@ class QuizResultCard extends StatelessWidget {
                       ),
                       verticalSpace(2),
                       Text(
-                        '${(percentage * 100).round()}%',
+                        '${toArabicNumbers((percentage * 100).round())}%',
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w700,

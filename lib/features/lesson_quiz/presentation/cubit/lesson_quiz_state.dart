@@ -10,7 +10,9 @@ sealed class LessonQuizState extends Equatable {
 final class LessonQuizInitial extends LessonQuizState {}
 
 final class LessonQuizLoading extends LessonQuizState {}
+final class LessonQuizEmpty extends LessonQuizState {
 
+}
 
 final class LessonQuizSuccess extends LessonQuizState {
   final List<LessonQuizEntity> questions;

@@ -13,16 +13,22 @@ class LessonQuizCubit extends Cubit<LessonQuizState> {
 
   bool _isClosing = false;
   bool get _canEmit => !_isClosing && !isClosed;
+    String? _lastLessonId;
+  String? get lessonId => _lastLessonId;
+
+
 
   Future<void> getQuizQuestions({required String lessonId}) async {
     if (!_canEmit) return;
 
-    emit(LessonQuizLoading());
-
     final normalizedLessonId = lessonId.trim();
 
+    _lastLessonId = normalizedLessonId;
+
+    emit(LessonQuizLoading());
+
     final result = await getLessonQuizUseCase.getQuizQuestions(
-    lessonId  : normalizedLessonId,
+      lessonId: normalizedLessonId,
     );
 
     if (!_canEmit) return;
@@ -30,14 +36,13 @@ class LessonQuizCubit extends Cubit<LessonQuizState> {
     result.fold(
       (failure) {
         if (!_canEmit) return;
-
         emit(LessonQuizFailure(errorMessage: failure.message));
       },
       (questions) {
         if (!_canEmit) return;
 
         if (questions.isEmpty) {
-          emit(LessonQuizInitial());
+          emit(LessonQuizEmpty());
           return;
         }
 
@@ -49,7 +54,6 @@ class LessonQuizCubit extends Cubit<LessonQuizState> {
       },
     );
   }
-
   void selectAnswer({required int questionIndex, required int optionIndex}) {
     if (!_canEmit) return;
 
@@ -146,6 +150,42 @@ class LessonQuizCubit extends Cubit<LessonQuizState> {
     }
   }
 
+int get correctCount {
+    final currentState = state;
+    if (currentState is LessonQuizSuccess) {
+      return currentState.questions
+          .where((q) => q.selectedOption == q.correctOption)
+          .length;
+    }
+    return 0;
+  }
+
+  int get earnedPoints {
+    final currentState = state;
+    if (currentState is LessonQuizSuccess) {
+      return currentState.questions
+          .where((q) => q.selectedOption == q.correctOption)
+          .fold<int>(0, (sum, q) => sum + q.questionScore);
+    }
+    return 0;
+  }
+
+  int get totalPoints {
+    final currentState = state;
+    if (currentState is LessonQuizSuccess) {
+      return currentState.questions
+          .fold<int>(0, (sum, q) => sum + q.questionScore);
+    }
+    return 0;
+  }
+
+  int get totalQuestions {
+    final currentState = state;
+    if (currentState is LessonQuizSuccess) {
+      return currentState.questions.length;
+    }
+    return 0;
+  }
   @override
   Future<void> close() async {
     if (_isClosing || isClosed) return;

@@ -10,25 +10,43 @@ class QuizAnswerOption extends StatelessWidget {
     required this.title,
     this.isSelected = false,
     this.onTap,
+    this.isCorrect,
   });
 
   final String title;
   final bool isSelected;
   final VoidCallback? onTap;
+  final bool? isCorrect;
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = isSelected
-        ? const Color(0xFFEBF5FC)
-        : ColorPalette.surface;
+    Color backgroundColor = ColorPalette.surface;
+    Color borderColor = ColorPalette.divider;
+    Color textColor = ColorPalette.textPrimary;
+    Color indicatorColor = ColorPalette.textMuted;
+    Color? innerDotColor;
 
-    final borderColor = isSelected
-        ? ColorPalette.secondary
-        : ColorPalette.divider;
-
-    final textColor = isSelected
-        ? ColorPalette.secondary
-        : ColorPalette.textPrimary;
+    if (isCorrect != null) {
+      if (isCorrect == true) {
+        backgroundColor = const Color(0xFFE8F8F0);
+        borderColor = ColorPalette.success;
+        textColor = ColorPalette.success;
+        indicatorColor = ColorPalette.success;
+        innerDotColor = ColorPalette.success;
+      } else {
+        backgroundColor = const Color(0xFFFFEBEE);
+        borderColor = ColorPalette.error;
+        textColor = ColorPalette.error;
+        indicatorColor = ColorPalette.error;
+        innerDotColor = ColorPalette.error;
+      }
+    } else if (isSelected) {
+      backgroundColor = const Color(0xFFE8F8F0);
+      borderColor = ColorPalette.success;
+      textColor = ColorPalette.success;
+      indicatorColor = ColorPalette.success;
+      innerDotColor = ColorPalette.success;
+    }
 
     return Material(
       color: Colors.transparent,
@@ -45,7 +63,7 @@ class QuizAnswerOption extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.r),
             border: Border.all(
               color: borderColor,
-              width: isSelected ? 1.5.w : 1.w,
+              width: (isSelected || isCorrect != null) ? 1.5.w : 1.w,
             ),
           ),
           child: Row(
@@ -57,19 +75,14 @@ class QuizAnswerOption extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: isSelected
-                        ? ColorPalette.secondary
-                        : ColorPalette.textMuted,
-                    width: 2.w,
-                  ),
+                  border: Border.all(color: indicatorColor, width: 2.w),
                 ),
-                child: isSelected
+                child: innerDotColor != null
                     ? Container(
                         width: 10.w,
                         height: 10.w,
-                        decoration: const BoxDecoration(
-                          color: ColorPalette.secondary,
+                        decoration: BoxDecoration(
+                          color: innerDotColor,
                           shape: BoxShape.circle,
                         ),
                       )
@@ -83,7 +96,9 @@ class QuizAnswerOption extends StatelessWidget {
                   textDirection: TextDirection.rtl,
                   style: AppTextStyle.font15TextPrimaryMediumTajawal().copyWith(
                     color: textColor,
-                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                    fontWeight: (isSelected || isCorrect != null)
+                        ? FontWeight.w700
+                        : FontWeight.w500,
                   ),
                 ),
               ),

@@ -58,13 +58,16 @@ class LessonMaterialTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(
-                      title,
-                      textAlign: TextAlign.right,
-                      textDirection: TextDirection.rtl,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyle.font16TextPrimarySemiBoldKufam(),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        title,
+                        textAlign: TextAlign.right,
+                        textDirection: TextDirection.rtl,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyle.font16TextPrimarySemiBoldKufam(),
+                      ),
                     ),
                     verticalSpace(5),
                     Text(

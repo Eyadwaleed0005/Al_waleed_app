@@ -21,7 +21,8 @@ class LessonQuizModel extends LessonQuizEntity {
         map['option3'] ?? '',
         map['option4'] ?? '',
       ],
-      correctOption: map['correctOption'] ?? 1,
+
+      correctOption: ((map['correctOption'] as num?)?.toInt() ?? 1) - 1,
       questionScore: map['questionScore'] ?? 1,
     );
   }
