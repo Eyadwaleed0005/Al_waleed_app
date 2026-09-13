@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:al_waleed/app/dependency_injection/service_locator.dart';
 import 'package:al_waleed/core/style/app_color.dart';
+import 'package:al_waleed/features/exams/presentation/screens/exams_screen.dart';
 import 'package:al_waleed/features/home/presentation/screens/home_screen.dart';
 import 'package:al_waleed/features/lessons/presentation/screens/lessons_screen.dart';
 import 'package:al_waleed/features/main_navigation/presentation/cubit/bottom_navigation_cubit.dart';
@@ -24,8 +24,7 @@ class MainNavigationScreen extends StatelessWidget {
     StudyNotesScreen(),
     HomeScreen(),
     LessonsScreen(),
-    // مؤقتًا لحين انتهاء فيتشر الامتحانات.
-    StudyNotesScreen(),
+    ExamsScreen(),
   ];
 
   @override

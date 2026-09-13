@@ -17,6 +17,8 @@ class ColorPalette {
   static const Color lightYellow = Color(0xFFEEE9CB);
   static const Color sageGray = Color(0xFFE0E7E2);
   static const Color fogWhite = Color(0xFFF4F7F5);
+  static const Color deepOlive = Color(0xFF021C14);
+  static const Color cyan = Color(0xFF172E26);
 
   // ===== Primary & Brand Semantics =====
   static const Color primary = emeraldGreen;
@@ -24,7 +26,6 @@ class ColorPalette {
   static const Color primaryPressed = darkForestGreen;
   static const Color primarySoftBackground = paleMint;
   static const Color deepSurface = Color(0xFF021C14);
-
 
   static const Color secondary = oceanBlue;
   static const Color accent = softSage;
@@ -60,4 +61,3 @@ class ColorPalette {
   static const Color error = Color(0xFFC0392B);
   static const Color info = oceanBlue;
 }
-

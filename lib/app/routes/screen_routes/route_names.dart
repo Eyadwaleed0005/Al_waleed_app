@@ -24,4 +24,10 @@ abstract final class RouteNames {
   static const String liveSessionScreen = '/liveSessionScreen';
 
   static const String lessonQuiz = '/lessonQuiz';
+
+  static const String examScreen = '/examScreen';
+
+  static const String startExamScreen = '/startExamScreen';
+
+  static const String resultExamScreen = '/resultExamScreen';
 }
