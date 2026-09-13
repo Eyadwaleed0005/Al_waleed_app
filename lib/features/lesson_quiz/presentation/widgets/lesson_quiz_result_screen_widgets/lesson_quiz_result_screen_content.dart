@@ -5,25 +5,16 @@ import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:al_waleed/core/widgets/background/background_student_layout.dart';
 import 'package:al_waleed/core/widgets/custom_button.dart';
 import 'package:al_waleed/core/widgets/custom_secondary_button.dart';
-import 'package:al_waleed/features/lesson_quiz/presentation/widgets/lesson_quiz_question_screen_widgets/quiz_header.dart';
+import 'package:al_waleed/features/lesson_quiz/presentation/cubit/lesson_quiz_cubit.dart';
+import 'package:al_waleed/features/lesson_quiz/presentation/screens/lesson_quiz_review_screen.dart';
 import 'package:al_waleed/features/lesson_quiz/presentation/widgets/quiz_info_card.dart';
 import 'package:al_waleed/features/lesson_quiz/presentation/widgets/quiz_result_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LessonQuizResultScreenContent extends StatelessWidget {
-  const LessonQuizResultScreenContent({
-    super.key,
-    this.score = 3,
-    this.totalQuestions = 5,
-    this.onReviewAnswers,
-    this.onRetryQuiz,
-  });
-
-  final int score;
-  final int totalQuestions;
-  final VoidCallback? onReviewAnswers;
-  final VoidCallback? onRetryQuiz;
+  const LessonQuizResultScreenContent({super.key});
 
   @override
   Widget build(BuildContext context) {

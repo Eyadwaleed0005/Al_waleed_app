@@ -69,11 +69,17 @@ class LessonDetailsContentScreen extends StatelessWidget {
               ],
 
               LessonMaterialTile(
-                title: 'اختبار الكيمياء العضوية',
+                title: lesson.title,
                 subtitle: 'سؤال · ٤ درجات',
                 icon: AppImage().exam,
                 iconBackground: ColorPalette.accent,
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    RouteNames.lessonQuiz,
+                    arguments: lesson.lessonId,
+                  );
+                },
               ),
             ],
           ),

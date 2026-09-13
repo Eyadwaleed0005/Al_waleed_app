@@ -1,3 +1,4 @@
+
 import 'package:al_waleed/core/helper/arabic_numbers_helper.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
@@ -21,7 +22,8 @@ class QuizProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final progress = total == 0 ? 0.0 : current / total;
+
+    final progress = total == 0 ? 0.0 : (current / total).clamp(0.0, 1.0);
     final percentage = (progress * 100).round();
 
     return Column(

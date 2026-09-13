@@ -1,24 +1,24 @@
-import 'package:al_waleed/core/helper/arabic_numbers_helper.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
-import 'package:al_waleed/core/style/textstyles.dart';
-import 'package:al_waleed/core/widgets/background/background_student_layout.dart';
-import 'package:al_waleed/features/lesson_quiz/presentation/widgets/lesson_quiz_question_screen_widgets/quiz_header.dart';
+import 'package:al_waleed/features/lesson_quiz/presentation/cubit/lesson_quiz_cubit.dart';
 import 'package:al_waleed/features/lesson_quiz/presentation/widgets/lesson_quiz_question_screen_widgets/quiz_progress.dart';
 import 'package:al_waleed/features/lesson_quiz/presentation/widgets/lesson_quiz_question_screen_widgets/quiz_question_content_card.dart';
 import 'package:al_waleed/features/lesson_quiz/presentation/widgets/quiz_review_navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class LessonQuizReviewScreenContent extends StatelessWidget {
+class LessonQuizReviewScreenContent extends StatefulWidget {
   const LessonQuizReviewScreenContent({super.key});
 
-  static const List<String> _answers = [
-    'الصوديوم',
-    'الحديد',
-    'الكالسيوم',
-    'المغنيسيوم',
-  ];
+  @override
+  State<LessonQuizReviewScreenContent> createState() =>
+      _LessonQuizReviewScreenContentState();
+}
+
+class _LessonQuizReviewScreenContentState
+    extends State<LessonQuizReviewScreenContent> {
+  int _index = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -40,18 +40,13 @@ class LessonQuizReviewScreenContent extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const QuizProgress(
-                        current: 1,
-                        total: 2,
-                        statusText: 'إجابة صحيحة',
-                        statusColor: ColorPalette.success,
-                      ),
-                      verticalSpace(16),
-                      const QuizQuestionContentCard(
-                        questionText:
-                            'أي العناصر التالية يُعد من العناصر الانتقالية؟',
-                        answers: _answers,
-                        selectedAnswer: 'الحديد',
+                      QuizProgress(
+                        current: _index + 1,
+                        total: state.questions.length,
+                        statusText: isCorrect ? 'إجابة صحيحة' : 'إجابة خاطئة',
+                        statusColor: isCorrect
+                            ? ColorPalette.success
+                            : ColorPalette.error,
                       ),
                       verticalSpace(16),
                       Text(
@@ -68,18 +63,20 @@ class LessonQuizReviewScreenContent extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 20.h),
                 child: QuizReviewNavigation(
-                  isFirstQuestion: true,
-                  isLastQuestion: false,
-                  onPrevious: () {
-                    Navigator.pop(context);
-                  },
-                  onNext: () {},
+                  isFirstQuestion: _index == 0,
+                  isLastQuestion: isLastQuestion,
+                  onPrevious: _index == 0
+                      ? () => Navigator.pop(context)
+                      : () => setState(() => _index--),
+                  onNext: isLastQuestion
+                      ? () => Navigator.pop(context)
+                      : () => setState(() => _index++),
                 ),
               ),
             ],
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

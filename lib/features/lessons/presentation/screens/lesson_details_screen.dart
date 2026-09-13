@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LessonDetailsScreen extends StatelessWidget {
-  const LessonDetailsScreen({super.key, required this.lesson});
+  const LessonDetailsScreen({super.key,required  this.lesson});
 
   final LessonEntity lesson;
 
@@ -30,3 +30,4 @@ class LessonDetailsScreen extends StatelessWidget {
     );
   }
 }
+
