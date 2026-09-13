@@ -14,8 +14,6 @@ import 'package:al_waleed/features/notifications/domain/use_cases/stream_opened_
 import 'package:al_waleed/features/notifications/domain/use_cases/sync_notification_grade_topic_use_case.dart';
 import 'package:al_waleed/features/notifications/domain/use_cases/unsubscribe_notification_grade_topic_use_case.dart';
 import 'package:al_waleed/features/notifications/presentation/cubit/notification_cubit.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 
 void registerNotificationDependencies(GetIt getIt) {
