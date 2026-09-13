@@ -27,9 +27,7 @@ class LessonQuizReviewScreenContent extends StatelessWidget {
         backgroundColor: Colors.transparent,
         appBar: QuizHeader(
           title: 'مراجعة الإجابات',
-          trailingBadge: QuizProgressBadge(
-            text: '${toArabicNumbers(4)} درجات',
-          ),
+          trailingBadge: QuizProgressBadge(text: '${toArabicNumbers(4)} درجات'),
         ),
         body: SafeArea(
           top: false,
@@ -38,12 +36,7 @@ class LessonQuizReviewScreenContent extends StatelessWidget {
               Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
-                  padding: EdgeInsets.fromLTRB(
-                    20.w,
-                    12.h,
-                    20.w,
-                    16.h,
-                  ),
+                  padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 16.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -65,11 +58,8 @@ class LessonQuizReviewScreenContent extends StatelessWidget {
                         'الإجابة الصحيحة هي الحديد.',
                         textAlign: TextAlign.center,
                         textDirection: TextDirection.rtl,
-                        style:
-                            AppTextStyle.font12TextSecondaryRegularTajawal()
-                                .copyWith(
-                                  color: ColorPalette.textSecondary,
-                                ),
+                        style: AppTextStyle.font12TextSecondaryRegularTajawal()
+                            .copyWith(color: ColorPalette.textSecondary),
                       ),
                     ],
                   ),

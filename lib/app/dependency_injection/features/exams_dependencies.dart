@@ -18,14 +18,19 @@ import 'package:al_waleed/features/exams/domain/use_cases/save_exam_answer_use_c
 import 'package:al_waleed/features/exams/domain/use_cases/start_student_exam_use_case.dart';
 import 'package:al_waleed/features/exams/domain/use_cases/stream_available_exams_use_case.dart';
 import 'package:al_waleed/features/exams/domain/use_cases/submit_student_exam_use_case.dart';
+import 'package:al_waleed/features/exams/presentation/cubit/exams_screen_cubit.dart';
+import 'package:al_waleed/features/exams/presentation/cubit/pending_exam_submissions_sync_cubit.dart';
+import 'package:al_waleed/features/exams/presentation/cubit/start_exam_screen_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 
 void registerExamsDependencies(GetIt getIt) {
   _registerDataSources(getIt);
   _registerRepositories(getIt);
   _registerUseCases(getIt);
+  _registerCubits(getIt);
 }
 
 void _registerDataSources(GetIt getIt) {
@@ -33,6 +38,7 @@ void _registerDataSources(GetIt getIt) {
     return FirebaseStudentExamsRemoteDataSource(
       firestore: getIt<FirebaseFirestore>(),
       functions: getIt<FirebaseFunctions>(),
+      firebaseAuth: getIt<FirebaseAuth>(),
     );
   });
 
@@ -131,6 +137,33 @@ void _registerUseCases(GetIt getIt) {
       markExpiredExamAttemptsPendingUseCase:
           getIt<MarkExpiredExamAttemptsPendingUseCase>(),
       submitStudentExamUseCase: getIt<SubmitStudentExamUseCase>(),
+    );
+  });
+}
+
+void _registerCubits(GetIt getIt) {
+  getIt.registerFactory<ExamsScreenCubit>(() {
+    return ExamsScreenCubit(
+      streamAvailableExamsUseCase: getIt<StreamAvailableExamsUseCase>(),
+      startStudentExamUseCase: getIt<StartStudentExamUseCase>(),
+      resumeStudentExamUseCase: getIt<ResumeStudentExamUseCase>(),
+      getPendingExamSubmissionsUseCase:
+          getIt<GetPendingExamSubmissionsUseCase>(),
+    );
+  });
+
+  getIt.registerFactory<StartExamScreenCubit>(() {
+    return StartExamScreenCubit(
+      getCachedExamAttemptUseCase: getIt<GetCachedExamAttemptUseCase>(),
+      saveExamAnswerUseCase: getIt<SaveExamAnswerUseCase>(),
+      submitStudentExamUseCase: getIt<SubmitStudentExamUseCase>(),
+    );
+  });
+
+  getIt.registerFactory<PendingExamSubmissionsSyncCubit>(() {
+    return PendingExamSubmissionsSyncCubit(
+      retryPendingExamSubmissionsUseCase:
+          getIt<RetryPendingExamSubmissionsUseCase>(),
     );
   });
 }

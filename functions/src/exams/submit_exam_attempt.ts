@@ -20,41 +20,41 @@ import {
 } from "./exam_functions_helper";
 
 interface SubmittedAnswer {
-    questionId: string;
-    selectedChoiceIndex: number;
+  questionId: string;
+  selectedChoiceIndex: number;
 }
 
 interface ValidatedQuestion {
-    questionId: string;
-    correctOption: number;
-    questionScore: number;
+  questionId: string;
+  correctOption: number;
+  questionScore: number;
 }
 
 interface ExamSubmissionResult {
-    resultId: string;
-    examId: string;
-    examName: string;
-    score: number;
-    totalScore: number;
-    correctAnswers: number;
-    wrongAnswers: number;
-    unansweredQuestions: number;
-    submittedAt: Timestamp;
+  resultId: string;
+  examId: string;
+  examName: string;
+  score: number;
+  totalScore: number;
+  correctAnswers: number;
+  wrongAnswers: number;
+  unansweredQuestions: number;
+  submittedAt: Timestamp;
 }
 
 interface CalculatedAnswer {
-    questionId: string;
-    selectedChoiceIndex: number;
-    isCorrect: boolean;
-    awardedScore: number;
+  questionId: string;
+  selectedChoiceIndex: number;
+  isCorrect: boolean;
+  awardedScore: number;
 }
 
 interface CalculatedSubmission {
-    score: number;
-    correctAnswers: number;
-    wrongAnswers: number;
-    unansweredQuestions: number;
-    answers: CalculatedAnswer[];
+  score: number;
+  correctAnswers: number;
+  wrongAnswers: number;
+  unansweredQuestions: number;
+  answers: CalculatedAnswer[];
 }
 
 export const submitExamAttempt = onCall(
@@ -196,7 +196,7 @@ export const submitExamAttempt = onCall(
 
           if (
             attemptStatus ===
-                        examAttemptStatuses.submitted
+            examAttemptStatuses.submitted
           ) {
             return readExistingSubmissionResult(
               attemptData,
@@ -209,7 +209,7 @@ export const submitExamAttempt = onCall(
 
           if (
             attemptStatus !==
-                        examAttemptStatuses.inProgress
+            examAttemptStatuses.inProgress
           ) {
             throw new HttpsError(
               "failed-precondition",
@@ -238,10 +238,10 @@ export const submitExamAttempt = onCall(
           );
 
           const calculatedSubmission =
-                        calculateSubmission(
-                          submittedAnswers,
-                          questions,
-                        );
+            calculateSubmission(
+              submittedAnswers,
+              questions,
+            );
 
           const submittedAt = Timestamp.now();
 
@@ -268,7 +268,7 @@ export const submitExamAttempt = onCall(
                 questionId: answer.questionId,
                 studentId,
                 selectedChoiceIndex:
-                                    answer.selectedChoiceIndex,
+                  answer.selectedChoiceIndex,
                 isCorrect: answer.isCorrect,
                 awardedScore: answer.awardedScore,
                 answeredAt: submittedAt,
@@ -284,11 +284,11 @@ export const submitExamAttempt = onCall(
               status: examAttemptStatuses.submitted,
               score: calculatedSubmission.score,
               correctAnswers:
-                                calculatedSubmission.correctAnswers,
+                calculatedSubmission.correctAnswers,
               wrongAnswers:
-                                calculatedSubmission.wrongAnswers,
+                calculatedSubmission.wrongAnswers,
               unansweredQuestions:
-                                calculatedSubmission.unansweredQuestions,
+                calculatedSubmission.unansweredQuestions,
               submittedAt,
               updatedAt: submittedAt,
             },
@@ -301,11 +301,11 @@ export const submitExamAttempt = onCall(
             score: calculatedSubmission.score,
             totalScore: examTotalScore,
             correctAnswers:
-                            calculatedSubmission.correctAnswers,
+              calculatedSubmission.correctAnswers,
             wrongAnswers:
-                            calculatedSubmission.wrongAnswers,
+              calculatedSubmission.wrongAnswers,
             unansweredQuestions:
-                            calculatedSubmission.unansweredQuestions,
+              calculatedSubmission.unansweredQuestions,
             submittedAt,
           };
         },
@@ -337,8 +337,8 @@ function readSubmittedAnswers(
     (rawAnswer): SubmittedAnswer => {
       if (
         typeof rawAnswer !== "object" ||
-                rawAnswer === null ||
-                Array.isArray(rawAnswer)
+        rawAnswer === null ||
+        Array.isArray(rawAnswer)
       ) {
         throw new HttpsError(
           "invalid-argument",
@@ -347,7 +347,7 @@ function readSubmittedAnswers(
       }
 
       const answerData =
-                rawAnswer as Record<string, unknown>;
+        rawAnswer as Record<string, unknown>;
 
       const questionId = getRequiredString(
         answerData,
@@ -355,13 +355,13 @@ function readSubmittedAnswers(
       );
 
       const selectedChoiceIndex =
-                answerData.selectedChoiceIndex;
+        answerData.selectedChoiceIndex;
 
       if (
         typeof selectedChoiceIndex !== "number" ||
-                !Number.isInteger(selectedChoiceIndex) ||
-                selectedChoiceIndex < 0 ||
-                selectedChoiceIndex > 3
+        !Number.isInteger(selectedChoiceIndex) ||
+        selectedChoiceIndex < 0 ||
+        selectedChoiceIndex > 3
       ) {
         throw new HttpsError(
           "invalid-argument",
@@ -457,12 +457,12 @@ function validateQuestion(
     );
   }
 
-  const correctOption = readPositiveInteger(
+  const correctOption = readNonNegativeInteger(
     questionData,
     "correctOption",
   );
 
-  if (correctOption > 4) {
+  if (correctOption > 3) {
     throw new HttpsError(
       "data-loss",
       "An exam question has an invalid correct option.",
@@ -520,9 +520,9 @@ function calculateSubmission(
   questions: ValidatedQuestion[],
 ): CalculatedSubmission {
   const questionsById = new Map<
-        string,
-        ValidatedQuestion
-    >();
+    string,
+    ValidatedQuestion
+  >();
 
   for (const question of questions) {
     questionsById.set(
@@ -549,8 +549,8 @@ function calculateSubmission(
     }
 
     const isCorrect =
-            submittedAnswer.selectedChoiceIndex + 1 ===
-            question.correctOption;
+      submittedAnswer.selectedChoiceIndex ===
+      question.correctOption;
 
     const awardedScore = isCorrect ?
       question.questionScore :
@@ -566,7 +566,7 @@ function calculateSubmission(
     calculatedAnswers.push({
       questionId: submittedAnswer.questionId,
       selectedChoiceIndex:
-                submittedAnswer.selectedChoiceIndex,
+        submittedAnswer.selectedChoiceIndex,
       isCorrect,
       awardedScore,
     });
@@ -577,7 +577,7 @@ function calculateSubmission(
     correctAnswers,
     wrongAnswers,
     unansweredQuestions:
-            questions.length - submittedAnswers.length,
+      questions.length - submittedAnswers.length,
     answers: calculatedAnswers,
   };
 }
@@ -605,10 +605,10 @@ function readExistingSubmissionResult(
   );
 
   const unansweredQuestions =
-        readNonNegativeInteger(
-          attemptData,
-          "unansweredQuestions",
-        );
+    readNonNegativeInteger(
+      attemptData,
+      "unansweredQuestions",
+    );
 
   const submittedAt = readRequiredTimestamp(
     attemptData,
@@ -659,7 +659,7 @@ function readRequiredString(
 
   if (
     typeof value !== "string" ||
-        value.trim().length === 0
+    value.trim().length === 0
   ) {
     throw new HttpsError(
       "data-loss",
@@ -678,8 +678,8 @@ function readPositiveInteger(
 
   if (
     typeof value !== "number" ||
-        !Number.isInteger(value) ||
-        value <= 0
+    !Number.isInteger(value) ||
+    value <= 0
   ) {
     throw new HttpsError(
       "data-loss",
@@ -698,8 +698,8 @@ function readNonNegativeInteger(
 
   if (
     typeof value !== "number" ||
-        !Number.isInteger(value) ||
-        value < 0
+    !Number.isInteger(value) ||
+    value < 0
   ) {
     throw new HttpsError(
       "data-loss",

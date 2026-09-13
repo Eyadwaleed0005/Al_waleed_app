@@ -9,25 +9,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class LiveSessionScreen extends StatelessWidget {
   final String gradeId;
 
-  const LiveSessionScreen({
-    super.key,
-    required this.gradeId,
-  });
+  const LiveSessionScreen({super.key, required this.gradeId});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<LiveSessionCubit>()
-        ..getLiveSession(
-          gradeId: gradeId,
-        ),
+      create: (_) =>
+          getIt<LiveSessionCubit>()..getLiveSession(gradeId: gradeId),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: AppSystemUi.dark(),
-        child: Scaffold(
-          body: LiveSessionScreenContent(
-            gradeId: gradeId,
-          ),
-        ),
+        child: Scaffold(body: LiveSessionScreenContent(gradeId: gradeId)),
       ),
     );
   }

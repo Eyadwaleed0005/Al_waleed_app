@@ -10,10 +10,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class LessonsCubit extends Cubit<LessonsState> {
   final StreamLessonsUseCase _streamLessonsUseCase;
 
-  LessonsCubit({
-    required StreamLessonsUseCase streamLessonsUseCase,
-  }) : _streamLessonsUseCase = streamLessonsUseCase,
-       super(const LessonsInitial());
+  LessonsCubit({required StreamLessonsUseCase streamLessonsUseCase})
+    : _streamLessonsUseCase = streamLessonsUseCase,
+      super(const LessonsInitial());
 
   StreamSubscription<Either<AppErrorModel, List<LessonEntity>>>?
   _lessonsSubscription;
@@ -59,14 +58,10 @@ class LessonsCubit extends Cubit<LessonsState> {
   void _watchLessons() {
     if (!_canEmit) return;
 
-    _lessonsSubscription = _streamLessonsUseCase().listen(
-      _onLessonsResult,
-    );
+    _lessonsSubscription = _streamLessonsUseCase().listen(_onLessonsResult);
   }
 
-  void _onLessonsResult(
-    Either<AppErrorModel, List<LessonEntity>> result,
-  ) {
+  void _onLessonsResult(Either<AppErrorModel, List<LessonEntity>> result) {
     if (!_canEmit) return;
 
     result.fold(_emitFailure, _emitLessons);

@@ -18,8 +18,8 @@ class SubmitStudentExamUseCase {
   Future<Either<AppErrorModel, StudentExamResultEntity>> call({
     required SubmitStudentExamEntity submission,
   }) async {
-    final Either<AppErrorModel, Unit> pendingResult =
-        await _cacheRepository.markPendingSubmission(
+    final Either<AppErrorModel, Unit> pendingResult = await _cacheRepository
+        .markPendingSubmission(
           resultId: submission.resultId,
           isTimeExpired: submission.isAutomatic,
         );
@@ -38,9 +38,7 @@ class SubmitStudentExamUseCase {
     }
 
     final Either<AppErrorModel, StudentExamResultEntity> submissionResult =
-        await _studentExamsRepository.submitExam(
-          submission: submission,
-        );
+        await _studentExamsRepository.submitExam(submission: submission);
 
     return submissionResult
         .fold<Future<Either<AppErrorModel, StudentExamResultEntity>>>(

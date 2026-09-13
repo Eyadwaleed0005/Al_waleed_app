@@ -7,9 +7,7 @@ import 'package:al_waleed/features/exams/domain/entities/submit_student_exam_ent
 abstract interface class StudentExamsRemoteDataSource {
   Stream<List<StudentExamEntity>> streamGradeExams({required String gradeId});
 
-  Stream<List<StudentExamAttemptEntity>> streamStudentAttempts({
-    required String studentId,
-  });
+  Stream<List<StudentExamAttemptEntity>> streamStudentAttempts();
 
   Future<StudentExamSessionEntity> startExam({required String examId});
 

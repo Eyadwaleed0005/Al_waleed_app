@@ -31,9 +31,8 @@ class QuizInfoCard extends StatelessWidget {
             children: [
               Text(
                 'الدرجة',
-                style: AppTextStyle.font13TextSecondaryRegularTajawal().copyWith(
-                  color: ColorPalette.textSecondary,
-                ),
+                style: AppTextStyle.font13TextSecondaryRegularTajawal()
+                    .copyWith(color: ColorPalette.textSecondary),
                 textDirection: TextDirection.rtl,
               ),
               Text(
@@ -53,9 +52,8 @@ class QuizInfoCard extends StatelessWidget {
             children: [
               Text(
                 'إعادة المحاولة',
-                style: AppTextStyle.font13TextSecondaryRegularTajawal().copyWith(
-                  color: ColorPalette.textSecondary,
-                ),
+                style: AppTextStyle.font13TextSecondaryRegularTajawal()
+                    .copyWith(color: ColorPalette.textSecondary),
                 textDirection: TextDirection.rtl,
               ),
               Text(

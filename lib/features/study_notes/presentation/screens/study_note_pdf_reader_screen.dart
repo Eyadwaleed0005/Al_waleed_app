@@ -14,41 +14,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class StudyNotePdfReaderScreen extends StatefulWidget {
   final StudyNoteEntity note;
 
-  const StudyNotePdfReaderScreen({
-    super.key,
-    required this.note,
-  });
+  const StudyNotePdfReaderScreen({super.key, required this.note});
 
   @override
   State<StudyNotePdfReaderScreen> createState() =>
       _StudyNotePdfReaderScreenState();
 }
 
-class _StudyNotePdfReaderScreenState
-    extends State<StudyNotePdfReaderScreen> {
+class _StudyNotePdfReaderScreenState extends State<StudyNotePdfReaderScreen> {
   @override
   void initState() {
     super.initState();
 
     unawaited(
-      SystemChrome.setPreferredOrientations(
-        const [
-          DeviceOrientation.portraitUp,
-          DeviceOrientation.landscapeLeft,
-          DeviceOrientation.landscapeRight,
-        ],
-      ),
+      SystemChrome.setPreferredOrientations(const [
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]),
     );
   }
 
   @override
   void dispose() {
     unawaited(
-      SystemChrome.setPreferredOrientations(
-        const [
-          DeviceOrientation.portraitUp,
-        ],
-      ),
+      SystemChrome.setPreferredOrientations(const [
+        DeviceOrientation.portraitUp,
+      ]),
     );
 
     super.dispose();
@@ -61,8 +53,7 @@ class _StudyNotePdfReaderScreenState
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: AppSystemUi.dark(),
         child: BlocProvider<StudyNotePdfCubit>(
-          create: (_) =>
-              getIt<StudyNotePdfCubit>()..loadPdf(note: widget.note),
+          create: (_) => getIt<StudyNotePdfCubit>()..loadPdf(note: widget.note),
           child: StudyNotePdfReaderContent(note: widget.note),
         ),
       ),

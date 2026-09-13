@@ -41,20 +41,11 @@ class LessonQuizResultScreenContent extends StatelessWidget {
               Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
-                  padding: EdgeInsets.fromLTRB(
-                    20.w,
-                    12.h,
-                    20.w,
-                    16.h,
-                  ),
+                  padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 16.h),
                   child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.stretch,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      QuizResultCard(
-                        score: score,
-                        total: totalQuestions,
-                      ),
+                      QuizResultCard(score: score, total: totalQuestions),
                       verticalSpace(16),
                       QuizInfoCard(
                         scoreText:
@@ -67,24 +58,15 @@ class LessonQuizResultScreenContent extends StatelessWidget {
                         'يمكنك إعادة الاختبار لتحسين درجتك.',
                         textAlign: TextAlign.center,
                         textDirection: TextDirection.rtl,
-                        style:
-                            AppTextStyle.font12TextSecondaryRegularTajawal()
-                                .copyWith(
-                                  color:
-                                      ColorPalette.textSecondary,
-                                ),
+                        style: AppTextStyle.font12TextSecondaryRegularTajawal()
+                            .copyWith(color: ColorPalette.textSecondary),
                       ),
                     ],
                   ),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(
-                  20.w,
-                  8.h,
-                  20.w,
-                  20.h,
-                ),
+                padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 20.h),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

@@ -1,133 +1,138 @@
+import 'dart:async';
+
 import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
+import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
+import 'package:al_waleed/core/widgets/app_error_state.dart';
+import 'package:al_waleed/core/widgets/app_loading_indicator.dart';
 import 'package:al_waleed/core/widgets/custom_app_bar.dart';
-import 'package:al_waleed/features/exams/domain/entities/exam_question_entity.dart';
-import 'package:al_waleed/features/exams/presentation/widgets/finish_exam_dialog/finish_exam_confirmation_dialog.dart';
+import 'package:al_waleed/core/widgets/custom_dialog.dart';
+import 'package:al_waleed/core/widgets/custom_operation_result_dialog.dart';
+import 'package:al_waleed/features/exams/domain/entities/student_exam_question_entity.dart';
+import 'package:al_waleed/features/exams/presentation/cubit/pending_exam_submissions_sync_cubit.dart';
+import 'package:al_waleed/features/exams/presentation/cubit/start_exam_screen_cubit.dart';
 import 'package:al_waleed/features/exams/presentation/widgets/start_exam_widgets/exam_navigation_actions.dart';
 import 'package:al_waleed/features/exams/presentation/widgets/start_exam_widgets/exam_question_card.dart';
+import 'package:al_waleed/features/exams/presentation/widgets/start_exam_widgets/finish_exam_confirmation_dialog.dart';
 import 'package:al_waleed/features/exams/presentation/widgets/start_exam_widgets/start_exam_progress_header.dart';
 import 'package:al_waleed/features/exams/presentation/widgets/start_exam_widgets/start_exam_timer.dart';
 import 'package:al_waleed/features/profile/presentation/widgets/profile_background.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class StartExamScreenContent extends StatefulWidget {
-  final List<ExamQuestionEntity>? questions;
-  final String examTitle;
-  final String initialRemainingTime;
+  const StartExamScreenContent({super.key});
 
-  const StartExamScreenContent({
-    super.key,
-    this.questions,
-    this.examTitle = 'اختبار الكيمياء العضوية',
-    this.initialRemainingTime = '25:13',
-  });
   @override
-  State<StartExamScreenContent> createState() => _StartExamScreenContentState();
+  State<StartExamScreenContent> createState() {
+    return _StartExamScreenContentState();
+  }
 }
 
 class _StartExamScreenContentState extends State<StartExamScreenContent> {
-  static const List<ExamQuestionEntity> _defaultQuestions = [
-    ExamQuestionEntity(
-      id: '1',
-      questionText:
-          'أي المركبات التالية يُظهر ظاهرة التشاكل الهندسي (سيس - ترانس)؟',
-      imageUrl:
-          'https://plus.unsplash.com/premium_photo-1681426678542-613c306013e1?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      options: ['2-بيوتين', '1-بيوتين', '2-ميثيل بروبين', 'الإيثين'],
-      correctAnswerIndex: 0,
-    ),
-    ExamQuestionEntity(
-      id: '2',
-      questionText: 'ما هي المجموعة الوظيفية المميزة للكحولات؟',
-      options: [
-        'مجموعة الهيدروكسيل (-OH)',
-        'مجموعة الكاربونيل (C=O)',
-        'مجموعة الكربوكسيل (-COOH)',
-        'مجموعة الأمين (-NH2)',
-      ],
-      correctAnswerIndex: 0,
-    ),
-    ExamQuestionEntity(
-      id: '3',
-      questionText: 'ما هو الناتج الرئيسي عند أكسدة الكحول الأولي أكسدة تامة؟',
-      options: ['حمض كربوكسيلي', 'كيتون', 'ألدهيد فقط', 'إيثر'],
-      correctAnswerIndex: 0,
-    ),
-    ExamQuestionEntity(
-      id: '4',
-      questionText: 'أي من المركبات الآتية يعتبر من الهيدروكربونات الأروماتية؟',
-      options: ['البنزين العطري', 'الهكسان الحلقي', 'البروباين', 'البيوتان'],
-      correctAnswerIndex: 0,
-    ),
-    ExamQuestionEntity(
-      id: '5',
-      questionText: 'ما الصيغة الجزيئية العامة للألكانات غير الحلقية؟',
-      options: ['CnH2n+2', 'CnH2n', 'CnH2n-2', 'CnH2n-6'],
-      correctAnswerIndex: 0,
-    ),
-  ];
-
   late final PageController _pageController;
 
-  late final List<ExamQuestionEntity> _questions;
+  PendingExamSubmissionsSyncCubit? _pendingSubmissionsSyncCubit;
 
-  final Map<int, int> _selectedAnswers = {};
-
-  int _currentIndex = 0;
+  bool _isFinishDialogVisible = false;
+  bool _isFailureDialogVisible = false;
 
   @override
   void initState() {
     super.initState();
+
     _pageController = PageController();
-    _questions = widget.questions ?? _defaultQuestions;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_pendingSubmissionsSyncCubit != null) {
+      return;
+    }
+
+    final PendingExamSubmissionsSyncCubit syncCubit = context
+        .read<PendingExamSubmissionsSyncCubit>();
+
+    _pendingSubmissionsSyncCubit = syncCubit;
+
+    syncCubit.pauseAutomaticSync();
   }
 
   @override
   void dispose() {
+    _pendingSubmissionsSyncCubit?.resumeAutomaticSync();
+
     _pageController.dispose();
+
     super.dispose();
-  }
-
-  void _onNext() {
-    if (_currentIndex < _questions.length - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    } else {
-      _handleSubmitExam();
-    }
-  }
-
-  void _onPrevious() {
-    if (_currentIndex > 0) {
-      _pageController.previousPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
-
-  void _handleSubmitExam() {
-    FinishExamConfirmationDialog.show(
-      context,
-      answeredCount: _selectedAnswers.length,
-      totalQuestions: _questions.length,
-      onConfirmFinish: () {
-        Navigator.of(context).pushReplacementNamed(RouteNames.resultExamScreen);
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentQuestionNumber = _currentIndex + 1;
-    final totalQuestionsCount = _questions.length;
-    final completionPercentage = totalQuestionsCount > 0
-        ? ((currentQuestionNumber / totalQuestionsCount) * 100).round()
-        : 0;
+    return BlocConsumer<StartExamScreenCubit, StartExamScreenState>(
+      listenWhen:
+          (StartExamScreenState previous, StartExamScreenState current) {
+            return current is StartExamScreenActionFailure ||
+                current is StartExamScreenResultReady;
+          },
+      listener: _handleStateListener,
+      builder: _buildState,
+    );
+  }
+
+  Widget _buildState(BuildContext context, StartExamScreenState state) {
+    if (state is StartExamScreenInitial ||
+        state is StartExamScreenLoading ||
+        state is StartExamScreenResultReady) {
+      return const ProfileBackground(
+        child: SafeArea(
+          child: Center(
+            child: AppLoadingIndicator(
+              color: ColorPalette.primary,
+              size: 38,
+              strokeWidth: 4,
+              wavelength: 16,
+              waveSpeed: 10,
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (state is StartExamScreenFailure) {
+      return ProfileBackground(
+        child: SafeArea(
+          child: AppErrorState(
+            message: state.error.message,
+            onRetry: context.read<StartExamScreenCubit>().retryLoading,
+          ),
+        ),
+      );
+    }
+
+    if (state is StartExamScreenDataState) {
+      return _buildExamContent(context: context, state: state);
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  Widget _buildExamContent({
+    required BuildContext context,
+    required StartExamScreenDataState state,
+  }) {
+    final StartExamScreenCubit cubit = context.read<StartExamScreenCubit>();
+
+    final bool isSubmitting = state is StartExamScreenSubmitting;
+
+    final bool canInteract =
+        !isSubmitting &&
+        !state.isTimeExpired &&
+        !state.cachedAttempt.isPendingSubmission;
 
     return ProfileBackground(
       child: SafeArea(
@@ -138,66 +143,255 @@ class _StartExamScreenContentState extends State<StartExamScreenContent> {
               CustomAppBar(
                 backgroundColor: Colors.transparent,
                 showBackButton: false,
-                titleWidget: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    StartExamTimer(remainingTime: widget.initialRemainingTime),
-                    Expanded(
-                      child: Text(
-                        widget.examTitle,
-                        textAlign: TextAlign.end,
-                        style: AppTextStyle.font18TextPrimarySemiBoldKufam(),
+                titleWidget: Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Row(
+                    children: [
+                      StartExamTimer(
+                        remainingDuration: state.remainingDuration,
                       ),
-                    ),
-                  ],
+                      horizontalSpace(12),
+                      Expanded(
+                        child: Text(
+                          state.session.exam.examName,
+                          textDirection: TextDirection.rtl,
+                          textAlign: TextAlign.right,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyle.font18TextPrimarySemiBoldKufam(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              verticalSpace(10),
+              SizedBox(height: 10.h),
               StartExamProgressHeader(
-                currentQuestion: currentQuestionNumber,
-                totalQuestions: totalQuestionsCount,
-                completionPercentage: completionPercentage,
+                currentQuestion: state.currentQuestionIndex + 1,
+                totalQuestions: state.totalQuestionsCount,
+                completionPercentage: state.completionPercentage,
               ),
-              verticalSpace(14),
+              SizedBox(height: 14.h),
               Expanded(
-                child: PageView.builder(
-                  controller: _pageController,
-                  physics: const BouncingScrollPhysics(),
-                  onPageChanged: (index) {
-                    setState(() {
-                      _currentIndex = index;
-                    });
-                  },
-                  itemCount: _questions.length,
-                  itemBuilder: (context, index) {
-                    final question = _questions[index];
-                    return SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      child: ExamQuestionCard(
-                        questionText: question.questionText,
-                        imageQuestion: question.imageUrl,
-                        options: question.options,
-                        selectedIndex: _selectedAnswers[index] ?? -1,
-                        onOptionSelected: (selectedOption) {
-                          setState(() {
-                            _selectedAnswers[index] = selectedOption;
-                          });
-                        },
-                      ),
-                    );
-                  },
+                child: IgnorePointer(
+                  ignoring: !canInteract,
+                  child: PageView.builder(
+                    controller: _pageController,
+                    physics: canInteract
+                        ? const BouncingScrollPhysics()
+                        : const NeverScrollableScrollPhysics(),
+                    onPageChanged: cubit.changeQuestion,
+                    itemCount: state.session.questions.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final StudentExamQuestionEntity question =
+                          state.session.questions[index];
+
+                      final int? selectedChoiceIndex = state
+                          .selectedChoiceIndexFor(question.questionId);
+
+                      return SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: ExamQuestionCard(
+                          questionText: question.questionText,
+                          imageQuestion: question.questionImageUrl,
+                          options: question.choices,
+                          selectedIndex: selectedChoiceIndex,
+                          isEnabled: canInteract,
+                          onOptionSelected: (int choiceIndex) {
+                            final int? updatedChoiceIndex =
+                                selectedChoiceIndex == choiceIndex
+                                ? null
+                                : choiceIndex;
+
+                            unawaited(
+                              cubit.saveAnswer(
+                                questionId: question.questionId,
+                                selectedChoiceIndex: updatedChoiceIndex,
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
-              verticalSpace(12),
+              SizedBox(height: 12.h),
               ExamNavigationActions(
-                onPreviousPressed: _currentIndex > 0 ? _onPrevious : null,
-                onNextPressed: _onNext,
-                onSubmitPressed: _handleSubmitExam,
+                isSubmitting: isSubmitting,
+                onPreviousPressed: canInteract && !state.isFirstQuestion
+                    ? _goToPreviousQuestion
+                    : null,
+                onNextPressed: canInteract && !state.isLastQuestion
+                    ? _goToNextQuestion
+                    : null,
+                onSubmitPressed: canInteract
+                    ? () {
+                        unawaited(
+                          _showFinishExamDialog(context: context, state: state),
+                        );
+                      }
+                    : null,
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _handleStateListener(BuildContext context, StartExamScreenState state) {
+    if (state is StartExamScreenActionFailure) {
+      unawaited(_showActionFailureDialog(context: context, state: state));
+
+      return;
+    }
+
+    if (state is StartExamScreenResultReady) {
+      Navigator.of(context).pushReplacementNamed(
+        RouteNames.resultExamScreen,
+        arguments: state.result,
+      );
+    }
+  }
+
+  void _goToPreviousQuestion() {
+    if (!_pageController.hasClients) {
+      return;
+    }
+
+    unawaited(
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
+
+  void _goToNextQuestion() {
+    if (!_pageController.hasClients) {
+      return;
+    }
+
+    unawaited(
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
+
+  Future<void> _showFinishExamDialog({
+    required BuildContext context,
+    required StartExamScreenDataState state,
+  }) async {
+    if (_isFinishDialogVisible ||
+        state.isTimeExpired ||
+        state.cachedAttempt.isPendingSubmission) {
+      return;
+    }
+
+    _isFinishDialogVisible = true;
+
+    final StartExamScreenCubit cubit = context.read<StartExamScreenCubit>();
+
+    await FinishExamConfirmationDialog.show(
+      context,
+      answeredCount: state.answeredQuestionsCount,
+      totalQuestions: state.totalQuestionsCount,
+      onConfirmFinish: () {
+        if (!cubit.isClosed) {
+          unawaited(cubit.submitExam(isAutomatic: false));
+        }
+      },
+    );
+
+    _isFinishDialogVisible = false;
+  }
+
+  Future<void> _showActionFailureDialog({
+    required BuildContext context,
+    required StartExamScreenActionFailure state,
+  }) async {
+    if (_isFailureDialogVisible) {
+      return;
+    }
+
+    _isFailureDialogVisible = true;
+
+    final StartExamScreenCubit cubit = context.read<StartExamScreenCubit>();
+
+    final bool? shouldRetry = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return PopScope(
+          canPop: false,
+          child: CustomOperationResultDialog(
+            type: CustomOperationResultType.failure,
+            title: state.isSubmissionFailure
+                ? 'تعذر تسليم الاختبار'
+                : 'تعذر حفظ الإجابة',
+            message: state.error.message,
+            actionText: state.isSubmissionFailure ? 'إعادة المحاولة' : 'حسنًا',
+            secondaryActionText: state.isSubmissionFailure
+                ? 'المحاولة لاحقًا'
+                : null,
+            onActionPressed: () {
+              Navigator.of(dialogContext).pop(state.isSubmissionFailure);
+            },
+            onSecondaryActionPressed: state.isSubmissionFailure
+                ? () {
+                    unawaited(
+                      _confirmAttemptLater(failureDialogContext: dialogContext),
+                    );
+                  }
+                : null,
+          ),
+        );
+      },
+    );
+
+    _isFailureDialogVisible = false;
+
+    if (!mounted || cubit.isClosed) {
+      return;
+    }
+
+    if (!state.isSubmissionFailure) {
+      cubit.restoreExamState();
+
+      return;
+    }
+
+    if (shouldRetry == true) {
+      await cubit.submitExam(isAutomatic: state.isTimeExpired);
+
+      return;
+    }
+
+    if (shouldRetry == false && Navigator.of(context).canPop()) {
+      Navigator.of(context).pop<String>(state.session.exam.examId);
+    }
+  }
+
+  Future<void> _confirmAttemptLater({
+    required BuildContext failureDialogContext,
+  }) async {
+    final bool? isConfirmed = await CustomDialog.showConfirm(
+      failureDialogContext,
+      title: 'المحاولة لاحقًا',
+      message:
+          'سيتم إرسال إجاباتك تلقائيًا عند إمكانية الإرسال، '
+          'لكن لن تتمكن من معرفة النتيجة من داخل التطبيق. '
+          'لمعرفة النتيجة تواصل مع المعلم.',
+      primaryText: 'المحاولة لاحقًا',
+      secondaryText: 'العودة',
+      icon: Icons.info_outline_rounded,
+    );
+    if (isConfirmed != true || !failureDialogContext.mounted) {
+      return;
+    }
+    Navigator.of(failureDialogContext).pop(false);
   }
 }

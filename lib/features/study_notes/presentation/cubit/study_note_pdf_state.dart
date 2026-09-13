@@ -17,15 +17,11 @@ final class StudyNotePdfLoading extends StudyNotePdfState {
 final class StudyNotePdfSuccess extends StudyNotePdfState {
   final Uint8List pdfBytes;
 
-  const StudyNotePdfSuccess({
-    required this.pdfBytes,
-  });
+  const StudyNotePdfSuccess({required this.pdfBytes});
 }
 
 final class StudyNotePdfFailure extends StudyNotePdfState {
   final AppErrorModel error;
 
-  const StudyNotePdfFailure({
-    required this.error,
-  });
+  const StudyNotePdfFailure({required this.error});
 }

@@ -1,17 +1,11 @@
 // Applies the Chain of Responsibility pattern to login field validation.
-enum LoginValidationField {
-  email,
-  password,
-}
+enum LoginValidationField { email, password }
 
 class LoginValidationRequest {
   final LoginValidationField field;
   final String value;
 
-  const LoginValidationRequest({
-    required this.field,
-    required this.value,
-  });
+  const LoginValidationRequest({required this.field, required this.value});
 }
 
 abstract class LoginValidationHandler {

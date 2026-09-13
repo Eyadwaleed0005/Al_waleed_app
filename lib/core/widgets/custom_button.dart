@@ -1,6 +1,7 @@
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
+import 'package:al_waleed/core/widgets/app_loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -34,15 +35,22 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color buttonBackground = background ?? ColorPalette.primary;
+
+    final Color buttonForeground = foreground ?? ColorPalette.textLight;
+
     return SizedBox(
       width: width ?? double.infinity,
       height: height ?? 52.h,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: background ?? ColorPalette.primary,
-          disabledBackgroundColor: ColorPalette.disabled,
-          foregroundColor: foreground ?? ColorPalette.textLight,
+          backgroundColor: buttonBackground,
+          disabledBackgroundColor: isLoading
+              ? buttonBackground
+              : ColorPalette.disabled,
+          foregroundColor: buttonForeground,
+          disabledForegroundColor: buttonForeground,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14.r),
@@ -52,13 +60,12 @@ class CustomButton extends StatelessWidget {
           ),
         ),
         child: isLoading
-            ? SizedBox(
-                width: 22.w,
-                height: 22.w,
-                child: CircularProgressIndicator(
-                  color: foreground ?? ColorPalette.textLight,
-                  strokeWidth: 2.5,
-                ),
+            ? AppLoadingIndicator(
+                color: buttonForeground,
+                size: 22,
+                strokeWidth: 2.5,
+                wavelength: 12,
+                waveSpeed: 10,
               )
             : Row(
                 mainAxisSize: MainAxisSize.min,
@@ -68,7 +75,7 @@ class CustomButton extends StatelessWidget {
                   Text(
                     text,
                     style: AppTextStyle.font15TextLightBoldTajawal().copyWith(
-                      color: foreground,
+                      color: buttonForeground,
                     ),
                   ),
                   if (suffixIcon != null) ...[horizontalSpace(8), suffixIcon!],

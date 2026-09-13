@@ -1,17 +1,16 @@
 import 'package:al_waleed/core/errors/error_model/app_error_model.dart';
-import 'package:al_waleed/features/exams/data/data_source/cache/validation/exam_session_cache_compatibility_validator.dart';
 import 'package:al_waleed/features/exams/domain/entities/cached_exam_attempt_entity.dart';
 import 'package:al_waleed/features/exams/domain/entities/student_exam_session_entity.dart';
 import 'package:al_waleed/features/exams/domain/repositories/exam_attempt_cache_repository.dart';
 import 'package:al_waleed/features/exams/domain/repositories/student_exams_repository.dart';
+import 'package:al_waleed/features/exams/domain/validation/exam_session_cache_compatibility_validator.dart';
 import 'package:dartz/dartz.dart';
 
 class ResumeStudentExamUseCase {
   const ResumeStudentExamUseCase({
-    required StudentExamsRepository studentExamsRepository,
-    required ExamAttemptCacheRepository cacheRepository,
-  }) : _studentExamsRepository = studentExamsRepository,
-       _cacheRepository = cacheRepository;
+    required this._studentExamsRepository,
+    required this._cacheRepository,
+  });
 
   final StudentExamsRepository _studentExamsRepository;
   final ExamAttemptCacheRepository _cacheRepository;

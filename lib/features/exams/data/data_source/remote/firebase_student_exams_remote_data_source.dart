@@ -19,18 +19,21 @@ import 'package:al_waleed/features/exams/domain/entities/student_exam_status.dar
 import 'package:al_waleed/features/exams/domain/entities/submit_student_exam_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseStudentExamsRemoteDataSource
     implements StudentExamsRemoteDataSource {
   FirebaseStudentExamsRemoteDataSource({
     FirebaseFirestore? firestore,
     FirebaseFunctions? functions,
+    FirebaseAuth? firebaseAuth,
   }) : _firestore = firestore ?? FirebaseFirestore.instance,
-       _functions =
-           functions ?? FirebaseFunctions.instanceFor(region: 'us-central1');
+       _functions = functions ?? FirebaseFunctions.instance,
+       _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
   final FirebaseFirestore _firestore;
   final FirebaseFunctions _functions;
+  final FirebaseAuth _firebaseAuth;
 
   static const Duration _functionsTimeout = Duration(seconds: 20);
 
@@ -44,16 +47,14 @@ class FirebaseStudentExamsRemoteDataSource
       return _firestore
           .collection(FirestoreCollections.exams)
           .where(FirestoreFields.gradeId, isEqualTo: normalizedGradeId)
-          .where(
-            FirestoreFields.examStatus,
-            isEqualTo: StudentExamStatus.published.name,
-          )
-          .where(FirestoreFields.isDeleting, isEqualTo: false)
           .snapshots()
           .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
             final List<StudentExamEntity> exams = snapshot.docs
-                .map((document) {
+                .map((QueryDocumentSnapshot<Map<String, dynamic>> document) {
                   return StudentExamModel.fromFirestore(document).toEntity();
+                })
+                .where((StudentExamEntity exam) {
+                  return exam.status == StudentExamStatus.published;
                 })
                 .toList(growable: false);
 
@@ -67,21 +68,17 @@ class FirebaseStudentExamsRemoteDataSource
   }
 
   @override
-  Stream<List<StudentExamAttemptEntity>> streamStudentAttempts({
-    required String studentId,
-  }) {
-    final String normalizedStudentId = ExamRemoteIdentifierValidator.validate(
-      studentId,
-    );
-
+  Stream<List<StudentExamAttemptEntity>> streamStudentAttempts() {
     return FirebaseErrorHandler.executeStream(() {
+      final String studentId = _getAuthenticatedStudentId();
+
       return _firestore
           .collection(FirestoreCollections.examResults)
-          .where(FirestoreFields.studentId, isEqualTo: normalizedStudentId)
+          .where(FirestoreFields.studentId, isEqualTo: studentId)
           .snapshots()
           .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
             final List<StudentExamAttemptEntity> attempts = snapshot.docs
-                .map((document) {
+                .map((QueryDocumentSnapshot<Map<String, dynamic>> document) {
                   return StudentExamAttemptModel.fromFirestore(
                     document,
                   ).toEntity();
@@ -183,6 +180,16 @@ class FirebaseStudentExamsRemoteDataSource
 
       return StudentExamResultModel.fromMap(resultData).toEntity();
     }, timeout: _functionsTimeout);
+  }
+
+  String _getAuthenticatedStudentId() {
+    final String studentId = _firebaseAuth.currentUser?.uid.trim() ?? '';
+
+    if (studentId.isEmpty) {
+      FirebaseErrorHandler.throwFunctionsCode('unauthenticated');
+    }
+
+    return ExamRemoteIdentifierValidator.validate(studentId);
   }
 
   Map<String, dynamic> _readSubmissionResult(

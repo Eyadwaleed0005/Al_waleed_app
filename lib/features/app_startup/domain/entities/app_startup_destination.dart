@@ -4,22 +4,17 @@ sealed class AppStartupDestination {
   const AppStartupDestination();
 }
 
-final class AppStartupLoginDestination
-    extends AppStartupDestination {
+final class AppStartupLoginDestination extends AppStartupDestination {
   const AppStartupLoginDestination();
 }
 
-final class AppStartupHomeDestination
-    extends AppStartupDestination {
+final class AppStartupHomeDestination extends AppStartupDestination {
   final String gradeId;
 
-  const AppStartupHomeDestination({
-    required this.gradeId,
-  });
+  const AppStartupHomeDestination({required this.gradeId});
 }
 
-final class AppStartupUpdateDestination
-    extends AppStartupDestination {
+final class AppStartupUpdateDestination extends AppStartupDestination {
   final AppVersionEntity version;
   final int installedBuildNumber;
 

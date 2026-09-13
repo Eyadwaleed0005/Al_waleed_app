@@ -15,15 +15,11 @@ final class ProfileLoading extends ProfileState {
 final class ProfileSuccess extends ProfileState {
   final ProfileEntity profile;
 
-  const ProfileSuccess({
-    required this.profile,
-  });
+  const ProfileSuccess({required this.profile});
 }
 
 final class ProfileFailure extends ProfileState {
   final AppErrorModel error;
 
-  const ProfileFailure({
-    required this.error,
-  });
+  const ProfileFailure({required this.error});
 }

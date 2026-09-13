@@ -10,9 +10,7 @@ class LessonQuizReviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppSystemUi.dark(),
-      child: const Scaffold(
-        body: LessonQuizReviewScreenContent(),
-      ),
+      child: const Scaffold(body: LessonQuizReviewScreenContent()),
     );
   }
 }

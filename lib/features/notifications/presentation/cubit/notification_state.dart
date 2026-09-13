@@ -20,15 +20,11 @@ final class NotificationReady extends NotificationState {
 final class NotificationNavigationRequested extends NotificationState {
   final AppNotificationEntity notification;
 
-  const NotificationNavigationRequested({
-    required this.notification,
-  });
+  const NotificationNavigationRequested({required this.notification});
 }
 
 final class NotificationFailure extends NotificationState {
   final AppErrorModel error;
 
-  const NotificationFailure({
-    required this.error,
-  });
+  const NotificationFailure({required this.error});
 }

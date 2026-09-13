@@ -5,9 +5,8 @@ import 'package:dartz/dartz.dart';
 class DisableSecureScreenUseCase {
   final SecureScreenRepository _repository;
 
-  const DisableSecureScreenUseCase({
-    required SecureScreenRepository repository,
-  }) : _repository = repository;
+  const DisableSecureScreenUseCase({required SecureScreenRepository repository})
+    : _repository = repository;
 
   Future<Either<AppErrorModel, void>> call() {
     return _repository.disableSecureScreen();

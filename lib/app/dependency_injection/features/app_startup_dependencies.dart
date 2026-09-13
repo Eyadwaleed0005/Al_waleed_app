@@ -19,9 +19,7 @@ void registerAppStartupDependencies(GetIt getIt) {
 
 void _registerDataSources(GetIt getIt) {
   getIt.registerLazySingleton<AppStartupLocalDataSource>(
-    () => DeviceAppStartupLocalDataSource(
-      firebaseAuth: getIt<FirebaseAuth>(),
-    ),
+    () => DeviceAppStartupLocalDataSource(firebaseAuth: getIt<FirebaseAuth>()),
   );
 
   getIt.registerLazySingleton<AppStartupRemoteDataSource>(

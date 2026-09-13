@@ -8,9 +8,7 @@ class GetLessonByIdUseCase {
 
   const GetLessonByIdUseCase({required this._repository});
 
-  Future<Either<AppErrorModel, LessonEntity>> call({
-    required String lessonId,
-  }) {
+  Future<Either<AppErrorModel, LessonEntity>> call({required String lessonId}) {
     return _repository.getLessonById(lessonId: lessonId);
   }
 }

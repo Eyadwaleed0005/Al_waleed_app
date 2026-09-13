@@ -1,33 +1,55 @@
 import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
+import 'package:al_waleed/features/exams/domain/entities/student_exam_result_entity.dart';
+import 'package:al_waleed/features/exams/domain/entities/student_exam_session_entity.dart';
 import 'package:al_waleed/features/exams/presentation/screens/exams_screen.dart';
-import 'package:al_waleed/features/exams/presentation/screens/start_exam_screen.dart';
 import 'package:al_waleed/features/exams/presentation/screens/result_exam_screen.dart';
+import 'package:al_waleed/features/exams/presentation/screens/start_exam_screen.dart';
 import 'package:flutter/material.dart';
 
-abstract class ExamsRoutes {
+abstract final class ExamsRoutes {
+  const ExamsRoutes._();
+
   static Route<dynamic>? generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RouteNames.examScreen:
-        return MaterialPageRoute(
+        final Object? arguments = settings.arguments;
+
+        if (arguments is! String || arguments.trim().isEmpty) {
+          return null;
+        }
+
+        return MaterialPageRoute<void>(
           settings: settings,
           builder: (_) {
-            return ExamsScreen();
+            return ExamsScreen(gradeId: arguments.trim());
           },
         );
 
       case RouteNames.startExamScreen:
-        return MaterialPageRoute(
+        final Object? arguments = settings.arguments;
+
+        if (arguments is! StudentExamSessionEntity) {
+          return null;
+        }
+
+        return MaterialPageRoute<String?>(
           settings: settings,
           builder: (_) {
-            return StartExamScreen();
+            return StartExamScreen(session: arguments);
           },
         );
 
       case RouteNames.resultExamScreen:
-        return MaterialPageRoute(
+        final Object? arguments = settings.arguments;
+
+        if (arguments is! StudentExamResultEntity) {
+          return null;
+        }
+
+        return MaterialPageRoute<void>(
           settings: settings,
           builder: (_) {
-            return ResultExamScreen();
+            return ResultExamScreen(result: arguments);
           },
         );
 
@@ -35,15 +57,4 @@ abstract class ExamsRoutes {
         return null;
     }
   }
-
-  /* static MaterialPageRoute<void> _buildInvalidArgumentsRoute(
-    RouteSettings settings,
-  ) {
-    return MaterialPageRoute<void>(
-      settings: settings,
-      builder: (_) {
-        return const Scaffold(body: Center(child: Text('تعذر فتح المذكرة')));
-      },
-    );
-  }*/
 }

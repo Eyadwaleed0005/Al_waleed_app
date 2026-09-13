@@ -21,33 +21,40 @@ import {
 } from "./exam_functions_helper";
 
 interface ValidatedExamData {
-    examId: string;
-    gradeId: string;
-    examName: string;
-    questionCount: number;
-    durationMinutes: number;
-    totalScore: number;
-    examStatus: string;
-    createdAt: Timestamp;
-    updatedAt: Timestamp;
+  examId: string;
+  gradeId: string;
+  examName: string;
+  questionCount: number;
+  durationMinutes: number;
+  totalScore: number;
+  examStatus: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 interface ValidatedAttemptData {
-    resultId: string;
-    examId: string;
-    studentId: string;
-    status: string;
-    totalScore: number;
-    startedAt: Timestamp;
-    expiresAt: Timestamp;
-    score: number | null;
-    submittedAt: Timestamp | null;
+  resultId: string;
+  examId: string;
+  studentId: string;
+  status: string;
+  totalScore: number;
+  startedAt: Timestamp;
+  expiresAt: Timestamp;
+  score: number | null;
+  submittedAt: Timestamp | null;
+}
+
+interface ValidatedQuestionCandidate {
+  questionId: string;
+  data: DocumentData;
+  preferredOrder: number | null;
+  createdAtMillis: number;
 }
 
 interface ValidatedQuestion {
-    questionId: string;
-    data: DocumentData;
-    questionOrder: number;
+  questionId: string;
+  data: DocumentData;
+  questionOrder: number;
 }
 
 export const getStudentExam = onCall(
@@ -163,18 +170,18 @@ export const getStudentExam = onCall(
         );
       }
 
-      const questions = questionsSnapshot.docs
+      const questionCandidates = questionsSnapshot.docs
         .map((questionDocument) => {
           return validateQuestion(
             questionDocument.id,
             questionDocument.data(),
             examId,
           );
-        })
-        .sort((first, second) => {
-          return first.questionOrder -
-                        second.questionOrder;
         });
+
+      const questions = normalizeQuestionOrders(
+        questionCandidates,
+      );
 
       validateExamQuestions(
         exam,
@@ -187,7 +194,10 @@ export const getStudentExam = onCall(
         questions: questions.map((question) => {
           return createSafeQuestionData(
             question.questionId,
-            question.data,
+            {
+              ...question.data,
+              questionOrder: question.questionOrder,
+            },
           );
         }),
       };
@@ -354,7 +364,7 @@ function validateQuestion(
   questionId: string,
   data: DocumentData,
   examId: string,
-): ValidatedQuestion {
+): ValidatedQuestionCandidate {
   const questionExamId = readRequiredString(
     data,
     "examId",
@@ -397,17 +407,17 @@ function validateQuestion(
     "questionScore",
   );
 
-  const questionOrder = readNonNegativeInteger(
+  const preferredOrder = readPreferredQuestionOrder(
+    questionId,
     data,
-    "questionOrder",
   );
 
-  const correctOption = readPositiveInteger(
+  const correctOption = readNonNegativeInteger(
     data,
     "correctOption",
   );
 
-  if (correctOption > 4) {
+  if (correctOption > 3) {
     throw new HttpsError(
       "data-loss",
       "An exam question has an invalid correct option.",
@@ -417,8 +427,54 @@ function validateQuestion(
   return {
     questionId,
     data,
-    questionOrder,
+    preferredOrder,
+    createdAtMillis: readQuestionCreatedAtMillis(data),
   };
+}
+
+function normalizeQuestionOrders(
+  questions: ValidatedQuestionCandidate[],
+): ValidatedQuestion[] {
+  const sortedQuestions = [...questions].sort(
+    compareQuestionCandidates,
+  );
+
+  return sortedQuestions.map((question, index) => {
+    return {
+      questionId: question.questionId,
+      data: question.data,
+      questionOrder: index,
+    };
+  });
+}
+
+function compareQuestionCandidates(
+  first: ValidatedQuestionCandidate,
+  second: ValidatedQuestionCandidate,
+): number {
+  const firstOrder = first.preferredOrder;
+  const secondOrder = second.preferredOrder;
+
+  if (firstOrder !== null && secondOrder !== null) {
+    const orderComparison = firstOrder - secondOrder;
+
+    if (orderComparison !== 0) {
+      return orderComparison;
+    }
+  } else if (firstOrder !== null) {
+    return -1;
+  } else if (secondOrder !== null) {
+    return 1;
+  }
+
+  const dateComparison =
+    first.createdAtMillis - second.createdAtMillis;
+
+  if (dateComparison !== 0) {
+    return dateComparison;
+  }
+
+  return first.questionId.localeCompare(second.questionId);
 }
 
 function validateExamQuestions(
@@ -433,15 +489,27 @@ function validateExamQuestions(
   }
 
   const questionIds = new Set<string>();
+  const questionOrders = new Set<number>();
   let calculatedTotalScore = 0;
 
   for (const question of questions) {
-    if (!questionIds.add(question.questionId)) {
+    if (questionIds.has(question.questionId)) {
       throw new HttpsError(
         "data-loss",
         "The exam contains duplicate questions.",
       );
     }
+
+    questionIds.add(question.questionId);
+
+    if (questionOrders.has(question.questionOrder)) {
+      throw new HttpsError(
+        "data-loss",
+        "The exam contains duplicate question orders.",
+      );
+    }
+
+    questionOrders.add(question.questionOrder);
 
     calculatedTotalScore += readPositiveInteger(
       question.data,
@@ -489,6 +557,52 @@ function createSafeAttemptResponse(
   };
 }
 
+function readPreferredQuestionOrder(
+  questionId: string,
+  data: DocumentData,
+): number | null {
+  const storedQuestionOrder = data.questionOrder;
+
+  if (
+    typeof storedQuestionOrder === "number" &&
+    Number.isSafeInteger(storedQuestionOrder) &&
+    storedQuestionOrder >= 0
+  ) {
+    return storedQuestionOrder;
+  }
+
+  const questionIdMatch = /_(\d+)$/.exec(questionId);
+
+  if (questionIdMatch === null) {
+    return null;
+  }
+
+  const parsedQuestionOrder = Number.parseInt(
+    questionIdMatch[1],
+    10,
+  );
+
+  if (!Number.isSafeInteger(parsedQuestionOrder)) {
+    return null;
+  }
+
+  return parsedQuestionOrder;
+}
+
+function readQuestionCreatedAtMillis(
+  data: DocumentData,
+): number {
+  if (data.createdAt instanceof Timestamp) {
+    return data.createdAt.toMillis();
+  }
+
+  if (data.updatedAt instanceof Timestamp) {
+    return data.updatedAt.toMillis();
+  }
+
+  return Number.MAX_SAFE_INTEGER;
+}
+
 function readRequiredString(
   data: DocumentData,
   key: string,
@@ -497,7 +611,7 @@ function readRequiredString(
 
   if (
     typeof value !== "string" ||
-        value.trim().length === 0
+    value.trim().length === 0
   ) {
     throw new HttpsError(
       "data-loss",
@@ -516,8 +630,8 @@ function readPositiveInteger(
 
   if (
     typeof value !== "number" ||
-        !Number.isInteger(value) ||
-        value <= 0
+    !Number.isInteger(value) ||
+    value <= 0
   ) {
     throw new HttpsError(
       "data-loss",
@@ -536,8 +650,8 @@ function readNonNegativeInteger(
 
   if (
     typeof value !== "number" ||
-        !Number.isInteger(value) ||
-        value < 0
+    !Number.isInteger(value) ||
+    value < 0
   ) {
     throw new HttpsError(
       "data-loss",
@@ -560,8 +674,8 @@ function readNullableInteger(
 
   if (
     typeof value !== "number" ||
-        !Number.isInteger(value) ||
-        value < 0
+    !Number.isInteger(value) ||
+    value < 0
   ) {
     throw new HttpsError(
       "data-loss",

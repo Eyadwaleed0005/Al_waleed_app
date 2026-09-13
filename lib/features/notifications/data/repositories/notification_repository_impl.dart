@@ -217,32 +217,26 @@ class NotificationRepositoryImpl implements NotificationRepository {
   Future<void> _tryUnsubscribeFromGrade({required String gradeId}) async {
     try {
       await _remoteDataSource.unsubscribeFromGradeTopic(gradeId: gradeId);
-    } catch (_) {
-    }
+    } catch (_) {}
   }
 
   @override
-Future<Either<AppErrorModel, void>>
-unsubscribeFromCurrentGradeTopic() async {
-  try {
-    final storedGradeId =
-        (await _topicLocalDataSource.getSubscribedGradeId())?.trim();
+  Future<Either<AppErrorModel, void>> unsubscribeFromCurrentGradeTopic() async {
+    try {
+      final storedGradeId = (await _topicLocalDataSource.getSubscribedGradeId())
+          ?.trim();
 
-    if (storedGradeId == null || storedGradeId.isEmpty) {
+      if (storedGradeId == null || storedGradeId.isEmpty) {
+        return const Right(null);
+      }
+
+      await _remoteDataSource.unsubscribeFromGradeTopic(gradeId: storedGradeId);
+
+      await _topicLocalDataSource.clearSubscribedGradeId();
+
       return const Right(null);
+    } catch (error) {
+      return Left(NotificationErrorHandler.handle(error));
     }
-
-    await _remoteDataSource.unsubscribeFromGradeTopic(
-      gradeId: storedGradeId,
-    );
-
-    await _topicLocalDataSource.clearSubscribedGradeId();
-
-    return const Right(null);
-  } catch (error) {
-    return Left(
-      NotificationErrorHandler.handle(error),
-    );
   }
-}
 }

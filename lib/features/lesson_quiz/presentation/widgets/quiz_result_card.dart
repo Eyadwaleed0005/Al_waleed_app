@@ -6,11 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class QuizResultCard extends StatelessWidget {
-  const QuizResultCard({
-    super.key,
-    required this.score,
-    required this.total,
-  });
+  const QuizResultCard({super.key, required this.score, required this.total});
 
   final int score;
   final int total;

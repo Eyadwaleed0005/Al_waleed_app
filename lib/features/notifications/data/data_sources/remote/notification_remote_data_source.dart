@@ -3,13 +3,9 @@ import 'package:al_waleed/features/notifications/data/models/app_notification_mo
 abstract interface class NotificationRemoteDataSource {
   Future<void> requestPermission();
 
-  Future<void> subscribeToGradeTopic({
-    required String gradeId,
-  });
+  Future<void> subscribeToGradeTopic({required String gradeId});
 
-  Future<void> unsubscribeFromGradeTopic({
-    required String gradeId,
-  });
+  Future<void> unsubscribeFromGradeTopic({required String gradeId});
 
   Stream<AppNotificationModel> streamForegroundNotifications();
 

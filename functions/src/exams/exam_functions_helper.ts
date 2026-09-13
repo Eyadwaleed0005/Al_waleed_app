@@ -5,7 +5,6 @@ import {
 } from "firebase-admin/firestore";
 import * as logger from "firebase-functions/logger";
 import {HttpsError} from "firebase-functions/v2/https";
-
 export const examCallableFunctionOptions = {
   region: "us-central1",
   memory: "256MiB" as const,
@@ -34,14 +33,14 @@ export const examAttemptStatuses = {
 } as const;
 
 export interface AuthenticatedStudent {
-    studentId: string;
-    studentName: string;
-    gradeId: string;
-    gradeName: string;
+  studentId: string;
+  studentName: string;
+  gradeId: string;
+  gradeName: string;
 }
 
 interface CallableAuth {
-    uid: string;
+  uid: string;
 }
 
 export function getAuthenticatedStudentId(
@@ -49,8 +48,8 @@ export function getAuthenticatedStudentId(
 ): string {
   if (
     auth === undefined ||
-        typeof auth.uid !== "string" ||
-        auth.uid.trim().length === 0
+    typeof auth.uid !== "string" ||
+    auth.uid.trim().length === 0
   ) {
     throw new HttpsError(
       "unauthenticated",
@@ -66,8 +65,8 @@ export function getRequestData(
 ): Record<string, unknown> {
   if (
     typeof data !== "object" ||
-        data === null ||
-        Array.isArray(data)
+    data === null ||
+    Array.isArray(data)
   ) {
     throw new HttpsError(
       "invalid-argument",
@@ -86,7 +85,7 @@ export function getRequiredString(
 
   if (
     typeof value !== "string" ||
-        value.trim().length === 0
+    value.trim().length === 0
   ) {
     throw new HttpsError(
       "invalid-argument",
@@ -144,7 +143,7 @@ export async function getAuthenticatedStudent(
 
   if (
     typeof storedStudentId !== "string" ||
-        storedStudentId !== studentId
+    storedStudentId !== studentId
   ) {
     throw new HttpsError(
       "permission-denied",
@@ -154,7 +153,7 @@ export async function getAuthenticatedStudent(
 
   if (
     typeof studentName !== "string" ||
-        studentName.trim().length === 0
+    studentName.trim().length === 0
   ) {
     throw new HttpsError(
       "failed-precondition",
@@ -164,7 +163,7 @@ export async function getAuthenticatedStudent(
 
   if (
     typeof gradeId !== "string" ||
-        gradeId.trim().length === 0
+    gradeId.trim().length === 0
   ) {
     throw new HttpsError(
       "failed-precondition",
@@ -188,7 +187,7 @@ export async function getAuthenticatedStudent(
 
   if (
     subscriptionEndAt.toMillis() <=
-        Timestamp.now().toMillis()
+    Timestamp.now().toMillis()
   ) {
     throw new HttpsError(
       "permission-denied",
@@ -222,7 +221,7 @@ export async function getAuthenticatedStudent(
 
   if (
     typeof gradeName !== "string" ||
-        gradeName.trim().length === 0
+    gradeName.trim().length === 0
   ) {
     throw new HttpsError(
       "failed-precondition",
@@ -268,6 +267,16 @@ export function handleExamFunctionError(
   operation: string,
 ): never {
   if (error instanceof HttpsError) {
+    logger.warn(
+      "Exam function request rejected.",
+      {
+        operation,
+        errorCode: error.code,
+        errorMessage: error.message,
+        errorDetails: error.details ?? null,
+      },
+    );
+
     throw error;
   }
 
@@ -294,8 +303,8 @@ function getErrorCode(
 ): string {
   if (
     typeof error === "object" &&
-        error !== null &&
-        "code" in error
+    error !== null &&
+    "code" in error
   ) {
     return String(error.code);
   }
@@ -308,8 +317,8 @@ function getErrorMessage(
 ): string {
   if (
     typeof error === "object" &&
-        error !== null &&
-        "message" in error
+    error !== null &&
+    "message" in error
   ) {
     return String(error.message);
   }

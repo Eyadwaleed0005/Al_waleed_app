@@ -5,9 +5,8 @@ import 'package:dartz/dartz.dart';
 class LogoutUseCase {
   final LogoutRepository _repository;
 
-  const LogoutUseCase({
-    required LogoutRepository repository,
-  }) : _repository = repository;
+  const LogoutUseCase({required LogoutRepository repository})
+    : _repository = repository;
 
   Future<Either<AppErrorModel, void>> call() {
     return _repository.logout();

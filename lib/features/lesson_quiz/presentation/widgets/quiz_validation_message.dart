@@ -4,7 +4,6 @@ import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 class QuizValidationMessage extends StatelessWidget {
   const QuizValidationMessage({super.key, required this.message});
 

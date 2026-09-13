@@ -27,10 +27,7 @@ final class LessonsDataSuccess extends LessonsState {
   final List<LessonEntity> lessons;
   final String query;
 
-  const LessonsDataSuccess({
-    required this.lessons,
-    this.query = '',
-  });
+  const LessonsDataSuccess({required this.lessons, this.query = ''});
 
   bool get hasActiveQuery => query.trim().isNotEmpty;
 

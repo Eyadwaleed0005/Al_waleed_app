@@ -18,15 +18,9 @@ abstract class StorageService {
     required int maxSize,
   });
 
-  Future<FullMetadata> getFileMetadata({
-    required String storagePath,
-  });
+  Future<FullMetadata> getFileMetadata({required String storagePath});
 
-  Future<void> deleteFile({
-    required String storagePath,
-  });
+  Future<void> deleteFile({required String storagePath});
 
-  Future<String> getDownloadUrl({
-    required String storagePath,
-  });
+  Future<String> getDownloadUrl({required String storagePath});
 }

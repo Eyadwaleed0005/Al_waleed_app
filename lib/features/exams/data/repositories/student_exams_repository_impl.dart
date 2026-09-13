@@ -2,32 +2,30 @@ import 'dart:async';
 
 import 'package:al_waleed/core/errors/error_model/app_error_model.dart';
 import 'package:al_waleed/core/errors/handlers/firebase_error_handler.dart';
-import 'package:al_waleed/features/app_startup/domain/entities/student_access_entity.dart';
 import 'package:al_waleed/features/exams/data/data_source/remote/student_exams_remote_data_source.dart';
 import 'package:al_waleed/features/exams/domain/entities/student_exam_attempt_entity.dart';
 import 'package:al_waleed/features/exams/domain/entities/student_exam_entity.dart';
 import 'package:al_waleed/features/exams/domain/entities/student_exam_list_item_entity.dart';
 import 'package:al_waleed/features/exams/domain/entities/student_exam_result_entity.dart';
 import 'package:al_waleed/features/exams/domain/entities/student_exam_session_entity.dart';
+import 'package:al_waleed/features/exams/domain/entities/student_exam_status.dart';
 import 'package:al_waleed/features/exams/domain/entities/submit_student_exam_entity.dart';
 import 'package:al_waleed/features/exams/domain/repositories/student_exams_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class StudentExamsRepositoryImpl implements StudentExamsRepository {
-  const StudentExamsRepositoryImpl({
-    required StudentExamsRemoteDataSource remoteDataSource,
-  }) : _remoteDataSource = remoteDataSource;
+  const StudentExamsRepositoryImpl({required this._remoteDataSource});
 
   final StudentExamsRemoteDataSource _remoteDataSource;
 
   @override
   Stream<Either<AppErrorModel, List<StudentExamListItemEntity>>>
-  streamAvailableExams({required StudentAccessEntity studentAccess}) {
-    return _combineExamsAndAttempts(studentAccess: studentAccess);
+  streamAvailableExams({required String gradeId}) {
+    return _combineExamsAndAttempts(gradeId: gradeId);
   }
 
   Stream<Either<AppErrorModel, List<StudentExamListItemEntity>>>
-  _combineExamsAndAttempts({required StudentAccessEntity studentAccess}) {
+  _combineExamsAndAttempts({required String gradeId}) {
     late final StreamController<
       Either<AppErrorModel, List<StudentExamListItemEntity>>
     >
@@ -56,11 +54,7 @@ class StudentExamsRepositoryImpl implements StudentExamsRepository {
       }
 
       final List<StudentExamListItemEntity> availableExams =
-          _buildAvailableExamItems(
-            exams: exams,
-            attempts: attempts,
-            studentGradeId: studentAccess.gradeId,
-          );
+          _buildAvailableExamItems(exams: exams, attempts: attempts);
 
       controller.add(
         Right(List<StudentExamListItemEntity>.unmodifiable(availableExams)),
@@ -76,9 +70,11 @@ class StudentExamsRepositoryImpl implements StudentExamsRepository {
     }
 
     Future<void> closeControllerIfFinished() async {
-      if (!examsStreamCompleted ||
-          !attemptsStreamCompleted ||
-          controller.isClosed) {
+      if (!examsStreamCompleted || !attemptsStreamCompleted) {
+        return;
+      }
+
+      if (controller.isClosed) {
         return;
       }
 
@@ -105,7 +101,7 @@ class StudentExamsRepositoryImpl implements StudentExamsRepository {
     void startListening() {
       try {
         examsSubscription = _remoteDataSource
-            .streamGradeExams(gradeId: studentAccess.gradeId)
+            .streamGradeExams(gradeId: gradeId)
             .listen(
               (List<StudentExamEntity> exams) {
                 latestExams = exams;
@@ -114,25 +110,21 @@ class StudentExamsRepositoryImpl implements StudentExamsRepository {
               onError: emitError,
               onDone: () {
                 examsStreamCompleted = true;
-
                 unawaited(closeControllerIfFinished());
               },
             );
 
-        attemptsSubscription = _remoteDataSource
-            .streamStudentAttempts(studentId: studentAccess.studentId)
-            .listen(
-              (List<StudentExamAttemptEntity> attempts) {
-                latestAttempts = attempts;
-                emitCurrentData();
-              },
-              onError: emitError,
-              onDone: () {
-                attemptsStreamCompleted = true;
-
-                unawaited(closeControllerIfFinished());
-              },
-            );
+        attemptsSubscription = _remoteDataSource.streamStudentAttempts().listen(
+          (List<StudentExamAttemptEntity> attempts) {
+            latestAttempts = attempts;
+            emitCurrentData();
+          },
+          onError: emitError,
+          onDone: () {
+            attemptsStreamCompleted = true;
+            unawaited(closeControllerIfFinished());
+          },
+        );
       } catch (error, stackTrace) {
         emitError(error, stackTrace);
       }
@@ -204,26 +196,19 @@ class StudentExamsRepositoryImpl implements StudentExamsRepository {
   List<StudentExamListItemEntity> _buildAvailableExamItems({
     required List<StudentExamEntity> exams,
     required List<StudentExamAttemptEntity> attempts,
-    required String studentGradeId,
   }) {
     final Map<String, StudentExamAttemptEntity> attemptsByExamId =
         <String, StudentExamAttemptEntity>{};
 
     for (final StudentExamAttemptEntity attempt in attempts) {
-      final String examId = attempt.examId.trim();
-      final StudentExamAttemptEntity? currentAttempt = attemptsByExamId[examId];
-
-      if (currentAttempt == null ||
-          attempt.startedAt.isAfter(currentAttempt.startedAt)) {
-        attemptsByExamId[examId] = attempt;
-      }
+      attemptsByExamId[attempt.examId.trim()] = attempt;
     }
 
     final List<StudentExamListItemEntity> availableExams =
         <StudentExamListItemEntity>[];
 
     for (final StudentExamEntity exam in exams) {
-      if (!exam.isAvailableForGrade(studentGradeId)) {
+      if (exam.status != StudentExamStatus.published) {
         continue;
       }
 

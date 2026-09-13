@@ -7,15 +7,12 @@ import 'package:dartz/dartz.dart';
 class GetStudyNotePdfUseCase {
   final StudyNotePdfRepository _repository;
 
-  const GetStudyNotePdfUseCase({
-    required StudyNotePdfRepository repository,
-  }) : _repository = repository;
+  const GetStudyNotePdfUseCase({required StudyNotePdfRepository repository})
+    : _repository = repository;
 
   Future<Either<AppErrorModel, StudyNotePdfEntity>> call({
     required StudyNoteEntity note,
   }) {
-    return _repository.getStudyNotePdf(
-      note: note,
-    );
+    return _repository.getStudyNotePdf(note: note);
   }
 }

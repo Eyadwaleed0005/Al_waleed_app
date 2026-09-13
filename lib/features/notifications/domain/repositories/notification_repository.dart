@@ -5,12 +5,9 @@ import 'package:dartz/dartz.dart';
 abstract interface class NotificationRepository {
   Future<Either<AppErrorModel, void>> initialize();
 
-  Future<Either<AppErrorModel, void>> syncGradeTopic({
-    required String gradeId,
-  });
+  Future<Either<AppErrorModel, void>> syncGradeTopic({required String gradeId});
 
-  Future<Either<AppErrorModel, void>>
-  unsubscribeFromCurrentGradeTopic();
+  Future<Either<AppErrorModel, void>> unsubscribeFromCurrentGradeTopic();
 
   Stream<Either<AppErrorModel, AppNotificationEntity>>
   streamForegroundNotifications();

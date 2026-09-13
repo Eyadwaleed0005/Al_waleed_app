@@ -36,8 +36,8 @@ class LoginScreenContant extends StatelessWidget {
               AppAnimations.secondaryTitle(
                 child: Text(
                   'منصة الكيمياء التعليمية',
-                  style:
-                      AppTextStyle.font14TextSecondaryRegularTajawal().copyWith(
+                  style: AppTextStyle.font14TextSecondaryRegularTajawal()
+                      .copyWith(
                         color: ColorPalette.cardBackground.withValues(
                           alpha: .6,
                         ),
@@ -57,8 +57,7 @@ class LoginScreenContant extends StatelessWidget {
                       verticalSpace(8),
                       Text(
                         '.سجّل دخولك للوصول إلى دروسك واختباراتك',
-                        style:
-                            AppTextStyle.font14TextSecondaryRegularTajawal(),
+                        style: AppTextStyle.font14TextSecondaryRegularTajawal(),
                         textAlign: TextAlign.center,
                       ),
                       verticalSpace(24),

@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-typedef FirestoreQueryBuilder = Query<Map<String, dynamic>> Function(
-  CollectionReference<Map<String, dynamic>> collection,
-);
+typedef FirestoreQueryBuilder =
+    Query<Map<String, dynamic>> Function(
+      CollectionReference<Map<String, dynamic>> collection,
+    );
 
 abstract class FirestoreService {
   Future<DocumentSnapshot<Map<String, dynamic>>> getDocument({
@@ -43,6 +44,4 @@ abstract class FirestoreService {
     required String collectionPath,
     required String documentId,
   });
-
-  
 }
