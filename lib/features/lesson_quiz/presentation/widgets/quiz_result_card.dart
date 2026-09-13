@@ -12,13 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class QuizResultCard extends StatelessWidget {
-  const QuizResultCard({
-    super.key,
-    required this.score,
-    required this.total,
-    required this.earnedPoints,
-    required this.totalPoints,
-  });
+  const QuizResultCard({super.key, required this.score, required this.total});
 
   final int score;
   final int total;

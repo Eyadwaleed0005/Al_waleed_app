@@ -67,20 +67,10 @@ class LessonQuizQuestionScreenContent extends StatelessWidget {
                           total: state.questions.length,
                         ),
                         verticalSpace(16),
-                        QuizQuestionContentCard(
-                          questionText: question.questionText,
-                          answers: question.options,
-                         questionImageUrl: question.questionImageUrl,
-
-                          selectedAnswer: question.selectedOption != null
-                              ? question.options[question.selectedOption!]
-                              : null,
-                          onAnswerTap: (answer) {
-                            cubit.selectAnswer(
-                              questionIndex: state.currentIndex,
-                              optionIndex: question.options.indexOf(answer),
-                            );
-                          },
+                        const QuizQuestionContentCard(
+                          questionText:
+                              'أي العناصر التالية يُعد من العناصر الانتقالية؟',
+                          answers: _answers,
                         ),
                         verticalSpace(14),
                         const QuizAutoSaveNotice(),

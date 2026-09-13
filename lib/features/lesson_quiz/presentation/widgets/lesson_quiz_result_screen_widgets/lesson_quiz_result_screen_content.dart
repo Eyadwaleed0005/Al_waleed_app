@@ -19,83 +19,63 @@ class LessonQuizResultScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BackgroundStudentLayout(
-      child: BlocBuilder<LessonQuizCubit, LessonQuizState>(
-        builder: (context, state) {
-          if (state is! LessonQuizSuccess) {
-            return Center(child: SizedBox());
-          }
-
-          final cubit = context.read<LessonQuizCubit>();
-
-          return SafeArea(
-            top: false,
-            child: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 16.h),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        QuizResultCard(
-                          score: cubit.correctCount,
-                          total: cubit.totalQuestions,
-                          earnedPoints: cubit.earnedPoints,
-                          totalPoints: cubit.totalPoints,
-                        ),
-                        verticalSpace(16),
-                        QuizInfoCard(
-                          scoreText:
-                            '${toArabicNumbers(cubit.earnedPoints)} من ${toArabicNumbers(cubit.totalPoints)}',
-                          retryText: 'متاحة',
-                        ),
-                        verticalSpace(16),
-                        Text(
-                          'يمكنك إعادة الاختبار لتحسين درجتك.',
-                          textAlign: TextAlign.center,
-                          textDirection: TextDirection.rtl,
-                          style:
-                              AppTextStyle.font12TextSecondaryRegularTajawal()
-                                  .copyWith(color: ColorPalette.textSecondary),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 20.h),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: const QuizHeader(
+          title: 'نتيجة اختبار الدرس',
+          showBackButton: true,
+        ),
+        body: SafeArea(
+          top: false,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 16.h),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      CustomSecondaryButton(
-                        text: 'مراجعة الإجابات',
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => BlocProvider.value(
-                                value: cubit,
-                                child: const LessonQuizReviewScreen(),
-                              ),
-                            ),
-                          );
-                        },
+                      QuizResultCard(score: score, total: totalQuestions),
+                      verticalSpace(16),
+                      QuizInfoCard(
+                        scoreText:
+                            '${toArabicNumbers(score * 2)} من '
+                            '${toArabicNumbers(totalQuestions * 2)}',
+                        retryText: 'متاحة',
                       ),
-                      verticalSpace(10),
-                      CustomButton(
-                        text: 'إعادة الاختبار',
-                        onPressed: () {
-                          cubit.restartQuiz();
-                          Navigator.of(context).pop();
-                        },
+                      verticalSpace(16),
+                      Text(
+                        'يمكنك إعادة الاختبار لتحسين درجتك.',
+                        textAlign: TextAlign.center,
+                        textDirection: TextDirection.rtl,
+                        style: AppTextStyle.font12TextSecondaryRegularTajawal()
+                            .copyWith(color: ColorPalette.textSecondary),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
-          );
-        },
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 20.h),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomSecondaryButton(
+                      text: 'مراجعة الإجابات',
+                      onPressed: onReviewAnswers ?? () {},
+                    ),
+                    verticalSpace(10),
+                    CustomButton(
+                      text: 'إعادة الاختبار',
+                      onPressed: onRetryQuiz ?? () {},
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

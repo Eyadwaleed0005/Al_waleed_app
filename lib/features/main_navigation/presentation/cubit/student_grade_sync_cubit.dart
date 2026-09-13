@@ -51,17 +51,12 @@ class StudentGradeSyncCubit extends Cubit<StudentGradeSyncState> {
     return initialize();
   }
 
-  void _onGradeResult(
-    Either<AppErrorModel, String> result,
-  ) {
+  void _onGradeResult(Either<AppErrorModel, String> result) {
     if (!_canEmit) {
       return;
     }
 
-    result.fold(
-      _emitFailure,
-      _emitSuccess,
-    );
+    result.fold(_emitFailure, _emitSuccess);
   }
 
   void _emitSuccess(String gradeId) {
@@ -82,11 +77,7 @@ class StudentGradeSyncCubit extends Cubit<StudentGradeSyncState> {
       return;
     }
 
-    emit(
-      StudentGradeSyncSuccess(
-        gradeId: normalizedGradeId,
-      ),
-    );
+    emit(StudentGradeSyncSuccess(gradeId: normalizedGradeId));
   }
 
   void _emitFailure(AppErrorModel error) {
@@ -94,11 +85,7 @@ class StudentGradeSyncCubit extends Cubit<StudentGradeSyncState> {
       return;
     }
 
-    emit(
-      StudentGradeSyncFailure(
-        error: error,
-      ),
-    );
+    emit(StudentGradeSyncFailure(error: error));
   }
 
   Future<void> _cancelSubscription() async {

@@ -13,8 +13,6 @@ class ShowLocalNotificationUseCase {
   Future<Either<AppErrorModel, void>> call({
     required AppNotificationEntity notification,
   }) {
-    return _repository.showLocalNotification(
-      notification: notification,
-    );
+    return _repository.showLocalNotification(notification: notification);
   }
 }

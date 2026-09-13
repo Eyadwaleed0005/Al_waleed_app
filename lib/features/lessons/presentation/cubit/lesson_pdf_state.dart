@@ -17,15 +17,11 @@ final class LessonPdfLoading extends LessonPdfState {
 final class LessonPdfSuccess extends LessonPdfState {
   final Uint8List pdfBytes;
 
-  const LessonPdfSuccess({
-    required this.pdfBytes,
-  });
+  const LessonPdfSuccess({required this.pdfBytes});
 }
 
 final class LessonPdfFailure extends LessonPdfState {
   final AppErrorModel error;
 
-  const LessonPdfFailure({
-    required this.error,
-  });
+  const LessonPdfFailure({required this.error});
 }

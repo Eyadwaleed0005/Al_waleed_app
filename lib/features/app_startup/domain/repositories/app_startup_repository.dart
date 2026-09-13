@@ -6,14 +6,11 @@ import 'package:dartz/dartz.dart';
 abstract interface class AppStartupRepository {
   String? getCurrentUserId();
 
-  Future<Either<AppErrorModel, int>>
-  getInstalledBuildNumber();
+  Future<Either<AppErrorModel, int>> getInstalledBuildNumber();
 
-  Future<Either<AppErrorModel, AppVersionEntity?>>
-  getAppVersion();
+  Future<Either<AppErrorModel, AppVersionEntity?>> getAppVersion();
 
-  Future<Either<AppErrorModel, StudentAccessEntity>>
-  getStudentAccess({
+  Future<Either<AppErrorModel, StudentAccessEntity>> getStudentAccess({
     required String studentId,
   });
 }

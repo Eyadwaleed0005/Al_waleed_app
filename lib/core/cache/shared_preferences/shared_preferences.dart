@@ -7,38 +7,27 @@ class SharedPreferencesHelper {
     required String key,
     required String value,
   }) async {
-    final prefs =
-        await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
 
     await prefs.setString(key, value);
   }
 
-  static Future<String?> getString({
-    required String key,
-  }) async {
-    final prefs =
-        await SharedPreferences.getInstance();
+  static Future<String?> getString({required String key}) async {
+    final prefs = await SharedPreferences.getInstance();
 
     return prefs.getString(key);
   }
 
   // Int
 
-  static Future<void> saveInt({
-    required String key,
-    required int value,
-  }) async {
-    final prefs =
-        await SharedPreferences.getInstance();
+  static Future<void> saveInt({required String key, required int value}) async {
+    final prefs = await SharedPreferences.getInstance();
 
     await prefs.setInt(key, value);
   }
 
-  static Future<int?> getInt({
-    required String key,
-  }) async {
-    final prefs =
-        await SharedPreferences.getInstance();
+  static Future<int?> getInt({required String key}) async {
+    final prefs = await SharedPreferences.getInstance();
 
     return prefs.getInt(key);
   }
@@ -49,17 +38,13 @@ class SharedPreferencesHelper {
     required String key,
     required bool value,
   }) async {
-    final prefs =
-        await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
 
     await prefs.setBool(key, value);
   }
 
-  static Future<bool?> getBool({
-    required String key,
-  }) async {
-    final prefs =
-        await SharedPreferences.getInstance();
+  static Future<bool?> getBool({required String key}) async {
+    final prefs = await SharedPreferences.getInstance();
 
     return prefs.getBool(key);
   }
@@ -70,39 +55,29 @@ class SharedPreferencesHelper {
     required String key,
     required double value,
   }) async {
-    final prefs =
-        await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
 
     await prefs.setDouble(key, value);
   }
 
-  static Future<double?> getDouble({
-    required String key,
-  }) async {
-    final prefs =
-        await SharedPreferences.getInstance();
+  static Future<double?> getDouble({required String key}) async {
+    final prefs = await SharedPreferences.getInstance();
 
     return prefs.getDouble(key);
   }
 
   // Remove
 
-  static Future<void> removeData({
-    required String key,
-  }) async {
-    final prefs =
-        await SharedPreferences.getInstance();
+  static Future<void> removeData({required String key}) async {
+    final prefs = await SharedPreferences.getInstance();
 
     await prefs.remove(key);
   }
 
   // Contains
 
-  static Future<bool> containsKey({
-    required String key,
-  }) async {
-    final prefs =
-        await SharedPreferences.getInstance();
+  static Future<bool> containsKey({required String key}) async {
+    final prefs = await SharedPreferences.getInstance();
 
     return prefs.containsKey(key);
   }
@@ -110,8 +85,7 @@ class SharedPreferencesHelper {
   // Clear all
 
   static Future<void> clearAll() async {
-    final prefs =
-        await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
 
     await prefs.clear();
   }

@@ -27,10 +27,7 @@ class LessonPdfRepositoryImpl implements LessonPdfRepository {
 
     if (currentCachedPdf != null) {
       return Right(
-        LessonPdfEntity(
-          bytes: currentCachedPdf,
-          source: LessonPdfSource.cache,
-        ),
+        LessonPdfEntity(bytes: currentCachedPdf, source: LessonPdfSource.cache),
       );
     }
 

@@ -12,10 +12,7 @@ class LessonQuizReviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppSystemUi.dark(),
-      child: const Scaffold(
-        appBar: QuizHeader(title: 'مراجعة الإجابات'),
-        body: BackgroundStudentLayout(child: LessonQuizReviewScreenContent()),
-      ),
+      child: const Scaffold(body: LessonQuizReviewScreenContent()),
     );
   }
 }

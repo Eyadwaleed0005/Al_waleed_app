@@ -22,20 +22,14 @@ class _LessonQuizReviewScreenContentState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LessonQuizCubit, LessonQuizState>(
-      builder: (context, state) {
-        if (state is! LessonQuizSuccess) {
-          return const Center(child: SizedBox());
-        }
-
-        final question = state.questions[_index];
-        final isLastQuestion = _index == state.questions.length - 1;
-        final isCorrect = question.selectedOption == question.correctOption;
-        final selectedAnswerText = question.selectedOption != null
-            ? question.options[question.selectedOption!]
-            : null;
-
-        return SafeArea(
+    return BackgroundStudentLayout(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: QuizHeader(
+          title: 'مراجعة الإجابات',
+          trailingBadge: QuizProgressBadge(text: '${toArabicNumbers(4)} درجات'),
+        ),
+        body: SafeArea(
           top: false,
           child: Column(
             children: [
@@ -55,13 +49,12 @@ class _LessonQuizReviewScreenContentState
                             : ColorPalette.error,
                       ),
                       verticalSpace(16),
-                      QuizQuestionContentCard(
-                        questionText: question.questionText,
-                        answers: question.options,
-                        selectedAnswer: selectedAnswerText,
-                          questionImageUrl: question.questionImageUrl,
-                        isReviewMode: true,
-                        isCorrect: isCorrect,
+                      Text(
+                        'الإجابة الصحيحة هي الحديد.',
+                        textAlign: TextAlign.center,
+                        textDirection: TextDirection.rtl,
+                        style: AppTextStyle.font12TextSecondaryRegularTajawal()
+                            .copyWith(color: ColorPalette.textSecondary),
                       ),
                     ],
                   ),

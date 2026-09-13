@@ -1,5 +1,6 @@
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
+import 'package:al_waleed/core/widgets/app_loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -31,6 +32,14 @@ class CustomSecondaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color resolvedBackgroundColor =
+        backgroundColor ?? ColorPalette.surface;
+
+    final Color resolvedForegroundColor =
+        foregroundColor ?? ColorPalette.primary;
+
+    final Color resolvedBorderColor = borderColor ?? ColorPalette.softSage;
+
     return SizedBox(
       width: width ?? double.infinity,
       height: height ?? 52.h,
@@ -38,50 +47,43 @@ class CustomSecondaryButton extends StatelessWidget {
         onPressed: isLoading ? null : onPressed,
         style: OutlinedButton.styleFrom(
           padding: EdgeInsets.symmetric(horizontal: 8.w),
-          backgroundColor: backgroundColor ?? ColorPalette.surface,
-          foregroundColor: foregroundColor ?? ColorPalette.primary,
-          side: BorderSide(
-            color: borderColor ?? ColorPalette.softSage,
-            width: 1.5.w,
-          ),
+          backgroundColor: resolvedBackgroundColor,
+          disabledBackgroundColor: resolvedBackgroundColor,
+          foregroundColor: resolvedForegroundColor,
+          disabledForegroundColor: resolvedForegroundColor,
+          side: BorderSide(color: resolvedBorderColor, width: 1.5.w),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.r),
           ),
         ),
         child: isLoading
-            ? SizedBox(
-                width: 22.w,
-                height: 22.w,
-                child: CircularProgressIndicator(
-                  color: foregroundColor ?? ColorPalette.primary,
-                  strokeWidth: 2.5,
-                ),
+            ? AppLoadingIndicator(
+                color: resolvedForegroundColor,
+                size: 22,
+                strokeWidth: 2.5,
+                wavelength: 12,
+                waveSpeed: 10,
               )
             : child ??
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (icon != null) ...[
-                      Icon(
-                        icon,
-                        size: 18.sp,
-                        color: foregroundColor ?? ColorPalette.primary,
-                      ),
-                      SizedBox(width: 4.w),
-                    ],
-                    Flexible(
-                      child: Text(
-                        text ?? '',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyle.font15TextLightBoldTajawal().copyWith(
-                          color: foregroundColor ?? ColorPalette.primary,
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (icon != null) ...[
+                        Icon(icon, size: 18.sp, color: resolvedForegroundColor),
+                        SizedBox(width: 4.w),
+                      ],
+                      Flexible(
+                        child: Text(
+                          text ?? '',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyle.font15TextLightBoldTajawal()
+                              .copyWith(color: resolvedForegroundColor),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
       ),
     );
   }

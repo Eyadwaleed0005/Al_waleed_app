@@ -31,7 +31,7 @@ class HomeScreenContent extends StatelessWidget {
                   ],
                 ),
               ),
-              verticalSpace(50),
+              verticalSpace(25),
               const HomeBanners(),
               verticalSpace(20),
               AppAnimations.screenSection(

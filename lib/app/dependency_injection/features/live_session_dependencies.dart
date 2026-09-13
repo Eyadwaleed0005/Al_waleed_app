@@ -21,14 +21,10 @@ void registerLiveSessionDependencies(GetIt getIt) {
   );
 
   getIt.registerLazySingleton<LiveSessionUseCase>(
-    () => LiveSessionUseCase(
-      liveSessionRepo: getIt<LiveSessionRepo>(),
-    ),
+    () => LiveSessionUseCase(liveSessionRepo: getIt<LiveSessionRepo>()),
   );
 
   getIt.registerFactory<LiveSessionCubit>(
-    () => LiveSessionCubit(
-      liveSessionUseCase: getIt<LiveSessionUseCase>(),
-    ),
+    () => LiveSessionCubit(liveSessionUseCase: getIt<LiveSessionUseCase>()),
   );
 }

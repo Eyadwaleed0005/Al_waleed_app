@@ -2,10 +2,7 @@ class ProfileEntity {
   final StudentProfileEntity studentProfile;
   final GradeEntity grade;
 
-  const ProfileEntity({
-    required this.studentProfile,
-    required this.grade,
-  });
+  const ProfileEntity({required this.studentProfile, required this.grade});
 }
 
 class StudentProfileEntity {
@@ -27,7 +24,5 @@ class StudentProfileEntity {
 class GradeEntity {
   final String name;
 
-  const GradeEntity({
-    required this.name,
-  });
+  const GradeEntity({required this.name});
 }

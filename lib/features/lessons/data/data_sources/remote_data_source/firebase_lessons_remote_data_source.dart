@@ -91,14 +91,9 @@ class FirebaseLessonsRemoteDataSource implements LessonsRemoteDataSource {
     return normalizedValue;
   }
 
-  List<LessonModel> _mapLessons(
-    QuerySnapshot<Map<String, dynamic>> snapshot,
-  ) {
+  List<LessonModel> _mapLessons(QuerySnapshot<Map<String, dynamic>> snapshot) {
     final lessons = snapshot.docs.map((document) {
-      return LessonModel.fromMap(
-        documentId: document.id,
-        map: document.data(),
-      );
+      return LessonModel.fromMap(documentId: document.id, map: document.data());
     }).toList();
 
     lessons.sort((firstLesson, secondLesson) {

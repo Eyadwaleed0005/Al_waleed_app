@@ -8,18 +8,15 @@ class UrlLauncherHelper {
     if (link.isEmpty) return;
 
     final Uri url = Uri.parse(link);
-    
+
     try {
       bool launched = await launchUrl(
         url,
         mode: LaunchMode.externalApplication,
       );
-      
+
       if (!launched) {
-        await launchUrl(
-          url,
-          mode: LaunchMode.platformDefault,
-        );
+        await launchUrl(url, mode: LaunchMode.platformDefault);
       }
     } catch (e) {
       log('Could not launch $url: $e');

@@ -7,18 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProfileLoadingView extends StatelessWidget {
-  const ProfileLoadingView({
-    super.key,
-  });
+  const ProfileLoadingView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ProfileBackground(
       child: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(
-            horizontal: 24.w,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: Column(
             children: [
               CustomAppBar(

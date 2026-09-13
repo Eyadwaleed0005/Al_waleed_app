@@ -16,14 +16,7 @@ class LessonQuizScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppSystemUi.dark(),
-      child: BlocProvider(
-        create: (_) =>
-            getIt<LessonQuizCubit>()..getQuizQuestions(lessonId: lessonId),
-        child: const Scaffold(
-          appBar: LessonQuizAppBar(),
-          body: LessonQuizQuestionScreenContent(),
-        ),
-      ),
+      child: const Scaffold(body: LessonQuizQuestionScreenContent()),
     );
   }
 }

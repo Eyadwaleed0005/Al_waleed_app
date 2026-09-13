@@ -12,8 +12,7 @@ class LessonsLoadingSkeleton extends StatefulWidget {
   }
 }
 
-class _LessonsLoadingSkeletonState
-    extends State<LessonsLoadingSkeleton>
+class _LessonsLoadingSkeletonState extends State<LessonsLoadingSkeleton>
     with SingleTickerProviderStateMixin {
   late final AnimationController _animationController;
 

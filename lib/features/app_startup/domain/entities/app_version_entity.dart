@@ -11,9 +11,7 @@ class AppVersionEntity {
     required this.forceUpdate,
   });
 
-  bool hasNewerVersion({
-    required int installedBuildNumber,
-  }) {
+  bool hasNewerVersion({required int installedBuildNumber}) {
     return latestBuildNumber > installedBuildNumber;
   }
 }

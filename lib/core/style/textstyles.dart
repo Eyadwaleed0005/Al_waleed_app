@@ -64,7 +64,7 @@ class AppTextStyle {
     );
   }
 
-    static TextStyle font13PrimaryRegularTajawal() {
+  static TextStyle font13PrimaryRegularTajawal() {
     return TextStyle(
       fontSize: 13.sp,
       fontWeight: FontWeightHelper.regular,
@@ -136,6 +136,15 @@ class AppTextStyle {
     );
   }
 
+  static TextStyle font18TextLightBoldTajawal() {
+    return TextStyle(
+      fontSize: 18.sp,
+      fontWeight: FontWeightHelper.bold,
+      fontFamily: tajawal,
+      color: ColorPalette.textLight,
+    );
+  }
+
   static TextStyle font18CardBackgroundSemiBoldKufam() {
     return TextStyle(
       fontSize: 18.sp,
@@ -190,6 +199,15 @@ class AppTextStyle {
     );
   }
 
+  static TextStyle font15TextPrimarySemiBoldKufam() {
+    return TextStyle(
+      fontSize: 15.sp,
+      fontWeight: FontWeightHelper.semiBold,
+      fontFamily: kufam,
+      color: ColorPalette.textPrimary,
+    );
+  }
+
   static TextStyle font14TextBlackRegularTajawal() {
     return TextStyle(
       fontSize: 14.sp,
@@ -198,6 +216,7 @@ class AppTextStyle {
       color: ColorPalette.textBlack,
     );
   }
+
   static TextStyle font20TextBlackSemiBoldKufam() {
     return TextStyle(
       fontSize: 20.sp,
@@ -214,8 +233,8 @@ class AppTextStyle {
       fontFamily: tajawal,
       color: ColorPalette.textSecondary,
     );
-  } 
-  
+  }
+
   static TextStyle font12TextMutedRegularTajawal() {
     return TextStyle(
       fontSize: 12.sp,
@@ -229,6 +248,15 @@ class AppTextStyle {
     return TextStyle(
       fontSize: 12.sp,
       fontWeight: FontWeightHelper.regular,
+      fontFamily: tajawal,
+      color: ColorPalette.primary,
+    );
+  }
+
+  static TextStyle font12TextPrimaryMediumTajawal() {
+    return TextStyle(
+      fontSize: 12.sp,
+      fontWeight: FontWeightHelper.medium,
       fontFamily: tajawal,
       color: ColorPalette.primary,
     );
@@ -316,7 +344,7 @@ class AppTextStyle {
     );
   }
 
-    static TextStyle font11TextErrorBoldTajawal() {
+  static TextStyle font11TextErrorBoldTajawal() {
     return TextStyle(
       fontSize: 11.sp,
       fontWeight: FontWeightHelper.bold,
@@ -340,15 +368,6 @@ class AppTextStyle {
       fontWeight: FontWeightHelper.medium,
       fontFamily: tajawal,
       color: ColorPalette.textSoftSaga,
-    );
-  }
-
-  static TextStyle font18TextLightBoldTajawal() {
-    return TextStyle(
-      fontSize: 18.sp,
-      fontWeight: FontWeightHelper.bold,
-      fontFamily: tajawal,
-      color: ColorPalette.textLight,
     );
   }
 
