@@ -16,11 +16,10 @@ class AppImage {
   // ===== images =====
   late final String teacherBanner = '${baseImages}teacher_banner.png';
   late final String logoApp = '${baseImages}app_icon.png';
-  late final String liveSessionBannerIllustration = '${baseImages}live_session_banner_illustration.png';
+  late final String liveSessionBannerIllustration =
+      '${baseImages}live_session_banner_illustration.png';
   late final String lessonTestTubes = '${baseImages}lesson_test_tubes.png';
   late final String alwaleedImg = '${baseImages}alwaleed_img.png';
-
-
 
   // ===== icons =====
   late final String homeIcon = '${baseIcons}home.png';
@@ -33,6 +32,7 @@ class AppImage {
   late final String emptyBookOpen = '${baseIcons}empty_book_open.png';
   late final String emptyNotesIcon = '${baseIcons}empty_notes.png';
   late final String profile = '${baseIcons}profile.png';
+  late final String emptyExam = '${baseIcons}empty_exam.png';
 
   // ===== animations =====
 }
