@@ -1,35 +1,15 @@
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
-import 'package:al_waleed/features/exams/presentation/widgets/current_exam_widgets/exam_stat_item.dart';
+import 'package:al_waleed/features/exams/domain/entities/student_exam_entity.dart';
+import 'package:al_waleed/features/exams/presentation/widgets/exams_screen_widgets/current_exam_widgets/exam_stat_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AvailableExamCard extends StatelessWidget {
-  const AvailableExamCard({
-    super.key,
-    this.badgeText = 'متاح لصفك',
-    this.title = 'اختبار الكيمياء العضوية',
-    this.subtitle = 'الصف الثالث الثانوي',
-    this.score = '40',
-    this.scoreLabel = 'درجة',
-    this.duration = '30',
-    this.durationLabel = 'دقيقة',
-    this.questionsCount = '20',
-    this.questionsLabel = 'سؤالاً',
-    this.remainingTime = '02:15:30',
-  });
+  const AvailableExamCard({super.key, required this.exam});
 
-  final String badgeText;
-  final String title;
-  final String subtitle;
-  final String score;
-  final String scoreLabel;
-  final String duration;
-  final String durationLabel;
-  final String questionsCount;
-  final String questionsLabel;
-  final String remainingTime;
+  final StudentExamEntity exam;
 
   @override
   Widget build(BuildContext context) {
@@ -59,41 +39,40 @@ class AvailableExamCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Text(
-                badgeText,
+                'متاح لصفك',
                 style: AppTextStyle.font11TextHighlightBoldTajawal(),
               ),
             ),
           ),
           verticalSpace(12),
           Text(
-            title,
+            exam.examName,
             textDirection: TextDirection.rtl,
             textAlign: TextAlign.right,
             style: AppTextStyle.font19TextLightSemiBoldKufam(),
-          ),
-          verticalSpace(4),
-          Text(
-            subtitle,
-            textDirection: TextDirection.rtl,
-            textAlign: TextAlign.right,
-            style: AppTextStyle.font12TextSoftSagaMediumTajawal(),
           ),
           verticalSpace(16),
           Row(
             children: [
               Expanded(
                 child: ExamStatItem(
-                  value: questionsCount,
-                  label: questionsLabel,
+                  value: exam.questionCount.toString(),
+                  label: 'سؤال',
                 ),
               ),
               horizontalSpace(10),
               Expanded(
-                child: ExamStatItem(value: duration, label: durationLabel),
+                child: ExamStatItem(
+                  value: exam.durationMinutes.toString(),
+                  label: 'دقيقة',
+                ),
               ),
               horizontalSpace(10),
               Expanded(
-                child: ExamStatItem(value: score, label: scoreLabel),
+                child: ExamStatItem(
+                  value: exam.totalScore.toString(),
+                  label: 'درجة',
+                ),
               ),
             ],
           ),

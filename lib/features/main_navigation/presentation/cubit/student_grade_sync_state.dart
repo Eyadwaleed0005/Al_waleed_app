@@ -13,17 +13,13 @@ final class StudentGradeSyncLoading extends StudentGradeSyncState {
 }
 
 final class StudentGradeSyncSuccess extends StudentGradeSyncState {
-  const StudentGradeSyncSuccess({
-    required this.gradeId,
-  });
+  const StudentGradeSyncSuccess({required this.gradeId});
 
   final String gradeId;
 }
 
 final class StudentGradeSyncFailure extends StudentGradeSyncState {
-  const StudentGradeSyncFailure({
-    required this.error,
-  });
+  const StudentGradeSyncFailure({required this.error});
 
   final AppErrorModel error;
 }

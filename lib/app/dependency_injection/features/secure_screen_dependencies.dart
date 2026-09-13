@@ -22,23 +22,20 @@ void _registerDataSources(GetIt getIt) {
 
 void _registerRepositories(GetIt getIt) {
   getIt.registerLazySingleton<SecureScreenRepository>(
-    () => SecureScreenRepositoryImpl(
-      dataSource: getIt<SecureScreenDataSource>(),
-    ),
+    () =>
+        SecureScreenRepositoryImpl(dataSource: getIt<SecureScreenDataSource>()),
   );
 }
 
 void _registerUseCases(GetIt getIt) {
   getIt.registerLazySingleton<EnableSecureScreenUseCase>(
-    () => EnableSecureScreenUseCase(
-      repository: getIt<SecureScreenRepository>(),
-    ),
+    () =>
+        EnableSecureScreenUseCase(repository: getIt<SecureScreenRepository>()),
   );
 
   getIt.registerLazySingleton<DisableSecureScreenUseCase>(
-    () => DisableSecureScreenUseCase(
-      repository: getIt<SecureScreenRepository>(),
-    ),
+    () =>
+        DisableSecureScreenUseCase(repository: getIt<SecureScreenRepository>()),
   );
 }
 

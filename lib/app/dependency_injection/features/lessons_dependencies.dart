@@ -84,42 +84,30 @@ void _registerRepositories(GetIt getIt) {
 
 void _registerUseCases(GetIt getIt) {
   getIt.registerLazySingleton<GetLessonByIdUseCase>(
-    () => GetLessonByIdUseCase(
-      repository: getIt<LessonsRepository>(),
-    ),
+    () => GetLessonByIdUseCase(repository: getIt<LessonsRepository>()),
   );
 
   getIt.registerLazySingleton<StreamLessonsUseCase>(
-    () => StreamLessonsUseCase(
-      repository: getIt<LessonsRepository>(),
-    ),
+    () => StreamLessonsUseCase(repository: getIt<LessonsRepository>()),
   );
 
   getIt.registerLazySingleton<GetLessonPdfUseCase>(
-    () => GetLessonPdfUseCase(
-      repository: getIt<LessonPdfRepository>(),
-    ),
+    () => GetLessonPdfUseCase(repository: getIt<LessonPdfRepository>()),
   );
 }
 
 void _registerCubits(GetIt getIt) {
   getIt.registerFactory<LessonsCubit>(
-    () => LessonsCubit(
-      streamLessonsUseCase: getIt<StreamLessonsUseCase>(),
-    ),
+    () => LessonsCubit(streamLessonsUseCase: getIt<StreamLessonsUseCase>()),
   );
 
   getIt.registerFactory<LessonPdfCubit>(
-    () => LessonPdfCubit(
-      getLessonPdfUseCase: getIt<GetLessonPdfUseCase>(),
-    ),
+    () => LessonPdfCubit(getLessonPdfUseCase: getIt<GetLessonPdfUseCase>()),
   );
 
   if (!getIt.isRegistered<NetworkStatusCubit>()) {
     getIt.registerFactory<NetworkStatusCubit>(
-      () => NetworkStatusCubit(
-        networkInfo: getIt<NetworkInfo>(),
-      ),
+      () => NetworkStatusCubit(networkInfo: getIt<NetworkInfo>()),
     );
   }
 }

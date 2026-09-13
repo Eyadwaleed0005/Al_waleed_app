@@ -23,7 +23,5 @@ final class SecureScreenDisabled extends SecureScreenState {
 final class SecureScreenFailure extends SecureScreenState {
   final AppErrorModel error;
 
-  const SecureScreenFailure({
-    required this.error,
-  });
+  const SecureScreenFailure({required this.error});
 }

@@ -7,20 +7,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ExamSubmittedSuccessCard extends StatelessWidget {
   const ExamSubmittedSuccessCard({
     super.key,
+    required this.examName,
     this.title = 'تم تسليم الاختبار بنجاح',
-    this.examName = 'اختبار الكيمياء العضوية',
-    this.noticeText = 'تم حفظ إجاباتك وإرسالها للمدرس للمراجعة.',
+    this.noticeText = 'تم تصحيح إجاباتك وحفظ النتيجة بنجاح.',
   });
 
-  final String title;
   final String examName;
+  final String title;
   final String noticeText;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 26.h),
       decoration: BoxDecoration(
         color: ColorPalette.surface,
         borderRadius: BorderRadius.circular(22.r),
@@ -35,39 +35,42 @@ class ExamSubmittedSuccessCard extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 55.w,
-            height: 55.w,
+            width: 64.r,
+            height: 64.r,
             decoration: BoxDecoration(
+              color: ColorPalette.emeraldGreen.withValues(alpha: 0.10),
               shape: BoxShape.circle,
               border: Border.all(
                 color: ColorPalette.emeraldGreen,
                 width: 2.2.w,
               ),
             ),
-            child: Center(
-              child: Icon(
-                Icons.check_rounded,
-                size: 38.sp,
-                color: ColorPalette.darkForestGreen,
-              ),
+            alignment: Alignment.center,
+            child: Icon(
+              Icons.check_rounded,
+              size: 40.sp,
+              color: ColorPalette.darkForestGreen,
             ),
           ),
-          verticalSpace(20),
+          verticalSpace(18),
           Text(
             title,
             textAlign: TextAlign.center,
+            textDirection: TextDirection.rtl,
             style: AppTextStyle.font14TextPrimarySemiBoldKufam(),
           ),
-          verticalSpace(6),
+          verticalSpace(8),
           Text(
             examName,
             textAlign: TextAlign.center,
+            textDirection: TextDirection.rtl,
             style: AppTextStyle.font12TextSecondaryMediumTajawal(),
           ),
-          verticalSpace(75),
+          verticalSpace(22),
           Text(
             noticeText,
             textAlign: TextAlign.center,
+            textDirection: TextDirection.rtl,
             style: AppTextStyle.font13TextPrimaryBoldTajawal(),
           ),
         ],

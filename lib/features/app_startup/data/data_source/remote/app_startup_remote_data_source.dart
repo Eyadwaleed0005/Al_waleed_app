@@ -4,7 +4,5 @@ import 'package:al_waleed/features/app_startup/data/models/student_access_model.
 abstract interface class AppStartupRemoteDataSource {
   Future<AppVersionModel?> getAppVersion();
 
-  Future<StudentAccessModel> getStudentAccess({
-    required String studentId,
-  });
+  Future<StudentAccessModel> getStudentAccess({required String studentId});
 }

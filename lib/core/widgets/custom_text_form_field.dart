@@ -64,7 +64,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool isRequired;
   final bool enabled;
   final bool readOnly;
-final bool obscureText;
+  final bool obscureText;
   final int maxLines;
   final int? minLines;
   final int? maxLength;

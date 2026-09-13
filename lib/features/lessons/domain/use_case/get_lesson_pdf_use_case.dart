@@ -7,15 +7,12 @@ import 'package:dartz/dartz.dart';
 class GetLessonPdfUseCase {
   final LessonPdfRepository _repository;
 
-  const GetLessonPdfUseCase({
-    required LessonPdfRepository repository,
-  }) : _repository = repository;
+  const GetLessonPdfUseCase({required LessonPdfRepository repository})
+    : _repository = repository;
 
   Future<Either<AppErrorModel, LessonPdfEntity>> call({
     required LessonEntity lesson,
   }) {
-    return _repository.getLessonPdf(
-      lesson: lesson,
-    );
+    return _repository.getLessonPdf(lesson: lesson);
   }
 }

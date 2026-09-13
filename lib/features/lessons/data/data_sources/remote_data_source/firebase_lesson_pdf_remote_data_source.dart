@@ -4,8 +4,7 @@ import 'package:al_waleed/core/errors/handlers/firebase_error_handler.dart';
 import 'package:al_waleed/core/firebase/storage/storage_service.dart';
 import 'package:al_waleed/features/lessons/data/data_sources/remote_data_source/lesson_pdf_remote_data_source.dart';
 
-class FirebaseLessonPdfRemoteDataSource
-    implements LessonPdfRemoteDataSource {
+class FirebaseLessonPdfRemoteDataSource implements LessonPdfRemoteDataSource {
   final StorageService _storageService;
 
   const FirebaseLessonPdfRemoteDataSource({

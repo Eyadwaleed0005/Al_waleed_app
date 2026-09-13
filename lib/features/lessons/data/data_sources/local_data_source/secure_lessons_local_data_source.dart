@@ -7,8 +7,6 @@ class SecureLessonsLocalDataSource implements LessonsLocalDataSource {
 
   @override
   Future<String?> getGradeId() {
-    return SecureStorageHelper.getString(
-      key: SecureStorageKeys.gradeId,
-    );
+    return SecureStorageHelper.getString(key: SecureStorageKeys.gradeId);
   }
 }

@@ -3,9 +3,7 @@ import 'package:al_waleed/features/notifications/data/models/app_notification_mo
 abstract interface class LocalNotificationDataSource {
   Future<void> initialize();
 
-  Future<void> showNotification({
-    required AppNotificationModel notification,
-  });
+  Future<void> showNotification({required AppNotificationModel notification});
 
   Stream<AppNotificationModel> streamOpenedNotifications();
 

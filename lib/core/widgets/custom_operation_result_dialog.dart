@@ -10,10 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-enum CustomOperationResultType {
-  success,
-  failure,
-}
+enum CustomOperationResultType { success, failure }
 
 class CustomOperationResultDialog extends StatefulWidget {
   const CustomOperationResultDialog({
@@ -63,15 +60,11 @@ class _CustomOperationResultDialogState
   }
 
   bool get hasEmail {
-    return isSuccess &&
-        widget.email != null &&
-        widget.email!.trim().isNotEmpty;
+    return isSuccess && widget.email != null && widget.email!.trim().isNotEmpty;
   }
 
   bool get hasPassword {
-    return isSuccess &&
-        widget.password != null &&
-        widget.password!.isNotEmpty;
+    return isSuccess && widget.password != null && widget.password!.isNotEmpty;
   }
 
   bool get hasCredentials {
@@ -87,13 +80,9 @@ class _CustomOperationResultDialogState
   void initState() {
     super.initState();
 
-    _emailController = TextEditingController(
-      text: widget.email?.trim() ?? '',
-    );
+    _emailController = TextEditingController(text: widget.email?.trim() ?? '');
 
-    _passwordController = TextEditingController(
-      text: widget.password ?? '',
-    );
+    _passwordController = TextEditingController(text: widget.password ?? '');
   }
 
   Future<void> _copyEmail() async {
@@ -101,9 +90,7 @@ class _CustomOperationResultDialogState
       return;
     }
 
-    await Clipboard.setData(
-      ClipboardData(text: _emailController.text),
-    );
+    await Clipboard.setData(ClipboardData(text: _emailController.text));
 
     if (!mounted) {
       return;
@@ -121,9 +108,7 @@ class _CustomOperationResultDialogState
       return;
     }
 
-    await Clipboard.setData(
-      ClipboardData(text: _passwordController.text),
-    );
+    await Clipboard.setData(ClipboardData(text: _passwordController.text));
 
     if (!mounted) {
       return;
@@ -140,26 +125,18 @@ class _CustomOperationResultDialogState
     final values = <String>[];
 
     if (hasEmail) {
-      values.add(
-        'البريد الإلكتروني: ${_emailController.text}',
-      );
+      values.add('البريد الإلكتروني: ${_emailController.text}');
     }
 
     if (hasPassword) {
-      values.add(
-        'كلمة المرور: ${_passwordController.text}',
-      );
+      values.add('كلمة المرور: ${_passwordController.text}');
     }
 
     if (values.isEmpty) {
       return;
     }
 
-    await Clipboard.setData(
-      ClipboardData(
-        text: values.join('\n'),
-      ),
-    );
+    await Clipboard.setData(ClipboardData(text: values.join('\n')));
 
     if (!mounted) {
       return;
@@ -206,28 +183,19 @@ class _CustomOperationResultDialogState
 
   @override
   Widget build(BuildContext context) {
-    final statusColor = isSuccess
-        ? ColorPalette.success
-        : ColorPalette.error;
+    final statusColor = isSuccess ? ColorPalette.success : ColorPalette.error;
 
-    final icon = isSuccess
-        ? widget.successIcon
-        : widget.failureIcon;
+    final icon = isSuccess ? widget.successIcon : widget.failureIcon;
 
     return AppAnimations.operationDialogEntrance(
       child: Dialog(
         elevation: 0,
-        insetPadding: EdgeInsets.symmetric(
-          horizontal: 24.w,
-        ),
+        insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
         backgroundColor: Colors.transparent,
         child: SingleChildScrollView(
           child: Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(
-              horizontal: 24.w,
-              vertical: 32.h,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
             decoration: BoxDecoration(
               color: ColorPalette.surface,
               borderRadius: BorderRadius.circular(28.r),
@@ -254,26 +222,20 @@ class _CustomOperationResultDialogState
                     shape: BoxShape.circle,
                   ),
                   alignment: Alignment.center,
-                  child: Icon(
-                    icon,
-                    size: 38.sp,
-                    color: statusColor,
-                  ),
+                  child: Icon(icon, size: 38.sp, color: statusColor),
                 ),
                 verticalSpace(22),
                 Text(
                   widget.title,
                   textAlign: TextAlign.center,
-                  style: AppTextStyle
-                      .font18TextPrimarySemiBoldKufam(),
+                  style: AppTextStyle.font18TextPrimarySemiBoldKufam(),
                 ),
                 verticalSpace(10),
                 Text(
                   widget.message,
                   textAlign: TextAlign.center,
                   textDirection: TextDirection.rtl,
-                  style: AppTextStyle
-                      .font14TextSecondaryRegularTajawal(),
+                  style: AppTextStyle.font14TextSecondaryRegularTajawal(),
                 ),
                 if (hasCredentials) ...[
                   verticalSpace(24),
@@ -291,8 +253,7 @@ class _CustomOperationResultDialogState
                       ),
                       onSuffixTap: _copyEmail,
                     ),
-                  if (hasEmail && hasPassword)
-                    verticalSpace(12),
+                  if (hasEmail && hasPassword) verticalSpace(12),
                   if (hasPassword)
                     CustomTextFormField(
                       controller: _passwordController,

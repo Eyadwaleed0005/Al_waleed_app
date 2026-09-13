@@ -9,11 +9,7 @@ class SyncNotificationGradeTopicUseCase {
     required NotificationRepository repository,
   }) : _repository = repository;
 
-  Future<Either<AppErrorModel, void>> call({
-    required String gradeId,
-  }) {
-    return _repository.syncGradeTopic(
-      gradeId: gradeId,
-    );
+  Future<Either<AppErrorModel, void>> call({required String gradeId}) {
+    return _repository.syncGradeTopic(gradeId: gradeId);
   }
 }

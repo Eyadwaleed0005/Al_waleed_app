@@ -21,12 +21,12 @@ class StudyNotesListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (notes.isEmpty) {
-      return  AppEmptyState(
-        iconBackgroundColor:  ColorPalette.textMuted.withValues(alpha: 0.45),
+      return AppEmptyState(
+        iconBackgroundColor: ColorPalette.textMuted.withValues(alpha: 0.45),
         iconContainerSize: 140,
         iconSize: 60,
         title: 'لا توجد مذكرات متاحة حاليًا',
-        iconWidget:Image.asset(AppImage().emptyNotesIcon, ),
+        iconWidget: Image.asset(AppImage().emptyNotesIcon),
       );
     }
 
@@ -41,10 +41,7 @@ class StudyNotesListView extends StatelessWidget {
 
         return AppAnimations.screenSection(
           delay: 60 * index,
-          child: StudyNotePreviewCard(
-            note: note,
-            onTap: () => onNoteTap(note),
-          ),
+          child: StudyNotePreviewCard(note: note, onTap: () => onNoteTap(note)),
         );
       },
     );

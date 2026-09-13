@@ -5,15 +5,10 @@ import 'package:flutter/material.dart';
 class LiveSessionSuccessView extends StatelessWidget {
   final LiveSessionEntity liveSession;
 
-  const LiveSessionSuccessView({
-    super.key,
-    required this.liveSession,
-  });
+  const LiveSessionSuccessView({super.key, required this.liveSession});
 
   @override
   Widget build(BuildContext context) {
-    return LiveSessionCard(
-      liveSession: liveSession,
-    );
+    return LiveSessionCard(liveSession: liveSession);
   }
 }

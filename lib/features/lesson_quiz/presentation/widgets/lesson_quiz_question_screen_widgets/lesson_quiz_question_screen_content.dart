@@ -44,7 +44,8 @@ class LessonQuizQuestionScreenContent extends StatelessWidget {
                         const QuizProgress(current: 1, total: 2),
                         verticalSpace(16),
                         const QuizQuestionContentCard(
-                          questionText: 'أي العناصر التالية يُعد من العناصر الانتقالية؟',
+                          questionText:
+                              'أي العناصر التالية يُعد من العناصر الانتقالية؟',
                           answers: _answers,
                         ),
                         verticalSpace(14),

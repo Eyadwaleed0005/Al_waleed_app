@@ -1,27 +1,32 @@
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
-import 'package:al_waleed/features/exams/presentation/widgets/start_exam_widgets/image_question.dart';
 import 'package:al_waleed/features/exams/presentation/widgets/start_exam_widgets/exam_answer_option_tile.dart';
+import 'package:al_waleed/features/exams/presentation/widgets/start_exam_widgets/image_question.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ExamQuestionCard extends StatelessWidget {
   const ExamQuestionCard({
     super.key,
-    this.questionText = 'أي المركبات التالية يُظهر ظاهرة التشاكل الهندسي؟',
+    required this.questionText,
     required this.options,
     required this.selectedIndex,
     required this.onOptionSelected,
-    this.imageQuestion =
-        'https://plus.unsplash.com/premium_photo-1681426678542-613c306013e1?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    this.imageQuestion,
+    this.isEnabled = true,
   });
 
   final String questionText;
   final String? imageQuestion;
   final List<String> options;
-  final int selectedIndex;
+  final int? selectedIndex;
   final ValueChanged<int> onOptionSelected;
+  final bool isEnabled;
+
+  bool get _hasImage {
+    return imageQuestion?.trim().isNotEmpty == true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,16 +54,25 @@ class ExamQuestionCard extends StatelessWidget {
             style: AppTextStyle.font15TextPrimarySemiBoldKufam(),
           ),
           verticalSpace(14),
-          if (imageQuestion != null) ...[
-            ImageQuestion(image: imageQuestion),
+          if (_hasImage) ...[
+            ImageQuestion(image: imageQuestion!),
             verticalSpace(16),
           ],
-          ...List.generate(
-            options.length,
-            (index) => ExamAnswerOptionTile(
-              text: options[index],
-              isSelected: selectedIndex == index,
-              onTap: () => onOptionSelected(index),
+          IgnorePointer(
+            ignoring: !isEnabled,
+            child: Opacity(
+              opacity: isEnabled ? 1 : 0.65,
+              child: Column(
+                children: List<Widget>.generate(options.length, (int index) {
+                  return ExamAnswerOptionTile(
+                    text: options[index],
+                    isSelected: selectedIndex == index,
+                    onTap: () {
+                      onOptionSelected(index);
+                    },
+                  );
+                }),
+              ),
             ),
           ),
         ],

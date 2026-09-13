@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SplashTitleText extends StatelessWidget {
-  const SplashTitleText({
-    super.key,
-    required this.text,
-    required this.style,
-  });
+  const SplashTitleText({super.key, required this.text, required this.style});
 
   final String text;
   final TextStyle style;

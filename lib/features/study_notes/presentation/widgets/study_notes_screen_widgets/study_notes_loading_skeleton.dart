@@ -12,8 +12,7 @@ class StudyNotesLoadingSkeleton extends StatefulWidget {
   }
 }
 
-class _StudyNotesLoadingSkeletonState
-    extends State<StudyNotesLoadingSkeleton>
+class _StudyNotesLoadingSkeletonState extends State<StudyNotesLoadingSkeleton>
     with SingleTickerProviderStateMixin {
   late final AnimationController _animationController;
 
@@ -154,4 +153,3 @@ class _StudyNotesLoadingSkeletonState
     );
   }
 }
-

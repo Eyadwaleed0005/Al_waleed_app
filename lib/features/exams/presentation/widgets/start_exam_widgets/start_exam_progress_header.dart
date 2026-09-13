@@ -8,9 +8,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class StartExamProgressHeader extends StatelessWidget {
   const StartExamProgressHeader({
     super.key,
-    this.currentQuestion = 6,
-    this.totalQuestions = 20,
-    this.completionPercentage = 30,
+    required this.currentQuestion,
+    required this.totalQuestions,
+    required this.completionPercentage,
   });
 
   final int currentQuestion;
@@ -19,9 +19,11 @@ class StartExamProgressHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final progressValue = totalQuestions > 0
-        ? (currentQuestion / totalQuestions).clamp(0.0, 1.0)
-        : 0.0;
+    final double progressValue = totalQuestions > 0
+        ? (currentQuestion / totalQuestions).clamp(0.0, 1.0).toDouble()
+        : 0;
+
+    final int normalizedPercentage = completionPercentage.clamp(0, 100);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -32,11 +34,12 @@ class StartExamProgressHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'السؤال ${toArabicNumbers(currentQuestion)} من ${toArabicNumbers(totalQuestions)}',
+                'السؤال ${toArabicNumbers(currentQuestion)} من '
+                '${toArabicNumbers(totalQuestions)}',
                 style: AppTextStyle.font13TextPrimaryBoldTajawal(),
               ),
               Text(
-                '$completionPercentage% مكتمل',
+                '${toArabicNumbers(normalizedPercentage)}٪ مكتمل',
                 style: AppTextStyle.font11TextSecondaryRegularTajawal(),
               ),
             ],

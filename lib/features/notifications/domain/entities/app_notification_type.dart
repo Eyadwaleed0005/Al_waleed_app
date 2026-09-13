@@ -1,7 +1,1 @@
-enum AppNotificationType {
-  lesson,
-  studyNote,
-  exam,
-  liveSession,
-  unknown,
-}
+enum AppNotificationType { lesson, studyNote, exam, liveSession, unknown }

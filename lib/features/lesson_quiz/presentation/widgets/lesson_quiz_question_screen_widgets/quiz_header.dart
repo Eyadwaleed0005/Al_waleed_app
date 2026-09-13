@@ -23,9 +23,7 @@ class QuizHeader extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: ColorPalette.primary,
-      ),
+      decoration: const BoxDecoration(color: ColorPalette.primary),
       child: SafeArea(
         bottom: false,
         child: SizedBox(

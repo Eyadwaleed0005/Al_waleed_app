@@ -34,7 +34,9 @@ class QuizProgress extends StatelessWidget {
               statusText ?? '%${toArabicNumbers(percentage)} مكتمل',
               style: AppTextStyle.font12TextSecondaryRegularTajawal().copyWith(
                 color: statusColor ?? ColorPalette.textSecondary,
-                fontWeight: statusText != null ? FontWeight.w700 : FontWeight.w500,
+                fontWeight: statusText != null
+                    ? FontWeight.w700
+                    : FontWeight.w500,
               ),
               textDirection: TextDirection.rtl,
             ),
@@ -57,7 +59,9 @@ class QuizProgress extends StatelessWidget {
               value: progress,
               minHeight: 8.h,
               backgroundColor: ColorPalette.paleSage,
-              valueColor: const AlwaysStoppedAnimation<Color>(ColorPalette.primary),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                ColorPalette.primary,
+              ),
             ),
           ),
         ),

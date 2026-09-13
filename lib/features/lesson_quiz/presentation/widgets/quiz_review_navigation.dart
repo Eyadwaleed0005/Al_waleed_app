@@ -26,10 +26,7 @@ class QuizReviewNavigation extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (!isFirstQuestion) ...[
-          CustomSecondaryButton(
-            text: 'السابق',
-            onPressed: onPrevious,
-          ),
+          CustomSecondaryButton(text: 'السابق', onPressed: onPrevious),
           verticalSpace(10),
         ],
         CustomButton(

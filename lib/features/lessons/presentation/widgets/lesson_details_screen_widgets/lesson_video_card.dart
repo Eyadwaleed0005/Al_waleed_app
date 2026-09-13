@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:al_waleed/core/connection/cubit/network_status_cubit.dart';
 import 'package:al_waleed/core/connection/cubit/network_status_state.dart';
 import 'package:al_waleed/core/style/app_color.dart';
+import 'package:al_waleed/core/widgets/app_loading_indicator.dart';
 import 'package:al_waleed/core/widgets/custom_operation_result_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,9 @@ class LessonVideoCard extends StatefulWidget {
   final String videoUrl;
 
   @override
-  State<LessonVideoCard> createState() => _LessonVideoCardState();
+  State<LessonVideoCard> createState() {
+    return _LessonVideoCardState();
+  }
 }
 
 class _LessonVideoCardState extends State<LessonVideoCard> {
@@ -43,6 +46,7 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
   void dispose() {
     _closePlayer();
     _restorePortraitOrientation();
+
     super.dispose();
   }
 
@@ -51,7 +55,7 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
       return;
     }
 
-    final videoId = _extractVideoId(widget.videoUrl);
+    final String? videoId = _extractVideoId(widget.videoUrl);
 
     if (videoId == null) {
       return;
@@ -60,7 +64,7 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
     _isCheckingConnection = true;
 
     try {
-      final hasInternet = await _checkInternetConnection();
+      final bool hasInternet = await _checkInternetConnection();
 
       if (!mounted) {
         return;
@@ -68,6 +72,7 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
 
       if (!hasInternet) {
         unawaited(_showOfflineDialog());
+
         return;
       }
 
@@ -78,7 +83,8 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
   }
 
   Future<bool> _checkInternetConnection() async {
-    final networkStatusCubit = context.read<NetworkStatusCubit>();
+    final NetworkStatusCubit networkStatusCubit = context
+        .read<NetworkStatusCubit>();
 
     await networkStatusCubit.checkConnection();
 
@@ -90,22 +96,24 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
   }
 
   void _createPlayer(String videoId) {
-    final controller = YoutubePlayerController.fromVideoId(
-      videoId: videoId,
-      autoPlay: true,
-      params: const YoutubePlayerParams(
-        interfaceLanguage: 'ar',
-        captionLanguage: 'ar',
-        playsInline: true,
-        enableCaption: false,
-        strictRelatedVideos: true,
-      ),
-    );
+    final YoutubePlayerController controller =
+        YoutubePlayerController.fromVideoId(
+          videoId: videoId,
+          autoPlay: true,
+          params: const YoutubePlayerParams(
+            interfaceLanguage: 'ar',
+            captionLanguage: 'ar',
+            playsInline: true,
+            enableCaption: false,
+            strictRelatedVideos: true,
+          ),
+        );
 
     controller.setFullScreenListener(_handleFullScreenChanged);
 
     if (!mounted) {
       unawaited(controller.close());
+
       return;
     }
 
@@ -118,6 +126,7 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
   void _handleFullScreenChanged(bool isFullScreen) {
     if (isFullScreen) {
       _setLandscapeOrientation();
+
       return;
     }
 
@@ -142,7 +151,7 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
   }
 
   void _closePlayer() {
-    final controller = _playerController;
+    final YoutubePlayerController? controller = _playerController;
 
     _playerController = null;
     _isPlayerActive = false;
@@ -159,10 +168,10 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
 
     _isOfflineDialogVisible = true;
 
-    final shouldRetry = await showDialog<bool>(
+    final bool? shouldRetry = await showDialog<bool>(
       context: context,
       barrierDismissible: true,
-      builder: (dialogContext) {
+      builder: (BuildContext dialogContext) {
         return CustomOperationResultDialog(
           type: CustomOperationResultType.failure,
           title: 'لا يوجد اتصال بالإنترنت',
@@ -189,13 +198,13 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
   }
 
   String? _extractVideoId(String videoUrl) {
-    final normalizedUrl = videoUrl.trim();
+    final String normalizedUrl = videoUrl.trim();
 
     if (normalizedUrl.isEmpty) {
       return null;
     }
 
-    final convertedVideoId = YoutubePlayerController.convertUrlToId(
+    final String? convertedVideoId = YoutubePlayerController.convertUrlToId(
       normalizedUrl,
     );
 
@@ -203,7 +212,9 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
       return convertedVideoId.trim();
     }
 
-    final isRawVideoId = RegExp(r'^[a-zA-Z0-9_-]{11}$').hasMatch(normalizedUrl);
+    final bool isRawVideoId = RegExp(
+      r'^[a-zA-Z0-9_-]{11}$',
+    ).hasMatch(normalizedUrl);
 
     return isRawVideoId ? normalizedUrl : null;
   }
@@ -214,7 +225,7 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
 
   @override
   Widget build(BuildContext context) {
-    final videoId = _extractVideoId(widget.videoUrl);
+    final String? videoId = _extractVideoId(widget.videoUrl);
 
     return AspectRatio(
       aspectRatio: _cardAspectRatio,
@@ -242,7 +253,7 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
 
   Widget _buildThumbnailPreview(String videoId) {
     return GestureDetector(
-      key: const ValueKey('video-thumbnail'),
+      key: const ValueKey<String>('video-thumbnail'),
       onTap: _activatePlayer,
       child: Stack(
         fit: StackFit.expand,
@@ -250,15 +261,21 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
           CachedNetworkImage(
             imageUrl: _thumbnailUrl(videoId),
             fit: BoxFit.cover,
-            placeholder: (_, _) {
+            placeholder: (BuildContext context, String imageUrl) {
               return const ColoredBox(
                 color: ColorPalette.primarySoftBackground,
                 child: Center(
-                  child: CircularProgressIndicator(color: ColorPalette.primary),
+                  child: AppLoadingIndicator(
+                    color: ColorPalette.primary,
+                    size: 30,
+                    strokeWidth: 3,
+                    wavelength: 14,
+                    waveSpeed: 10,
+                  ),
                 ),
               );
             },
-            errorWidget: (_, _, _) {
+            errorWidget: (BuildContext context, String imageUrl, Object error) {
               return const ColoredBox(
                 color: ColorPalette.primarySoftBackground,
                 child: Center(
@@ -311,7 +328,7 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
 
   Widget _buildInvalidVideoView() {
     return ColoredBox(
-      key: const ValueKey('invalid-video'),
+      key: const ValueKey<String>('invalid-video'),
       color: ColorPalette.primarySoftBackground,
       child: Center(
         child: Column(
@@ -338,7 +355,7 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
 
   Widget _buildPlayer() {
     return Theme(
-      key: const ValueKey('youtube-player'),
+      key: const ValueKey<String>('youtube-player'),
       data: Theme.of(context).copyWith(
         colorScheme: Theme.of(
           context,

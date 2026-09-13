@@ -11,11 +11,13 @@ class ExamNavigationActions extends StatelessWidget {
     this.onPreviousPressed,
     this.onNextPressed,
     this.onSubmitPressed,
+    this.isSubmitting = false,
   });
 
   final VoidCallback? onPreviousPressed;
   final VoidCallback? onNextPressed;
   final VoidCallback? onSubmitPressed;
+  final bool isSubmitting;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class ExamNavigationActions extends StatelessWidget {
             Expanded(
               child: CustomButton(
                 text: 'التالي',
-                onPressed: onNextPressed,
+                onPressed: isSubmitting ? null : onNextPressed,
                 background: ColorPalette.primary,
                 foreground: ColorPalette.textLight,
                 height: 50.h,
@@ -37,7 +39,7 @@ class ExamNavigationActions extends StatelessWidget {
             Expanded(
               child: CustomSecondaryButton(
                 text: 'السابق',
-                onPressed: onPreviousPressed,
+                onPressed: isSubmitting ? null : onPreviousPressed,
                 backgroundColor: ColorPalette.surface,
                 borderColor: ColorPalette.softSage,
                 foregroundColor: ColorPalette.primary,
@@ -49,7 +51,8 @@ class ExamNavigationActions extends StatelessWidget {
         verticalSpace(12),
         CustomSecondaryButton(
           text: 'تسليم الامتحان',
-          onPressed: onSubmitPressed,
+          onPressed: isSubmitting ? null : onSubmitPressed,
+          isLoading: isSubmitting,
           backgroundColor: ColorPalette.surface,
           borderColor: ColorPalette.crimsonRed.withValues(alpha: 0.4),
           foregroundColor: ColorPalette.crimsonRed,

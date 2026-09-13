@@ -11,15 +11,11 @@ class StudentAccessEntity {
     required this.subscriptionEndAt,
   });
 
-  bool hasValidSubscription({
-    required DateTime currentDate,
-  }) {
+  bool hasValidSubscription({required DateTime currentDate}) {
     if (!isActive) {
       return false;
     }
 
-    return subscriptionEndAt.toUtc().isAfter(
-      currentDate.toUtc(),
-    );
+    return subscriptionEndAt.toUtc().isAfter(currentDate.toUtc());
   }
 }
