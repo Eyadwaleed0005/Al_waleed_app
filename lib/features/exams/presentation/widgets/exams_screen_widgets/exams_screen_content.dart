@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:al_waleed/app/routes/app_images_routes.dart';
 import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
-import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/widgets/app_error_state.dart';
 import 'package:al_waleed/core/widgets/custom_app_bar.dart';
 import 'package:al_waleed/core/widgets/custom_dialog.dart';
@@ -41,9 +40,6 @@ class ExamsScreenContent extends StatelessWidget {
                   ),
                 ],
               ),
-
-              verticalSpace(24),
-
               Expanded(
                 child: BlocConsumer<ExamsScreenCubit, ExamsScreenState>(
                   listenWhen: (previous, current) {

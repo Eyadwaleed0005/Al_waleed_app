@@ -59,13 +59,12 @@ class DefaultFirebaseOptions {
   );
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBALMA4Q6QOHXXZDPvrPeJl5-F5NJLD5nc',
-    appId: '1:929812100990:ios:c117d7436cb6e44edbe52f',
+    appId: '1:929812100990:ios:ec966ab94d4e55fadbe52f',
     messagingSenderId: '929812100990',
     projectId: 'alwaleed-education-platform',
     storageBucket: 'alwaleed-education-platform.firebasestorage.app',
-    iosBundleId: 'com.example.alWaleed',
+    iosBundleId: 'com.famex.alwaleed',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyBALMA4Q6QOHXXZDPvrPeJl5-F5NJLD5nc',
     appId: '1:929812100990:ios:c117d7436cb6e44edbe52f',
