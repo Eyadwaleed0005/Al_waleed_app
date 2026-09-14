@@ -1,6 +1,7 @@
 import 'package:al_waleed/app/routes/screen_routes/feature/app_startup_routes.dart';
 import 'package:al_waleed/app/routes/screen_routes/feature/authentication_routes.dart';
 import 'package:al_waleed/app/routes/screen_routes/feature/exams_routes.dart';
+import 'package:al_waleed/app/routes/screen_routes/feature/lesson_quiz_routes.dart';
 import 'package:al_waleed/app/routes/screen_routes/feature/lessons_routes.dart';
 import 'package:al_waleed/app/routes/screen_routes/feature/live_session_routes.dart';
 import 'package:al_waleed/app/routes/screen_routes/feature/main_navigation_routes.dart';
@@ -17,6 +18,7 @@ abstract final class AppRoutes {
         LiveSessionRoutes.generateRoute(settings) ??
         StudyNotesRoutes.generateRoute(settings) ??
         LessonsRoutes.generateRoute(settings) ??
+        LessonQuizRoutes.generateRoute(settings) ??
         ExamsRoutes.generateRoute(settings) ??
         _buildUnknownRoute(settings);
   }
@@ -26,7 +28,12 @@ abstract final class AppRoutes {
       settings: settings,
       builder: (_) {
         return const Scaffold(
-          body: Center(child: Text('الصفحة المطلوبة غير موجودة')),
+          body: Center(
+            child: Text(
+              'الصفحة المطلوبة غير موجودة',
+              textDirection: TextDirection.rtl,
+            ),
+          ),
         );
       },
     );

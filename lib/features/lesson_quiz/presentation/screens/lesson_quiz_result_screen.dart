@@ -1,5 +1,4 @@
 import 'package:al_waleed/core/helper/app_system_ui.dart';
-import 'package:al_waleed/features/lesson_quiz/presentation/widgets/lesson_quiz_question_screen_widgets/quiz_header.dart';
 import 'package:al_waleed/features/lesson_quiz/presentation/widgets/lesson_quiz_result_screen_widgets/lesson_quiz_result_screen_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,10 +10,7 @@ class LessonQuizResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppSystemUi.dark(),
-      child: const Scaffold(
-        appBar: QuizHeader(title: 'نتيجة اختبار الدرس'),
-        body: LessonQuizResultScreenContent(),
-      ),
+      child: const LessonQuizResultScreenContent(),
     );
   }
 }

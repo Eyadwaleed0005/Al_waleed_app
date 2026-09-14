@@ -1,7 +1,7 @@
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
-import 'package:al_waleed/features/lesson_quiz/presentation/widgets/lesson_quiz_question_screen_widgets/quiz_answer_option.dart';
+import 'package:al_waleed/features/lesson_quiz/presentation/widgets/lesson_quiz_screen_widgets/lesson_quiz_screen_widget/quiz_answer_option.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

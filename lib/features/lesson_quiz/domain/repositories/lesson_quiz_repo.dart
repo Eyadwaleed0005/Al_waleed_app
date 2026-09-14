@@ -3,5 +3,7 @@ import 'package:al_waleed/features/lesson_quiz/domain/entity/lesson_quiz_entity.
 import 'package:dartz/dartz.dart';
 
 abstract class LessonQuizRepository {
-  Future<Either<AppErrorModel, List<LessonQuizEntity>>> getQuizQuestions({ required String lessonId});
+  Future<Either<AppErrorModel, LessonQuizEntity>> getLessonQuiz({
+    required String lessonId,
+  });
 }

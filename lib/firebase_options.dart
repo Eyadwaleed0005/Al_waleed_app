@@ -52,12 +52,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyA7yeiSp3Mf76AA3XqdtV14HycPasozbvY',
-    appId: '1:929812100990:android:bbdc54931355cf1adbe52f',
+    appId: '1:929812100990:android:550f6d789710b7a9dbe52f',
     messagingSenderId: '929812100990',
     projectId: 'alwaleed-education-platform',
     storageBucket: 'alwaleed-education-platform.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBALMA4Q6QOHXXZDPvrPeJl5-F5NJLD5nc',
     appId: '1:929812100990:ios:c117d7436cb6e44edbe52f',

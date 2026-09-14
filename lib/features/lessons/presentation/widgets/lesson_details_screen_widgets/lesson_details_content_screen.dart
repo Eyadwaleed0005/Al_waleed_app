@@ -22,7 +22,7 @@ class LessonDetailsContentScreen extends StatelessWidget {
     return BackgroundStudentLayout(
       child: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(20.w, 14.h, 20.w, 28.h),
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -32,7 +32,7 @@ class LessonDetailsContentScreen extends StatelessWidget {
                 backgroundColor: Colors.transparent,
               ),
 
-              verticalSpace(12),
+              verticalSpace(15),
 
               if (lesson.hasYoutubeVideo) ...[
                 LessonVideoCard(videoUrl: lesson.youtubeUrl),
@@ -52,39 +52,48 @@ class LessonDetailsContentScreen extends StatelessWidget {
 
               verticalSpace(14),
 
-              if (lesson.hasPdfFile) ...[
-                LessonMaterialTile(
-                  title: 'ملف الدرس',
-                  subtitle: lesson.pdfFileName.isEmpty
-                      ? 'ملف PDF'
-                      : 'ملف PDF · ${lesson.pdfFileName}',
-                  icon: AppImage().readerPdf,
-                  onTap: () {
-                    Navigator.of(
-                      context,
-                    ).pushNamed(RouteNames.lessonDetailsPdf, arguments: lesson);
-                  },
-                ),
-                verticalSpace(14),
-              ],
+              LessonMaterialTile(
+                title: 'ملف الدرس',
+                subtitle: _getPdfSubtitle(),
+                icon: AppImage().readerPdf,
+                onTap: () {
+                  Navigator.of(
+                    context,
+                  ).pushNamed(RouteNames.lessonDetailsPdf, arguments: lesson);
+                },
+              ),
+
+              verticalSpace(14),
 
               LessonMaterialTile(
                 title: lesson.title,
-                subtitle: 'سؤال · ٤ درجات',
+                subtitle: 'اختبار تدريبي',
                 icon: AppImage().exam,
                 iconBackground: ColorPalette.accent,
                 onTap: () {
-                  Navigator.pushNamed(
-                    context,
+                  Navigator.of(context).pushNamed(
                     RouteNames.lessonQuiz,
                     arguments: lesson.lessonId,
                   );
                 },
               ),
+
+              verticalSpace(28),
             ],
           ),
         ),
       ),
     );
+  }
+
+  String _getPdfSubtitle() {
+    if (!lesson.hasPdfFile) {
+      return 'لا يوجد ملف متاح حاليًا';
+    }
+    final fileName = lesson.pdfFileName.trim();
+    if (fileName.isEmpty) {
+      return 'ملف PDF';
+    }
+    return 'ملف PDF · $fileName';
   }
 }

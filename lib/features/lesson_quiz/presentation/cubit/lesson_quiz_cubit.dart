@@ -1,197 +1,33 @@
+import 'package:al_waleed/core/errors/error_model/app_error_model.dart';
 import 'package:al_waleed/features/lesson_quiz/domain/entity/lesson_quiz_entity.dart';
 import 'package:al_waleed/features/lesson_quiz/domain/usecase/lesson_quiz_usecase.dart';
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 
 part 'lesson_quiz_state.dart';
 
 class LessonQuizCubit extends Cubit<LessonQuizState> {
-  final LessonQuizUseCase getLessonQuizUseCase;
+  LessonQuizCubit({required GetLessonQuizUseCase getLessonQuizUseCase})
+    : _getLessonQuizUseCase = getLessonQuizUseCase,
+      super(LessonQuizInitial());
 
-  LessonQuizCubit({required this.getLessonQuizUseCase})
-      : super(LessonQuizInitial());
+  final GetLessonQuizUseCase _getLessonQuizUseCase;
 
-  bool _isClosing = false;
-  bool get _canEmit => !_isClosing && !isClosed;
-    String? _lastLessonId;
-  String? get lessonId => _lastLessonId;
-
-
-
-  Future<void> getQuizQuestions({required String lessonId}) async {
-    if (!_canEmit) return;
-
-    final normalizedLessonId = lessonId.trim();
-
-    _lastLessonId = normalizedLessonId;
-
+  Future<void> loadLessonQuiz({required String lessonId}) async {
     emit(LessonQuizLoading());
 
-    final result = await getLessonQuizUseCase.getQuizQuestions(
-      lessonId: normalizedLessonId,
-    );
+    final result = await _getLessonQuizUseCase(lessonId: lessonId);
 
-    if (!_canEmit) return;
+    if (isClosed) {
+      return;
+    }
 
     result.fold(
-      (failure) {
-        if (!_canEmit) return;
-        emit(LessonQuizFailure(errorMessage: failure.message));
+      (error) {
+        emit(LessonQuizFailure(error: error));
       },
-      (questions) {
-        if (!_canEmit) return;
-
-        if (questions.isEmpty) {
-          emit(LessonQuizEmpty());
-          return;
-        }
-
-        emit(LessonQuizSuccess(
-          questions: questions,
-          currentIndex: 0,
-          isSubmitted: false,
-        ));
+      (quiz) {
+        emit(LessonQuizSuccess(quiz: quiz));
       },
     );
-  }
-  void selectAnswer({required int questionIndex, required int optionIndex}) {
-    if (!_canEmit) return;
-
-    final currentState = state;
-    if (currentState is LessonQuizSuccess) {
-      if (currentState.isSubmitted) return;
-
-      final updatedQuestions = List<LessonQuizEntity>.from(currentState.questions);
-      final currentQuestion = updatedQuestions[questionIndex];
-
-      updatedQuestions[questionIndex] = LessonQuizEntity(
-        lessonId: currentQuestion.lessonId,
-        questionText: currentQuestion.questionText,
-        questionImageUrl: currentQuestion.questionImageUrl,
-        options: currentQuestion.options,
-        correctOption: currentQuestion.correctOption,
-        questionScore: currentQuestion.questionScore,
-        selectedOption: optionIndex,
-      );
-
-      emit(LessonQuizSuccess(
-        questions: updatedQuestions,
-        currentIndex: currentState.currentIndex,
-        isSubmitted: currentState.isSubmitted,
-      ));
-    }
-  }
-
-  void nextQuestion() {
-    if (!_canEmit) return;
-
-    final currentState = state;
-    if (currentState is LessonQuizSuccess) {
-      if (currentState.currentIndex < currentState.questions.length - 1) {
-        emit(LessonQuizSuccess(
-          questions: currentState.questions,
-          currentIndex: currentState.currentIndex + 1,
-          isSubmitted: currentState.isSubmitted,
-        ));
-      }
-    }
-  }
-
-  void previousQuestion() {
-    if (!_canEmit) return;
-
-    final currentState = state;
-    if (currentState is LessonQuizSuccess) {
-      if (currentState.currentIndex > 0) {
-        emit(LessonQuizSuccess(
-          questions: currentState.questions,
-          currentIndex: currentState.currentIndex - 1,
-          isSubmitted: currentState.isSubmitted,
-        ));
-      }
-    }
-  }
-
-  void submitQuiz() {
-    if (!_canEmit) return;
-
-    final currentState = state;
-    if (currentState is LessonQuizSuccess) {
-      emit(LessonQuizSuccess(
-        questions: currentState.questions,
-        currentIndex: currentState.currentIndex,
-        isSubmitted: true,
-      ));
-    }
-  }
-
-  void restartQuiz() {
-    if (!_canEmit) return;
-
-    final currentState = state;
-    if (currentState is LessonQuizSuccess) {
-      final resetQuestions = currentState.questions.map((q) {
-        return LessonQuizEntity(
-          lessonId: q.lessonId,
-          questionText: q.questionText,
-          questionImageUrl: q.questionImageUrl,
-          options: q.options,
-          correctOption: q.correctOption,
-          questionScore: q.questionScore,
-          selectedOption: null,
-        );
-      }).toList();
-
-      emit(LessonQuizSuccess(
-        questions: resetQuestions,
-        currentIndex: 0,
-        isSubmitted: false,
-      ));
-    }
-  }
-
-int get correctCount {
-    final currentState = state;
-    if (currentState is LessonQuizSuccess) {
-      return currentState.questions
-          .where((q) => q.selectedOption == q.correctOption)
-          .length;
-    }
-    return 0;
-  }
-
-  int get earnedPoints {
-    final currentState = state;
-    if (currentState is LessonQuizSuccess) {
-      return currentState.questions
-          .where((q) => q.selectedOption == q.correctOption)
-          .fold<int>(0, (sum, q) => sum + q.questionScore);
-    }
-    return 0;
-  }
-
-  int get totalPoints {
-    final currentState = state;
-    if (currentState is LessonQuizSuccess) {
-      return currentState.questions
-          .fold<int>(0, (sum, q) => sum + q.questionScore);
-    }
-    return 0;
-  }
-
-  int get totalQuestions {
-    final currentState = state;
-    if (currentState is LessonQuizSuccess) {
-      return currentState.questions.length;
-    }
-    return 0;
-  }
-  @override
-  Future<void> close() async {
-    if (_isClosing || isClosed) return;
-
-    _isClosing = true;
-
-    await super.close();
   }
 }

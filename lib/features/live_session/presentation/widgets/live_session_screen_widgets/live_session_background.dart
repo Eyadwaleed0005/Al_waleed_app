@@ -3,9 +3,9 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class LiveSessionBackground extends StatelessWidget {
-  final Widget child;
-
   const LiveSessionBackground({super.key, required this.child});
+
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +35,12 @@ class LiveSessionBackground extends StatelessWidget {
               ),
             ),
             child: Stack(
-              fit: StackFit.expand,
               children: [
-                const IgnorePointer(
-                  child: CustomPaint(
-                    painter: _LiveSessionChemicalBackgroundPainter(),
+                const Positioned.fill(
+                  child: IgnorePointer(
+                    child: CustomPaint(
+                      painter: _LiveSessionChemicalBackgroundPainter(),
+                    ),
                   ),
                 ),
                 child,
@@ -123,6 +124,7 @@ class _LiveSessionChemicalBackgroundPainter extends CustomPainter {
     }
 
     path.close();
+
     canvas.drawPath(path, paint);
   }
 

@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:al_waleed/app/routes/app_images_routes.dart';
 import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
+import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/widgets/app_error_state.dart';
 import 'package:al_waleed/core/widgets/custom_app_bar.dart';
 import 'package:al_waleed/core/widgets/custom_dialog.dart';
@@ -13,6 +15,7 @@ import 'package:al_waleed/features/exams/presentation/widgets/exams_screen_widge
 import 'package:al_waleed/features/profile/presentation/widgets/profile_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ExamsScreenContent extends StatelessWidget {
   const ExamsScreenContent({super.key});
@@ -21,26 +24,38 @@ class ExamsScreenContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileBackground(
       child: SafeArea(
-        child: Column(
-          children: [
-            const CustomAppBar(
-              title: 'الامتحانات',
-              centerTitle: true,
-              showBackButton: false,
-              backgroundColor: Colors.transparent,
-            ),
-            Expanded(
-              child: BlocConsumer<ExamsScreenCubit, ExamsScreenState>(
-                listenWhen:
-                    (ExamsScreenState previous, ExamsScreenState current) {
-                      return current is ExamsScreenActionFailure ||
-                          current is ExamsScreenSessionReady;
-                    },
-                listener: _handleStateListener,
-                builder: _buildState,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          child: Column(
+            children: [
+              CustomAppBar(
+                title: 'الامتحانات',
+                backgroundColor: Colors.transparent,
+                showBackButton: false,
+                actions: [
+                  Image.asset(
+                    AppImage().exam,
+                    width: 24.w,
+                    height: 24.h,
+                    fit: BoxFit.contain,
+                  ),
+                ],
               ),
-            ),
-          ],
+
+              verticalSpace(24),
+
+              Expanded(
+                child: BlocConsumer<ExamsScreenCubit, ExamsScreenState>(
+                  listenWhen: (previous, current) {
+                    return current is ExamsScreenActionFailure ||
+                        current is ExamsScreenSessionReady;
+                  },
+                  listener: _handleStateListener,
+                  builder: _buildState,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -131,9 +146,9 @@ class ExamsScreenContent extends StatelessWidget {
     required BuildContext context,
     required StudentExamListItemEntity examItem,
   }) async {
-    final ExamsScreenCubit cubit = context.read<ExamsScreenCubit>();
+    final cubit = context.read<ExamsScreenCubit>();
 
-    final bool? isConfirmed = await CustomDialog.showConfirm(
+    final isConfirmed = await CustomDialog.showConfirm(
       context,
       title: 'بدء الامتحان',
       message:
@@ -155,11 +170,11 @@ class ExamsScreenContent extends StatelessWidget {
     required BuildContext context,
     required ExamsScreenActionFailure state,
   }) async {
-    final ExamsScreenCubit cubit = context.read<ExamsScreenCubit>();
+    final cubit = context.read<ExamsScreenCubit>();
 
     await showDialog<void>(
       context: context,
-      builder: (BuildContext dialogContext) {
+      builder: (dialogContext) {
         return CustomOperationResultDialog(
           type: CustomOperationResultType.failure,
           title: 'تعذر فتح الاختبار',
@@ -178,9 +193,9 @@ class ExamsScreenContent extends StatelessWidget {
     required BuildContext context,
     required ExamsScreenSessionReady state,
   }) async {
-    final ExamsScreenCubit cubit = context.read<ExamsScreenCubit>();
+    final cubit = context.read<ExamsScreenCubit>();
 
-    final String? pendingExamId = await Navigator.of(
+    final pendingExamId = await Navigator.of(
       context,
     ).pushNamed<String>(RouteNames.startExamScreen, arguments: state.session);
 
@@ -193,7 +208,6 @@ class ExamsScreenContent extends StatelessWidget {
 
       return;
     }
-
     cubit.restoreExamsState();
   }
 }

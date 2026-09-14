@@ -24,7 +24,7 @@ class LiveSessionScreenContent extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: AppAnimations.screenSection(
                 delay: 100,
                 child: CustomAppBar(

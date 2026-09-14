@@ -1,6 +1,5 @@
 abstract final class FirestoreFields {
   const FirestoreFields._();
-
   // Relations
 
   static const String gradeId = 'gradeId';

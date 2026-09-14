@@ -14,6 +14,10 @@ final class LessonPdfLoading extends LessonPdfState {
   const LessonPdfLoading();
 }
 
+final class LessonPdfEmpty extends LessonPdfState {
+  const LessonPdfEmpty();
+}
+
 final class LessonPdfSuccess extends LessonPdfState {
   final Uint8List pdfBytes;
 

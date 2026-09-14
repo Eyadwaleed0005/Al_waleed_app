@@ -1,32 +1,36 @@
 import 'dart:math';
+
 import 'package:al_waleed/app/dependency_injection/service_locator.dart';
 import 'package:al_waleed/core/helper/arabic_numbers_helper.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
-import 'package:al_waleed/features/lessons/presentation/cubit/lessons_cubit.dart';
-import 'package:al_waleed/features/lessons/presentation/cubit/lessons_state.dart';
+import 'package:al_waleed/features/lesson_quiz/domain/entity/lesson_quiz_result_entity.dart';
 import 'package:al_waleed/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class QuizResultCard extends StatelessWidget {
-  const QuizResultCard({super.key, required this.score, required this.total});
+  const QuizResultCard({
+    super.key,
+    required this.result,
+  });
 
-  final int score;
-  final int total;
-  final int earnedPoints;
-  final int totalPoints;
+  final LessonQuizResultEntity result;
 
   @override
   Widget build(BuildContext context) {
-    final percentage = totalPoints == 0 ? 0.0 : earnedPoints / totalPoints;
-    final isPassing = percentage >= 0.5;
+    final resultColor = result.isPassing
+        ? ColorPalette.primary
+        : ColorPalette.error;
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 28.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: 24.w,
+        vertical: 28.h,
+      ),
       decoration: BoxDecoration(
         color: ColorPalette.surface,
         borderRadius: BorderRadius.circular(24.r),
@@ -46,53 +50,21 @@ class QuizResultCard extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: isPassing ? ColorPalette.primary : ColorPalette.error,
+                color: resultColor,
                 width: 2.w,
               ),
             ),
             child: Icon(
-              isPassing ? Icons.check_rounded : Icons.close_rounded,
-              color: isPassing ? ColorPalette.primary : ColorPalette.error,
+              result.isPassing
+                  ? Icons.check_rounded
+                  : Icons.close_rounded,
+              color: resultColor,
               size: 32.sp,
             ),
           ),
           verticalSpace(16),
-          BlocProvider(
-            create: (context) => getIt<ProfileCubit>()..initialize(),
-            child: BlocBuilder<ProfileCubit, ProfileState>(
-              builder: (context, state) {
-                String studentName = 'صديقي';
-                if (state is ProfileSuccess) {
-                  studentName = state.profile.studentProfile.name;
-                }
-
-                return Text(
-                  isPassing ? '  أحسنت يا $studentName !' : 'حاول مرة أخرى!',
-                  style: AppTextStyle.font20TextPrimarySemiBoldKufam().copyWith(
-                    color: ColorPalette.primary,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  textDirection: TextDirection.rtl,
-                );
-              },
-            ),
-          ),
-          verticalSpace(4),
-          BlocProvider(
-            create: (context) => getIt.get<LessonsCubit>()..initialize(),
-            child: BlocBuilder<LessonsCubit, LessonsState>(
-              builder: (context, state) {
-                if (state is LessonsDataSuccess && state.lessons.isNotEmpty) {
-                  return Text(
-                    state.lessons.first.title,
-                    style: AppTextStyle.font13TextSecondaryRegularTajawal()
-                        .copyWith(color: ColorPalette.textSecondary),
-                    textDirection: TextDirection.rtl,
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
+          _StudentResultTitle(
+            isPassing: result.isPassing,
           ),
           verticalSpace(24),
           SizedBox(
@@ -103,9 +75,9 @@ class QuizResultCard extends StatelessWidget {
               children: [
                 CustomPaint(
                   painter: _RingGaugePainter(
-                    percentage: percentage,
+                    percentage: result.percentage,
                     trackColor: ColorPalette.paleSage,
-                    progressColor: ColorPalette.primary,
+                    progressColor: resultColor,
                     strokeWidth: 10.w,
                   ),
                 ),
@@ -114,7 +86,8 @@ class QuizResultCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '${toArabicNumbers(earnedPoints)} / ${toArabicNumbers(totalPoints)}',
+                        '${toArabicNumbers(result.earnedScore)} / '
+                        '${toArabicNumbers(result.totalScore)}',
                         style: TextStyle(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.w800,
@@ -125,11 +98,13 @@ class QuizResultCard extends StatelessWidget {
                       ),
                       verticalSpace(2),
                       Text(
-                        '${toArabicNumbers((percentage * 100).round())}%',
+                        '${toArabicNumbers(
+                          (result.percentage * 100).round(),
+                        )}%',
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w700,
-                          color: ColorPalette.secondary,
+                          color: resultColor,
                           fontFamily: 'Tajawal',
                         ),
                       ),
@@ -141,32 +116,97 @@ class QuizResultCard extends StatelessWidget {
           ),
           verticalSpace(20),
           Text(
-            _getSummaryText(score, total),
-            style: AppTextStyle.font14TextPrimaryMediumTajawal().copyWith(
-              color: ColorPalette.primary,
-              fontWeight: FontWeight.w700,
+            _getSummaryText(
+              correctAnswers: result.correctAnswersCount,
+              totalQuestions: result.totalQuestions,
             ),
+            textAlign: TextAlign.center,
             textDirection: TextDirection.rtl,
+            style: AppTextStyle
+                .font14TextPrimaryMediumTajawal()
+                .copyWith(
+                  color: resultColor,
+                  fontWeight: FontWeight.w700,
+                ),
           ),
         ],
       ),
     );
   }
 
-  String _getSummaryText(int score, int total) {
-    final totalText = total == 2 ? 'سؤالين' : '$total أسئلة';
-    if (score == 1) {
-      return 'إجابة صحيحة من أصل $totalText';
-    } else if (score == 2) {
-      return 'إجابتان صحيحتان من أصل $totalText';
-    } else {
-      return '$score إجابات صحيحة من أصل $totalText';
+  String _getSummaryText({
+    required int correctAnswers,
+    required int totalQuestions,
+  }) {
+    final totalText = _getQuestionsCountText(totalQuestions);
+
+    if (correctAnswers == 1) {
+      return 'إجابة صحيحة واحدة من أصل $totalText';
     }
+
+    if (correctAnswers == 2) {
+      return 'إجابتان صحيحتان من أصل $totalText';
+    }
+
+    return '${toArabicNumbers(correctAnswers)} إجابات صحيحة '
+        'من أصل $totalText';
+  }
+
+  String _getQuestionsCountText(int totalQuestions) {
+    if (totalQuestions == 1) {
+      return 'سؤال واحد';
+    }
+
+    if (totalQuestions == 2) {
+      return 'سؤالين';
+    }
+
+    return '${toArabicNumbers(totalQuestions)} أسئلة';
+  }
+}
+
+class _StudentResultTitle extends StatelessWidget {
+  const _StudentResultTitle({
+    required this.isPassing,
+  });
+
+  final bool isPassing;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => getIt<ProfileCubit>()..initialize(),
+      child: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
+          var studentName = 'صديقي';
+
+          if (state is ProfileSuccess) {
+            studentName = state.profile.studentProfile.name;
+          }
+
+          return Text(
+            isPassing
+                ? 'أحسنت يا $studentName!'
+                : 'حاول مرة أخرى يا $studentName!',
+            textAlign: TextAlign.center,
+            textDirection: TextDirection.rtl,
+            style: AppTextStyle
+                .font20TextPrimarySemiBoldKufam()
+                .copyWith(
+                  color: isPassing
+                      ? ColorPalette.primary
+                      : ColorPalette.error,
+                  fontWeight: FontWeight.w700,
+                ),
+          );
+        },
+      ),
+    );
   }
 }
 
 class _RingGaugePainter extends CustomPainter {
-  _RingGaugePainter({
+  const _RingGaugePainter({
     required this.percentage,
     required this.trackColor,
     required this.progressColor,
@@ -180,8 +220,22 @@ class _RingGaugePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = (size.width - strokeWidth) / 2;
+    final safePercentage = percentage.clamp(0.0, 1.0).toDouble();
+
+    final center = Offset(
+      size.width / 2,
+      size.height / 2,
+    );
+
+    final diameter = min(
+      size.width,
+      size.height,
+    );
+
+    final radius = max(
+      0.0,
+      (diameter - strokeWidth) / 2,
+    );
 
     final trackPaint = Paint()
       ..color = trackColor
@@ -195,11 +249,19 @@ class _RingGaugePainter extends CustomPainter {
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
 
-    canvas.drawCircle(center, radius, trackPaint);
+    canvas.drawCircle(
+      center,
+      radius,
+      trackPaint,
+    );
 
-    final sweepAngle = 2 * pi * percentage;
+    final sweepAngle = 2 * pi * safePercentage;
+
     canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
+      Rect.fromCircle(
+        center: center,
+        radius: radius,
+      ),
       -pi / 2,
       sweepAngle,
       false,
@@ -211,6 +273,7 @@ class _RingGaugePainter extends CustomPainter {
   bool shouldRepaint(covariant _RingGaugePainter oldDelegate) {
     return oldDelegate.percentage != percentage ||
         oldDelegate.trackColor != trackColor ||
-        oldDelegate.progressColor != progressColor;
+        oldDelegate.progressColor != progressColor ||
+        oldDelegate.strokeWidth != strokeWidth;
   }
 }

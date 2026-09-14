@@ -11,8 +11,14 @@ class LessonPdfReaderContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape =
+        MediaQuery.orientationOf(context) == Orientation.landscape;
+
     return Scaffold(
-      appBar: LessonPdfReaderHeader(lessonTitle: lesson.title),
+      appBar: LessonPdfReaderHeader(
+        lessonTitle: lesson.title,
+        isLandscape: isLandscape,
+      ),
       body: BackgroundStudentLayout(child: LessonPdfBody(lesson: lesson)),
     );
   }
