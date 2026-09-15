@@ -2,7 +2,6 @@ import 'package:al_waleed/app/dependency_injection/service_locator.dart';
 import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/core/cache/secure_storage/secure_storage.dart';
 import 'package:al_waleed/core/cache/secure_storage/secure_storage_keys.dart';
-import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_animations.dart';
 import 'package:al_waleed/features/home/presentation/widgets/live_session_banner.dart';
 import 'package:al_waleed/features/home/presentation/widgets/teacher_banner.dart';
@@ -33,7 +32,7 @@ class _HomeBannersState extends State<HomeBanners> {
     return Column(
       children: [
         AppAnimations.screenSection(delay: 250, child: const TeacherBanner()),
-        verticalSpace(35),
+
         FutureBuilder<String?>(
           future: _gradeIdFuture,
           builder: (context, snapshot) {
