@@ -5,6 +5,7 @@ import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:al_waleed/core/widgets/app_empty_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CurrentExamEmptyView extends StatelessWidget {
   const CurrentExamEmptyView({super.key});
@@ -14,7 +15,7 @@ class CurrentExamEmptyView extends StatelessWidget {
     return AppEmptyState(
       title: "لا يوجد امتحان حاليًا",
       subtitle: "سيظهر الاختبار هنا بمجرد أن ينشره المدرس.",
-      iconWidget: Image.asset(
+      iconWidget: SvgPicture.asset(
         AppImage().emptyExam,
         width: 64.w,
         height: 64.h,

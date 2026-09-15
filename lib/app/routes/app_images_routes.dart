@@ -22,16 +22,16 @@ class AppImage {
   late final String alwaleedImg = '${baseImages}alwaleed_img.png';
 
   // ===== icons =====
-  late final String homeIcon = '${baseIcons}home.png';
-  late final String search = '${baseIcons}search.png';
-  late final String bookOpen = '${baseIcons}book_open.png';
-  late final String bookOpenBig = '${baseIcons}BookOpenBig.png';
-  late final String exam = '${baseIcons}exams.png';
-  late final String studyNotes = '${baseIcons}study_notes.png';
-  late final String readerPdf = '${baseIcons}reader_pdf.png';
-  late final String emptyBookOpen = '${baseIcons}empty_book_open.png';
-  late final String emptyNotesIcon = '${baseIcons}empty_notes.png';
-  late final String profile = '${baseIcons}profile.png';
-  late final String emptyExam = '${baseIcons}empty_exam.png';
+  late final String homeIcon = '${baseIcons}Home.svg';
+  late final String search = '${baseIcons}Search.svg';
+  late final String bookOpen = '${baseIcons}BookOpen.svg';
+  late final String bookOpenBig = '${baseIcons}BookOpenBig.svg';
+  late final String exam = '${baseIcons}Exams.svg';
+  late final String studyNotes = '${baseIcons}StudyNotes.svg';
+  late final String readerPdf = '${baseIcons}PdfFile.svg';
+  late final String emptyBookOpen = '${baseIcons}empty_book_open.svg';
+  late final String emptyNotesIcon = '${baseIcons}empty_notes.svg';
+  late final String profile = '${baseIcons}Profile.svg';
+  late final String emptyExam = '${baseIcons}empty_exam.svg';
   // ===== animations =====
 }

@@ -4,6 +4,7 @@ import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:al_waleed/core/widgets/app_empty_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class LessonsEmptyView extends StatelessWidget {
   const LessonsEmptyView({super.key});
@@ -17,7 +18,7 @@ class LessonsEmptyView extends StatelessWidget {
         iconContainerSize: 136,
         iconBackgroundColor: ColorPalette.disabled,
         iconTitleSpacing: 36,
-        iconWidget: Image.asset(
+        iconWidget: SvgPicture.asset(
           AppImage().emptyBookOpen,
           width: 102.w,
           height: 102.h,

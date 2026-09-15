@@ -3,6 +3,7 @@ import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CategoryNavigationCard extends StatelessWidget {
   final String label;
@@ -48,7 +49,7 @@ class CategoryNavigationCard extends StatelessWidget {
                     color: ColorPalette.primarySoftBackground,
                     borderRadius: BorderRadius.circular(12.r),
                   ),
-                  child: Image.asset(image, width: 22.w, height: 22.h),
+                  child: SvgPicture.asset(image, width: 25.w, height: 25.h),
                 ),
                 verticalSpace(6),
                 FittedBox(

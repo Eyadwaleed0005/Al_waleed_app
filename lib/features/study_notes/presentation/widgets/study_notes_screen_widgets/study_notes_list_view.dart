@@ -7,6 +7,7 @@ import 'package:al_waleed/features/study_notes/domain/entities/study_note_entity
 import 'package:al_waleed/features/study_notes/presentation/widgets/study_notes_screen_widgets/study_note_preview_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class StudyNotesListView extends StatelessWidget {
   const StudyNotesListView({
@@ -26,7 +27,7 @@ class StudyNotesListView extends StatelessWidget {
         iconContainerSize: 140,
         iconSize: 60,
         title: 'لا توجد مذكرات متاحة حاليًا',
-        iconWidget: Image.asset(AppImage().emptyNotesIcon),
+        iconWidget: SvgPicture.asset(AppImage().emptyNotesIcon),
       );
     }
 

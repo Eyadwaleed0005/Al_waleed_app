@@ -6,6 +6,7 @@ import 'package:al_waleed/features/study_notes/domain/entities/study_note_entity
 import 'package:al_waleed/features/study_notes/presentation/widgets/study_note_pdf_reader_screen_widgets/study_note_pdf_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class StudyNotePdfReaderContent extends StatelessWidget {
   final StudyNoteEntity note;
@@ -25,10 +26,14 @@ class StudyNotePdfReaderContent extends StatelessWidget {
           SizedBox(
             width: 56.w,
             child: Center(
-              child: ImageIcon(
-                AssetImage(AppImage().studyNotes),
-                size: 26.r,
-                color: ColorPalette.cardBackground,
+              child: SvgPicture.asset(
+                AppImage().studyNotes,
+                width: 26.w,
+                height: 26.h,
+                colorFilter: ColorFilter.mode(
+                  ColorPalette.cardBackground,
+                  BlendMode.srcIn,
+                ),
               ),
             ),
           ),

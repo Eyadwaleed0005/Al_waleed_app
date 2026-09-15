@@ -3,6 +3,7 @@ import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:al_waleed/core/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class LessonPdfReaderHeader extends StatelessWidget
     implements PreferredSizeWidget {
@@ -56,7 +57,7 @@ class LessonPdfReaderHeader extends StatelessWidget
       actions: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-          child: Image.asset(
+          child: SvgPicture.asset(
             AppImage().readerPdf,
             width: iconSize,
             height: iconSize,

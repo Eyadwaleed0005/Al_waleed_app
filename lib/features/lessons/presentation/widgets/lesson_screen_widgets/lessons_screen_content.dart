@@ -12,6 +12,7 @@ import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_wi
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class LessonsScreenContent extends StatelessWidget {
   const LessonsScreenContent({super.key});
@@ -29,8 +30,8 @@ class LessonsScreenContent extends StatelessWidget {
                 showBackButton: true,
                 backgroundColor: Colors.transparent,
                 actions: [
-                  Image.asset(
-                    AppImage().bookOpenBig,
+                  SvgPicture.asset(
+                    AppImage().bookOpen,
                     width: 28.w,
                     height: 28.h,
                   ),

@@ -4,6 +4,7 @@ import 'package:al_waleed/core/style/fontweighthelper.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class BottomNavItemData {
   const BottomNavItemData({required this.label, required this.iconPath});
@@ -58,7 +59,7 @@ class NavItem extends StatelessWidget {
                       ? _SelectedNavBadge(iconPath: data.iconPath)
                       : ColorFiltered(
                           colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-                          child: Image.asset(
+                          child: SvgPicture.asset(
                             data.iconPath,
                             width: _iconSlotSize.w,
                             height: _iconSlotSize.w,
@@ -118,7 +119,7 @@ class _SelectedNavBadge extends StatelessWidget {
               ColorPalette.primary,
               BlendMode.srcIn,
             ),
-            child: Image.asset(iconPath, width: 18.w, height: 18.w),
+            child: SvgPicture.asset(iconPath, width: 18.w, height: 18.w),
           ),
         ),
       ),

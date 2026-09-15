@@ -7,6 +7,7 @@ import 'package:al_waleed/features/home/presentation/widgets/home_banners.dart';
 import 'package:al_waleed/features/home/presentation/widgets/home_quick_links_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class HomeScreenContent extends StatelessWidget {
   const HomeScreenContent({super.key});
@@ -27,7 +28,11 @@ class HomeScreenContent extends StatelessWidget {
                   backgroundColor: Colors.transparent,
                   showBackButton: false,
                   actions: [
-                    Image.asset(AppImage().homeIcon, height: 24.h, width: 24.w),
+                    SvgPicture.asset(
+                      AppImage().homeIcon,
+                      height: 24.h,
+                      width: 24.w,
+                    ),
                   ],
                 ),
               ),
