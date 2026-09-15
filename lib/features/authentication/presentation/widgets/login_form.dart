@@ -35,6 +35,8 @@ class _LoginFormState extends State<LoginForm> {
 
   void _submit(BuildContext context) {
     if (_formKey.currentState?.validate() ?? false) {
+      FocusScope.of(context).unfocus();
+
       context.read<LoginCubit>().login(
         email: _emailController.text.trim(),
         password: _passwordController.text,
@@ -48,37 +50,49 @@ class _LoginFormState extends State<LoginForm> {
     });
   }
 
+  void _navigateToMainScreen(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
+      RouteNames.mainNavigationScreen,
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state is LoginFailure) {
-          showDialog(
+          showDialog<void>(
             context: context,
-            builder: (context) => CustomOperationResultDialog(
-              type: CustomOperationResultType.failure,
-              title: 'خطأ في تسجيل الدخول',
-              message: state.errorMessage,
-              actionText: 'حاول مرة أخرى',
-            ),
+            builder: (dialogContext) {
+              return CustomOperationResultDialog(
+                type: CustomOperationResultType.failure,
+                title: 'خطأ في تسجيل الدخول',
+                message: state.errorMessage,
+                actionText: 'حاول مرة أخرى',
+              );
+            },
           );
         } else if (state is LoginSuccess) {
-          showDialog(
+          showDialog<void>(
             context: context,
-            builder: (context) => CustomOperationResultDialog(
-              type: CustomOperationResultType.success,
-              title: 'تم تسجيل الدخول بنجاح',
-              message: 'مرحباً بك مجدداً',
-              actionText: 'متابعة',
-              onActionPressed: () {
-                Navigator.pushNamed(context, RouteNames.mainNavigationScreen);
-              },
-            ),
+            barrierDismissible: false,
+            builder: (dialogContext) {
+              return CustomOperationResultDialog(
+                type: CustomOperationResultType.success,
+                title: 'تم تسجيل الدخول بنجاح',
+                message: 'مرحباً بك مجدداً',
+                actionText: 'متابعة',
+                onActionPressed: () {
+                  _navigateToMainScreen(context);
+                },
+              );
+            },
           );
         }
       },
       builder: (context, state) {
-        final isLoading = state is LoginLoading;
+        final bool isLoading = state is LoginLoading;
 
         return Form(
           key: _formKey,

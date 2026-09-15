@@ -23,7 +23,7 @@ class LessonDetailsScreen extends StatelessWidget {
           return getIt<NetworkStatusCubit>()..startMonitoring();
         },
         child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: AppSystemUi.light(),
+          value: AppSystemUi.dark(),
           child: Scaffold(body: LessonDetailsContentScreen(lesson: lesson)),
         ),
       ),

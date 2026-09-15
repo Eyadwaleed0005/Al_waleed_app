@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:al_waleed/core/errors/error_model/app_error_model.dart';
 import 'package:al_waleed/core/errors/exceptions/firebase_remote_exception.dart';
 import 'package:al_waleed/core/errors/handlers/firebase_auth_error_handler.dart';
@@ -13,7 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 abstract final class FirebaseErrorHandler {
   const FirebaseErrorHandler._();
 
-  static const Duration _operationTimeout = Duration(seconds: 9);
+  static const Duration _operationTimeout = Duration(seconds: 40);
 
   static Future<T> execute<T>(
     Future<T> Function() operation, {

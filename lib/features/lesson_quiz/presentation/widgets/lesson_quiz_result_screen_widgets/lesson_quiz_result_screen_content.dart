@@ -1,3 +1,4 @@
+import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/core/helper/arabic_numbers_helper.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
@@ -26,9 +27,12 @@ class LessonQuizResultScreenContent extends StatelessWidget {
         return BackgroundStudentLayout(
           child: Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: const QuizHeader(
+            appBar: QuizHeader(
               title: 'نتيجة اختبار الدرس',
               showBackButton: true,
+              onBack: () {
+                _returnToLessonDetails(context);
+              },
             ),
             body: result == null
                 ? const Center(
@@ -44,11 +48,9 @@ class LessonQuizResultScreenContent extends StatelessWidget {
                         Expanded(
                           child: SingleChildScrollView(
                             physics: const BouncingScrollPhysics(),
-                            padding: EdgeInsets.fromLTRB(
-                              20.w,
-                              12.h,
-                              20.w,
-                              16.h,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20.w,
+                              vertical: 16.h,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -106,11 +108,17 @@ class LessonQuizResultScreenContent extends StatelessWidget {
     );
   }
 
+  void _returnToLessonDetails(BuildContext context) {
+    Navigator.of(context).popUntil((route) {
+      return route.settings.name == RouteNames.lessonDetails || route.isFirst;
+    });
+  }
+
   void _openReviewScreen(BuildContext context) {
     final sessionCubit = context.read<LessonQuizSessionCubit>();
 
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (_) {
           return BlocProvider.value(
             value: sessionCubit,

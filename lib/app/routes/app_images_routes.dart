@@ -33,6 +33,5 @@ class AppImage {
   late final String emptyNotesIcon = '${baseIcons}empty_notes.png';
   late final String profile = '${baseIcons}profile.png';
   late final String emptyExam = '${baseIcons}empty_exam.png';
-
   // ===== animations =====
 }

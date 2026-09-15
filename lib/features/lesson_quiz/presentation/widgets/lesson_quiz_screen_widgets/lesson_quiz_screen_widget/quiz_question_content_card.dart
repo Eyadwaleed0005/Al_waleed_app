@@ -12,7 +12,7 @@ class QuizQuestionContentCard extends StatelessWidget {
     required this.questionText,
     required this.answers,
     this.questionImageUrl,
-    this.selectedAnswer,
+    this.selectedAnswerIndex,
     this.onAnswerTap,
     this.isReviewMode = false,
     this.isCorrect = false,
@@ -21,8 +21,8 @@ class QuizQuestionContentCard extends StatelessWidget {
   final String questionText;
   final List<String> answers;
   final String? questionImageUrl;
-  final String? selectedAnswer;
-  final ValueChanged<String>? onAnswerTap;
+  final int? selectedAnswerIndex;
+  final ValueChanged<int>? onAnswerTap;
   final bool isReviewMode;
   final bool isCorrect;
 
@@ -52,7 +52,8 @@ class QuizQuestionContentCard extends StatelessWidget {
               color: ColorPalette.textPrimary,
             ),
           ),
-          if (questionImageUrl != null && questionImageUrl!.isNotEmpty) ...[
+          if (questionImageUrl != null &&
+              questionImageUrl!.trim().isNotEmpty) ...[
             verticalSpace(14),
             ClipRRect(
               borderRadius: BorderRadius.circular(16.r),
@@ -61,28 +62,31 @@ class QuizQuestionContentCard extends StatelessWidget {
                 child: CachedNetworkImage(
                   imageUrl: questionImageUrl!,
                   fit: BoxFit.fill,
-                  placeholder: (context, url) => Container(
-                    color: ColorPalette.divider,
-                    child: const Center(
-                      child: SizedBox(),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    color: ColorPalette.divider,
-                    child: Icon(
-                      Icons.broken_image_outlined,
-                      color: ColorPalette.textMuted,
-                      size: 32.sp,
-                    ),
-                  ),
+                  placeholder: (context, url) {
+                    return Container(color: ColorPalette.divider);
+                  },
+                  errorWidget: (context, url, error) {
+                    return Container(
+                      color: ColorPalette.divider,
+                      child: Icon(
+                        Icons.broken_image_outlined,
+                        color: ColorPalette.textMuted,
+                        size: 32.sp,
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
           ],
           verticalSpace(16),
-          ...answers.map((answer) {
+          ...answers.asMap().entries.map((entry) {
+            final int answerIndex = entry.key;
+            final String answer = entry.value;
+
+            final bool isAnswerSelected = selectedAnswerIndex == answerIndex;
+
             bool? isAnswerCorrect;
-            bool isAnswerSelected = answer == selectedAnswer;
 
             if (isReviewMode && isAnswerSelected) {
               isAnswerCorrect = isCorrect;
@@ -94,7 +98,11 @@ class QuizQuestionContentCard extends StatelessWidget {
                 title: answer,
                 isSelected: isAnswerSelected,
                 isCorrect: isAnswerCorrect,
-                onTap: onAnswerTap != null ? () => onAnswerTap!(answer) : null,
+                onTap: onAnswerTap == null
+                    ? null
+                    : () {
+                        onAnswerTap!(answerIndex);
+                      },
               ),
             );
           }),
