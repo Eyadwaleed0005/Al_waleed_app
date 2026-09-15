@@ -52,7 +52,7 @@ class _LessonPdfReaderScreenState extends State<LessonPdfReaderScreen> {
     return SecureScreenScope(
       cubit: getIt<SecureScreenCubit>(),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: AppSystemUi.light(),
+        value: AppSystemUi.dark(),
         child: BlocProvider<LessonPdfCubit>(
           create: (_) {
             return getIt<LessonPdfCubit>()..loadPdf(lesson: widget.lesson);

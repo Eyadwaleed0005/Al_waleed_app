@@ -56,7 +56,7 @@ class LoginScreenContant extends StatelessWidget {
                       ),
                       verticalSpace(8),
                       Text(
-                        '.سجّل دخولك للوصول إلى دروسك واختباراتك',
+                        'سجّل دخولك للوصول إلى دروسك واختباراتك.',
                         style: AppTextStyle.font14TextSecondaryRegularTajawal(),
                         textAlign: TextAlign.center,
                       ),

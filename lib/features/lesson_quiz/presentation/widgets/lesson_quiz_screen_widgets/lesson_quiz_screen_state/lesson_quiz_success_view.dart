@@ -48,7 +48,7 @@ class _LessonQuizSessionContent extends StatelessWidget {
           return const SizedBox.shrink();
         }
 
-        final selectedAnswer = _getSelectedAnswer(
+        _getSelectedAnswer(
           options: question.options,
           selectedOptionIndex: state.currentSelectedOption,
         );
@@ -84,13 +84,11 @@ class _LessonQuizSessionContent extends StatelessWidget {
                             questionText: question.questionText,
                             questionImageUrl: question.questionImageUrl,
                             answers: question.options,
-                            selectedAnswer: selectedAnswer,
-                            onAnswerTap: (answer) {
-                              _selectAnswer(
-                                sessionCubit: sessionCubit,
+                            selectedAnswerIndex: state.currentSelectedOption,
+                            onAnswerTap: (optionIndex) {
+                              sessionCubit.selectAnswer(
                                 questionId: question.questionId,
-                                options: question.options,
-                                answer: answer,
+                                optionIndex: optionIndex,
                               );
                             },
                           ),
@@ -140,21 +138,6 @@ class _LessonQuizSessionContent extends StatelessWidget {
     }
 
     return options[selectedOptionIndex];
-  }
-
-  void _selectAnswer({
-    required LessonQuizSessionCubit sessionCubit,
-    required String questionId,
-    required List<String> options,
-    required String answer,
-  }) {
-    final optionIndex = options.indexOf(answer);
-
-    if (optionIndex == -1) {
-      return;
-    }
-
-    sessionCubit.selectAnswer(questionId: questionId, optionIndex: optionIndex);
   }
 
   void _handleNextAction({

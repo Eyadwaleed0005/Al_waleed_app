@@ -14,7 +14,7 @@ class LessonsScreen extends StatelessWidget {
     return BlocProvider(
       create: (_) => getIt<LessonsCubit>()..initialize(),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: AppSystemUi.light(),
+        value: AppSystemUi.dark(),
         child: const Scaffold(body: LessonsScreenContent()),
       ),
     );

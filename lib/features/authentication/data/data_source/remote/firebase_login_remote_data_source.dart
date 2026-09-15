@@ -74,15 +74,12 @@ class FirebaseLoginRemoteDataSource implements LoginRemoteDataSource {
 
         final String gradeId = gradeIdValue.trim();
 
-        // العملية المحلية يجب أن تنجح قبل تغيير حالة الطالب في Firestore.
         await loginLocalDataSource.saveGradeId(gradeId: gradeId);
 
-        // فحص أخير قبل تحديث isLoggedIn.
         final User verifiedUser = await _verifyCurrentUser(
           expectedUserId: authenticatedUser.uid,
         );
 
-        // آخر عملية قابلة للانتظار قبل إرجاع نجاح تسجيل الدخول.
         await firestoreService.patchData(
           collectionPath: FirestoreCollections.students,
           documentId: verifiedUser.uid,
@@ -97,7 +94,7 @@ class FirebaseLoginRemoteDataSource implements LoginRemoteDataSource {
         await _signOutSafely();
         rethrow;
       }
-    });
+    }, timeout: null);
   }
 
   Future<User> _verifyAuthenticatedUser(UserCredential userCredential) async {

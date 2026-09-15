@@ -1,6 +1,6 @@
 import 'package:al_waleed/app/routes/app_images_routes.dart';
-import 'package:al_waleed/core/widgets/custom_app_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TeacherBanner extends StatelessWidget {
   const TeacherBanner({super.key});
@@ -8,17 +8,16 @@ class TeacherBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 350 / 180,
-      child: CustomAppCard(
-        width: double.infinity,
-        height: double.infinity,
-        padding: EdgeInsets.zero,
+      aspectRatio: 360 / 238,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20.r),
         child: Image.asset(
           AppImage().teacherBanner,
-          alignment: Alignment.topCenter,
           width: double.infinity,
           height: double.infinity,
-          fit: BoxFit.cover,
+          fit: BoxFit.contain,
+          alignment: Alignment.center,
+          filterQuality: FilterQuality.high,
         ),
       ),
     );

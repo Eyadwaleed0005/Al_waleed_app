@@ -45,7 +45,7 @@ class _LessonQuizReviewScreenContentState
         final question = questions[_currentIndex];
         final selectedOptionIndex = state.selectedAnswers[question.questionId];
 
-        final selectedAnswer = _getAnswerByIndex(
+        _getAnswerByIndex(
           options: question.options,
           optionIndex: selectedOptionIndex,
         );
@@ -95,7 +95,7 @@ class _LessonQuizReviewScreenContentState
                             questionText: question.questionText,
                             questionImageUrl: question.questionImageUrl,
                             answers: question.options,
-                            selectedAnswer: selectedAnswer,
+                            selectedAnswerIndex: selectedOptionIndex,
                             isReviewMode: true,
                             isCorrect: isCorrect,
                           ),

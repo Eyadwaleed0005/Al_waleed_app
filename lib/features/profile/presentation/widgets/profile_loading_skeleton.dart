@@ -2,57 +2,95 @@ import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shimmer/shimmer.dart';
 
-class ProfileLoadingSkeleton extends StatelessWidget {
+class ProfileLoadingSkeleton extends StatefulWidget {
   const ProfileLoadingSkeleton({super.key});
 
   @override
+  State<ProfileLoadingSkeleton> createState() {
+    return _ProfileLoadingSkeletonState();
+  }
+}
+
+class _ProfileLoadingSkeletonState extends State<ProfileLoadingSkeleton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1300),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Shimmer.fromColors(
-      baseColor: ColorPalette.border,
-      highlightColor: ColorPalette.cardBackground,
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        return Column(
+          children: [
+            _buildSkeletonBox(
+              width: 190.w,
+              height: 24.h,
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            verticalSpace(10),
+            _buildSkeletonBox(
+              width: 130.w,
+              height: 14.h,
+              borderRadius: BorderRadius.circular(6.r),
+            ),
+            verticalSpace(32),
+            _buildProfileInfoCard(),
+            verticalSpace(38),
+            _buildSkeletonBox(
+              width: double.infinity,
+              height: 52.h,
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildProfileInfoCard() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
+      decoration: BoxDecoration(
+        color: ColorPalette.surface,
+        borderRadius: BorderRadius.circular(20.r),
+        boxShadow: [
+          BoxShadow(
+            color: ColorPalette.primary.withValues(alpha: 0.06),
+            blurRadius: 18.r,
+            offset: Offset(0, 8.h),
+          ),
+        ],
+      ),
       child: Column(
         children: [
-          _SkeletonBox(width: 190.w, height: 24.h, borderRadius: 8.r),
-          verticalSpace(10),
-          _SkeletonBox(width: 130.w, height: 14.h, borderRadius: 6.r),
-          verticalSpace(32),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
-            decoration: BoxDecoration(
-              color: ColorPalette.cardBackground,
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: const Column(
-              children: [
-                _ProfileInfoRowSkeleton(),
-                _ProfileInfoRowSkeleton(),
-                _ProfileInfoRowSkeleton(),
-                _ProfileInfoRowSkeleton(showDivider: false),
-              ],
-            ),
-          ),
-          verticalSpace(38),
-          _SkeletonBox(
-            width: double.infinity,
-            height: 52.h,
-            borderRadius: 16.r,
-          ),
+          _buildProfileInfoRow(),
+          _buildProfileInfoRow(),
+          _buildProfileInfoRow(),
+          _buildProfileInfoRow(showDivider: false),
         ],
       ),
     );
   }
-}
 
-class _ProfileInfoRowSkeleton extends StatelessWidget {
-  final bool showDivider;
-
-  const _ProfileInfoRowSkeleton({this.showDivider = true});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildProfileInfoRow({bool showDivider = true}) {
     return Column(
       children: [
         Padding(
@@ -60,11 +98,23 @@ class _ProfileInfoRowSkeleton extends StatelessWidget {
           child: Row(
             textDirection: TextDirection.rtl,
             children: [
-              _SkeletonBox(width: 26.r, height: 26.r, borderRadius: 8.r),
+              _buildSkeletonBox(
+                width: 26.r,
+                height: 26.r,
+                borderRadius: BorderRadius.circular(8.r),
+              ),
               horizontalSpace(12),
-              _SkeletonBox(width: 92.w, height: 14.h, borderRadius: 5.r),
+              _buildSkeletonBox(
+                width: 92.w,
+                height: 14.h,
+                borderRadius: BorderRadius.circular(5.r),
+              ),
               const Spacer(),
-              _SkeletonBox(width: 105.w, height: 14.h, borderRadius: 5.r),
+              _buildSkeletonBox(
+                width: 105.w,
+                height: 14.h,
+                borderRadius: BorderRadius.circular(5.r),
+              ),
             ],
           ),
         ),
@@ -77,27 +127,29 @@ class _ProfileInfoRowSkeleton extends StatelessWidget {
       ],
     );
   }
-}
 
-class _SkeletonBox extends StatelessWidget {
-  final double width;
-  final double height;
-  final double borderRadius;
+  Widget _buildSkeletonBox({
+    required double width,
+    required double height,
+    BorderRadius? borderRadius,
+  }) {
+    final double movement = _animationController.value * 3;
 
-  const _SkeletonBox({
-    required this.width,
-    required this.height,
-    required this.borderRadius,
-  });
-
-  @override
-  Widget build(BuildContext context) {
     return Container(
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: ColorPalette.cardBackground,
-        borderRadius: BorderRadius.circular(borderRadius),
+        borderRadius: borderRadius ?? BorderRadius.circular(8.r),
+        gradient: LinearGradient(
+          begin: Alignment(-1.5 + movement, 0),
+          end: Alignment(-0.5 + movement, 0),
+          colors: const [
+            ColorPalette.sageGray,
+            ColorPalette.fogWhite,
+            ColorPalette.sageGray,
+          ],
+          stops: const [0.2, 0.5, 0.8],
+        ),
       ),
     );
   }

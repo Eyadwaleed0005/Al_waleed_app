@@ -28,7 +28,6 @@ class AvailableExamsListView extends StatelessWidget {
 
     return ListView.separated(
       physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.h),
       itemCount: exams.length,
       separatorBuilder: (BuildContext context, int index) {
         return verticalSpace(28);
