@@ -12,6 +12,7 @@ import 'package:al_waleed/features/study_notes/presentation/widgets/study_notes_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class StudyNotesScreenContent extends StatelessWidget {
   const StudyNotesScreenContent({super.key});
@@ -29,7 +30,11 @@ class StudyNotesScreenContent extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 showBackButton: false,
                 actions: [
-                  Image.asset(AppImage().studyNotes, width: 24.w, height: 24.h),
+                  SvgPicture.asset(
+                    AppImage().studyNotes,
+                    width: 24.w,
+                    height: 24.h,
+                  ),
                 ],
               ),
               verticalSpace(24),

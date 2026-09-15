@@ -3,6 +3,7 @@ import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class LessonMaterialTile extends StatelessWidget {
   const LessonMaterialTile({
@@ -46,10 +47,10 @@ class LessonMaterialTile extends StatelessWidget {
                   color: iconBackground,
                   borderRadius: BorderRadius.circular(14.r),
                 ),
-                child: Image.asset(
+                child: SvgPicture.asset(
                   icon,
-                  width: 24.w,
-                  height: 24.h,
+                  width: 25.w,
+                  height: 25.h,
                   fit: BoxFit.contain,
                 ),
               ),

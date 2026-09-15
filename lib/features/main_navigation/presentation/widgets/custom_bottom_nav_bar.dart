@@ -8,6 +8,7 @@ import 'package:al_waleed/features/main_navigation/presentation/cubit/bottom_nav
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class BottomNavItemData {
   final String label;
@@ -139,7 +140,7 @@ class CustomBottomNavBar extends StatelessWidget {
                                             ColorPalette.accent,
                                             BlendMode.srcIn,
                                           ),
-                                          child: Image.asset(
+                                          child: SvgPicture.asset(
                                             item.iconPath,
                                             width: 26.w,
                                             height: 26.w,
@@ -221,7 +222,7 @@ class _SelectedCircleIndicator extends StatelessWidget {
                 ColorPalette.primary,
                 BlendMode.srcIn,
               ),
-              child: Image.asset(
+              child: SvgPicture.asset(
                 iconPath,
                 width: 30.w,
                 height: 30.w,
