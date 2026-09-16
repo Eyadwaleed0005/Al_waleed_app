@@ -1,17 +1,68 @@
-# al_waleed
+# Al-Waleed
 
-A new Flutter project.
+Al-Waleed is a comprehensive educational mobile application designed for secondary school students. It provides a secure and organized learning experience through lessons, exams, educational materials, live sessions, and instant notifications.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Secure student authentication
+- Grade-based educational content
+- Educational lessons and videos
+- PDF study materials
+- Online exams and quizzes
+- Student exam results and performance tracking
+- Live educational sessions
+- Push notifications and important announcements
+- Secure local data storage
+- Network connection monitoring
+- In-app update notifications
+- Optional and forced application updates
 
-A few resources to get you started if this is your first Flutter project:
+## Security
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+- Secure student authentication using Firebase Authentication
+- Protected local data using Flutter Secure Storage
+- Controlled access to grade-specific content
+- Screenshot and screen-recording protection for educational content
+- Secure communication with Firebase services
+- Firestore Security Rules for protecting application data
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Notifications
+
+- Push notifications for students
+- New lesson and educational material alerts
+- Exam and live-session reminders
+- Important announcements and application updates
+
+## Tech Stack
+
+- Flutter
+- Dart
+- Firebase Authentication
+- Cloud Firestore
+- Firebase Storage
+- Firebase Cloud Functions
+- Firebase Cloud Messaging
+- Bloc / Cubit
+- GetIt
+- Flutter Secure Storage
+- Clean Architecture
+
+## Architecture
+
+The application follows Clean Architecture principles and separates each feature into three main layers:
+
+- Data
+- Domain
+- Presentation
+
+This structure improves maintainability, scalability, and separation of responsibilities.
+
+## Platforms
+
+- Android
+- iOS
+
+## Development
+
+Developed by **Eyad Waleed**  
+© 2026 Fame X. All rights reserved.
