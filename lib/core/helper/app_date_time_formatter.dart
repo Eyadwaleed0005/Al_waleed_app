@@ -56,7 +56,7 @@ abstract final class AppDateTimeFormatter {
     final localDateTime = dateTime.toLocal();
 
     final day = localDateTime.day.toString();
-    final month = localDateTime.month - 1;
+    final month = localDateTime.month.toString();
     final year = localDateTime.year.toString();
 
     final formattedDate = '$day / $month / $year';
