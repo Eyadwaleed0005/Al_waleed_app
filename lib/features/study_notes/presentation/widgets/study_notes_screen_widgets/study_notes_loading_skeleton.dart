@@ -38,14 +38,17 @@ class _StudyNotesLoadingSkeletonState extends State<StudyNotesLoadingSkeleton>
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, _) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: List.generate(3, (index) {
-            return Padding(
-              padding: EdgeInsets.only(bottom: 14.h),
-              child: _buildCardSkeleton(),
-            );
-          }),
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: List.generate(3, (index) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: 14.h),
+                child: _buildCardSkeleton(),
+              );
+            }),
+          ),
         );
       },
     );
