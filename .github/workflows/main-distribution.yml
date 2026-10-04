@@ -1,9 +1,11 @@
 name: Main Firebase Distribution
 
 on:
-  push:
+  pull_request:
     branches:
       - main
+    types:
+      - closed
 
 permissions:
   contents: read
@@ -11,11 +13,17 @@ permissions:
 jobs:
   distribute:
     name: Build and distribute client APK
+    if: >-
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.head.ref == 'development' &&
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout merged code
         uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
 
       - name: Setup Java
         uses: actions/setup-java@v6
