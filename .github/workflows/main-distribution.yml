@@ -38,6 +38,11 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Setup Shorebird
+        uses: shorebirdtech/setup-shorebird@v1
+        with:
+          cache: true
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -76,8 +81,10 @@ jobs:
             printf 'storePassword=%s\n' "$STORE_PASSWORD"
           } > android/key.properties
 
-      - name: Build release APK
-        run: flutter build apk --release
+      - name: Build Shorebird release APK
+        env:
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+        run: shorebird release android --artifact apk --flutter-version 3.47.3
 
       - name: Prepare Firebase credentials
         env:
