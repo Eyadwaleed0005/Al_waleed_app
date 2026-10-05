@@ -42,7 +42,6 @@ class _StartExamScreenContentState extends State<StartExamScreenContent> {
   @override
   void initState() {
     super.initState();
-
     _pageController = PageController();
   }
 
@@ -58,16 +57,13 @@ class _StartExamScreenContentState extends State<StartExamScreenContent> {
         .read<PendingExamSubmissionsSyncCubit>();
 
     _pendingSubmissionsSyncCubit = syncCubit;
-
     syncCubit.pauseAutomaticSync();
   }
 
   @override
   void dispose() {
     _pendingSubmissionsSyncCubit?.resumeAutomaticSync();
-
     _pageController.dispose();
-
     super.dispose();
   }
 
@@ -132,7 +128,8 @@ class _StartExamScreenContentState extends State<StartExamScreenContent> {
     final bool canInteract =
         !isSubmitting &&
         !state.isTimeExpired &&
-        !state.cachedAttempt.isPendingSubmission;
+        !state.cachedAttempt.isPendingSubmission &&
+        !state.cachedAttempt.isSubmissionStopped;
 
     return ProfileBackground(
       child: SafeArea(
@@ -243,7 +240,6 @@ class _StartExamScreenContentState extends State<StartExamScreenContent> {
   void _handleStateListener(BuildContext context, StartExamScreenState state) {
     if (state is StartExamScreenActionFailure) {
       unawaited(_showActionFailureDialog(context: context, state: state));
-
       return;
     }
 
@@ -287,7 +283,8 @@ class _StartExamScreenContentState extends State<StartExamScreenContent> {
   }) async {
     if (_isFinishDialogVisible ||
         state.isTimeExpired ||
-        state.cachedAttempt.isPendingSubmission) {
+        state.cachedAttempt.isPendingSubmission ||
+        state.cachedAttempt.isSubmissionStopped) {
       return;
     }
 
@@ -295,18 +292,20 @@ class _StartExamScreenContentState extends State<StartExamScreenContent> {
 
     final StartExamScreenCubit cubit = context.read<StartExamScreenCubit>();
 
-    await FinishExamConfirmationDialog.show(
-      context,
-      answeredCount: state.answeredQuestionsCount,
-      totalQuestions: state.totalQuestionsCount,
-      onConfirmFinish: () {
-        if (!cubit.isClosed) {
-          unawaited(cubit.submitExam(isAutomatic: false));
-        }
-      },
-    );
-
-    _isFinishDialogVisible = false;
+    try {
+      await FinishExamConfirmationDialog.show(
+        context,
+        answeredCount: state.answeredQuestionsCount,
+        totalQuestions: state.totalQuestionsCount,
+        onConfirmFinish: () {
+          if (!cubit.isClosed) {
+            unawaited(cubit.submitExam(isAutomatic: false));
+          }
+        },
+      );
+    } finally {
+      _isFinishDialogVisible = false;
+    }
   }
 
   Future<void> _showActionFailureDialog({
@@ -321,52 +320,75 @@ class _StartExamScreenContentState extends State<StartExamScreenContent> {
 
     final StartExamScreenCubit cubit = context.read<StartExamScreenCubit>();
 
-    final bool? shouldRetry = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext dialogContext) {
-        return PopScope(
-          canPop: false,
-          child: CustomOperationResultDialog(
-            type: CustomOperationResultType.failure,
-            title: state.isSubmissionFailure
-                ? 'تعذر تسليم الاختبار'
-                : 'تعذر حفظ الإجابة',
-            message: state.error.message,
-            actionText: state.isSubmissionFailure ? 'إعادة المحاولة' : 'حسنًا',
-            secondaryActionText: state.isSubmissionFailure
-                ? 'المحاولة لاحقًا'
-                : null,
-            onActionPressed: () {
-              Navigator.of(dialogContext).pop(state.isSubmissionFailure);
-            },
-            onSecondaryActionPressed: state.isSubmissionFailure
-                ? () {
-                    unawaited(
-                      _confirmAttemptLater(failureDialogContext: dialogContext),
-                    );
-                  }
-                : null,
-          ),
-        );
-      },
-    );
+    final bool isExamDeleted =
+        state.isSubmissionFailure && state.error.code == 'exam-deleted';
 
-    _isFailureDialogVisible = false;
+    bool? shouldRetry;
+
+    try {
+      shouldRetry = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext dialogContext) {
+          return PopScope(
+            canPop: false,
+            child: CustomOperationResultDialog(
+              type: CustomOperationResultType.failure,
+              title: isExamDeleted
+                  ? 'تم حذف الاختبار'
+                  : state.isSubmissionFailure
+                  ? 'تعذر تسليم الاختبار'
+                  : 'تعذر حفظ الإجابة',
+              message: state.error.message,
+              actionText: isExamDeleted
+                  ? 'حسنًا'
+                  : state.isSubmissionFailure
+                  ? 'إعادة المحاولة'
+                  : 'حسنًا',
+              secondaryActionText: state.isSubmissionFailure && !isExamDeleted
+                  ? 'المحاولة لاحقًا'
+                  : null,
+              onActionPressed: () {
+                Navigator.of(
+                  dialogContext,
+                ).pop(state.isSubmissionFailure && !isExamDeleted);
+              },
+              onSecondaryActionPressed:
+                  state.isSubmissionFailure && !isExamDeleted
+                  ? () {
+                      unawaited(
+                        _confirmAttemptLater(
+                          failureDialogContext: dialogContext,
+                        ),
+                      );
+                    }
+                  : null,
+            ),
+          );
+        },
+      );
+    } finally {
+      _isFailureDialogVisible = false;
+    }
 
     if (!mounted || cubit.isClosed) {
       return;
     }
 
+    if (isExamDeleted) {
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop<String>(state.session.exam.examId);
+      }
+      return;
+    }
+
     if (!state.isSubmissionFailure) {
       cubit.restoreExamState();
-
       return;
     }
 
     if (shouldRetry == true) {
       await cubit.submitExam(isAutomatic: state.isTimeExpired);
-
       return;
     }
 
@@ -389,9 +411,11 @@ class _StartExamScreenContentState extends State<StartExamScreenContent> {
       secondaryText: 'العودة',
       icon: Icons.info_outline_rounded,
     );
+
     if (isConfirmed != true || !failureDialogContext.mounted) {
       return;
     }
+
     Navigator.of(failureDialogContext).pop(false);
   }
 }

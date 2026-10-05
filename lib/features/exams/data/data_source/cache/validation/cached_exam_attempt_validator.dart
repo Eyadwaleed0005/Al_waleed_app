@@ -50,7 +50,13 @@ abstract final class CachedExamAttemptValidator {
       LocalStorageErrorHandler.throwInvalidData();
     }
 
-    if (attempt.isTimeExpired && !attempt.isPendingSubmission) {
+    if (attempt.isTimeExpired &&
+        !attempt.isPendingSubmission &&
+        !attempt.isSubmissionStopped) {
+      LocalStorageErrorHandler.throwInvalidData();
+    }
+
+    if (attempt.isSubmissionStopped && attempt.isPendingSubmission) {
       LocalStorageErrorHandler.throwInvalidData();
     }
   }

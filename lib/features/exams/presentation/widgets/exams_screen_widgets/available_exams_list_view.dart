@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_animations.dart';
 import 'package:al_waleed/core/style/app_color.dart';
@@ -10,7 +12,7 @@ import 'package:al_waleed/features/exams/presentation/widgets/exams_screen_widge
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AvailableExamsListView extends StatelessWidget {
+class AvailableExamsListView extends StatefulWidget {
   const AvailableExamsListView({
     super.key,
     required this.exams,
@@ -23,27 +25,106 @@ class AvailableExamsListView extends StatelessWidget {
   final String? openingExamId;
 
   @override
+  State<AvailableExamsListView> createState() => _AvailableExamsListViewState();
+}
+
+class _AvailableExamsListViewState extends State<AvailableExamsListView> {
+  Timer? _expiryTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _scheduleExpiryUpdate();
+  }
+
+  @override
+  void didUpdateWidget(covariant AvailableExamsListView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _scheduleExpiryUpdate();
+  }
+
+  void _scheduleExpiryUpdate() {
+    _expiryTimer?.cancel();
+    _expiryTimer = null;
+
+    final DateTime now = DateTime.now().toUtc();
+    DateTime? nextExpiry;
+
+    for (final StudentExamListItemEntity examItem in widget.exams) {
+      final attempt = examItem.attempt;
+
+      if (attempt == null || !attempt.canContinueAt(now)) {
+        continue;
+      }
+
+      final DateTime expiresAt = attempt.expiresAt.toUtc();
+
+      if (nextExpiry == null || expiresAt.isBefore(nextExpiry)) {
+        nextExpiry = expiresAt;
+      }
+    }
+
+    if (nextExpiry == null) {
+      return;
+    }
+
+    _expiryTimer = Timer(nextExpiry.difference(now), () {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {});
+      _scheduleExpiryUpdate();
+    });
+  }
+
+  void _handleExamPressed(StudentExamListItemEntity examItem) {
+    if (widget.openingExamId != null) {
+      return;
+    }
+
+    final DateTime now = DateTime.now().toUtc();
+
+    if (!examItem.canStart && !examItem.canContinueAt(now)) {
+      setState(() {});
+      _scheduleExpiryUpdate();
+      return;
+    }
+
+    widget.onExamPressed(examItem);
+  }
+
+  @override
+  void dispose() {
+    _expiryTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final DateTime currentDate = DateTime.now().toUtc();
 
     return ListView.separated(
       physics: const BouncingScrollPhysics(),
-      itemCount: exams.length,
+      itemCount: widget.exams.length,
       separatorBuilder: (BuildContext context, int index) {
         return verticalSpace(28);
       },
       itemBuilder: (BuildContext context, int index) {
-        final StudentExamListItemEntity examItem = exams[index];
+        final StudentExamListItemEntity examItem = widget.exams[index];
 
         final bool isOpening =
-            openingExamId?.trim() == examItem.exam.examId.trim();
+            widget.openingExamId?.trim() == examItem.exam.examId.trim();
 
-        final bool anotherExamIsOpening = openingExamId != null && !isOpening;
+        final bool anotherExamIsOpening =
+            widget.openingExamId != null && !isOpening;
 
         final bool shouldAutoSubmit = examItem.shouldAutoSubmitAt(currentDate);
 
-        final bool canPress =
-            !isOpening && !anotherExamIsOpening && !shouldAutoSubmit;
+        final bool canOpen =
+            examItem.canStart || examItem.canContinueAt(currentDate);
+
+        final bool canPress = !isOpening && !anotherExamIsOpening && canOpen;
 
         final String buttonText = _buttonText(
           examItem: examItem,
@@ -59,9 +140,11 @@ class AvailableExamsListView extends StatelessWidget {
             children: [
               AvailableExamCard(exam: examItem.exam),
               verticalSpace(18),
-              const ExamAutoSaveNotice(
+              ExamAutoSaveNotice(
                 title: 'تُحفظ إجاباتك تلقائيًا أثناء الحل',
-                subtitle: 'تأكد من اتصال الإنترنت قبل بدء المحاولة.',
+                subtitle: examItem.hasAttempt
+                    ? 'وقت المحاولة يستمر حتى أثناء خروجك من الاختبار.'
+                    : 'تأكد من اتصال الإنترنت قبل بدء المحاولة.',
               ),
               verticalSpace(22),
               IgnorePointer(
@@ -74,7 +157,7 @@ class AvailableExamsListView extends StatelessWidget {
                       CustomButton(
                         text: isOpening ? '' : buttonText,
                         onPressed: () {
-                          onExamPressed(examItem);
+                          _handleExamPressed(examItem);
                         },
                         background: ColorPalette.primary,
                         foreground: ColorPalette.textLight,
@@ -123,6 +206,6 @@ class AvailableExamsListView extends StatelessWidget {
       return 'استمرار الاختبار';
     }
 
-    return 'ابدأ الامتحان';
+    return examItem.canStart ? 'ابدأ الامتحان' : 'الاختبار غير متاح';
   }
 }

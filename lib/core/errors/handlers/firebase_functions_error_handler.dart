@@ -3,6 +3,20 @@ import 'package:cloud_functions/cloud_functions.dart';
 
 abstract final class FirebaseFunctionsErrorHandler {
   static AppErrorModel handle(FirebaseFunctionsException error) {
+    final code = _normalizeCode(error.code);
+    final details = error.details;
+
+    if (code == 'not-found' &&
+        details is Map &&
+        details['reason'] == 'exam_deleted') {
+      return const AppErrorModel(
+        code: 'exam-deleted',
+        message: 'تم حذف الامتحان، ولا يمكن إرسال الإجابات.',
+        type: AppErrorType.notFound,
+        isRetryable: false,
+      );
+    }
+
     return handleCode(error.code);
   }
 

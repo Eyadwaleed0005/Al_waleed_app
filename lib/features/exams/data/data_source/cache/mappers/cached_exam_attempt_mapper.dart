@@ -10,6 +10,10 @@ import 'package:al_waleed/features/exams/domain/entities/cached_exam_attempt_ent
 abstract final class CachedExamAttemptMapper {
   const CachedExamAttemptMapper._();
 
+  static const String _isSubmissionStoppedKey = 'isSubmissionStopped';
+  static const String _submissionStopCodeKey = 'submissionStopCode';
+  static const String _submissionStopMessageKey = 'submissionStopMessage';
+
   static String encode(CachedExamAttemptEntity attempt) {
     return jsonEncode(toMap(attempt));
   }
@@ -76,6 +80,9 @@ abstract final class CachedExamAttemptMapper {
           .toIso8601String(),
       ExamAttemptCacheFields.isTimeExpired: attempt.isTimeExpired,
       ExamAttemptCacheFields.isPendingSubmission: attempt.isPendingSubmission,
+      _isSubmissionStoppedKey: attempt.isSubmissionStopped,
+      _submissionStopCodeKey: attempt.submissionStopCode,
+      _submissionStopMessageKey: attempt.submissionStopMessage,
       ExamAttemptCacheFields.updatedAt: attempt.updatedAt
           .toUtc()
           .toIso8601String(),
@@ -103,6 +110,13 @@ abstract final class CachedExamAttemptMapper {
       isTimeExpired: _readBool(data[ExamAttemptCacheFields.isTimeExpired]),
       isPendingSubmission: _readBool(
         data[ExamAttemptCacheFields.isPendingSubmission],
+      ),
+      isSubmissionStopped: data.containsKey(_isSubmissionStoppedKey)
+          ? _readBool(data[_isSubmissionStoppedKey])
+          : false,
+      submissionStopCode: _readNullableString(data[_submissionStopCodeKey]),
+      submissionStopMessage: _readNullableString(
+        data[_submissionStopMessageKey],
       ),
       updatedAt: _readDateTime(data[ExamAttemptCacheFields.updatedAt]),
     );
@@ -171,6 +185,14 @@ abstract final class CachedExamAttemptMapper {
     }
 
     return value;
+  }
+
+  static String? _readNullableString(dynamic value) {
+    if (value == null) {
+      return null;
+    }
+
+    return _readString(value);
   }
 
   static int _readInt(dynamic value) {
