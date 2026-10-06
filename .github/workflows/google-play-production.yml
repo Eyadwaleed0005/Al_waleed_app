@@ -1,0 +1,113 @@
+name: Google Play Production
+
+on:
+  pull_request:
+    branches:
+      - google-play-production
+    types:
+      - closed
+
+permissions:
+  contents: read
+
+concurrency:
+  group: google-play-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and upload production bundle
+    if: >-
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.head.ref == 'main' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout merged code
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.3'
+          channel: stable
+          cache: true
+
+      - name: Setup Shorebird
+        uses: shorebirdtech/setup-shorebird@v1
+        with:
+          cache: true
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          working-directory: android
+
+      - name: Install Fastlane dependencies
+        working-directory: android
+        run: |
+          bundle lock --add-platform x86_64-linux
+          bundle install
+
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      - name: Analyze code
+        run: flutter analyze --no-fatal-infos
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Prepare Android signing
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          umask 077
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/upload-keystore.jks"
+
+          {
+            printf 'storeFile=%s\n' "$RUNNER_TEMP/upload-keystore.jks"
+            printf 'keyAlias=%s\n' "$KEY_ALIAS"
+            printf 'keyPassword=%s\n' "$KEY_PASSWORD"
+            printf 'storePassword=%s\n' "$STORE_PASSWORD"
+          } > android/key.properties
+
+      - name: Build Shorebird release bundle
+        env:
+          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+        run: shorebird release android --flutter-version 3.47.3
+
+      - name: Prepare Google Play credentials
+        env:
+          GOOGLE_PLAY_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          umask 077
+          printf '%s' "$GOOGLE_PLAY_JSON" > "$RUNNER_TEMP/google-play-service-account.json"
+
+      - name: Upload bundle to Google Play production
+        working-directory: android
+        env:
+          GOOGLE_PLAY_SERVICE_ACCOUNT_FILE: ${{ runner.temp }}/google-play-service-account.json
+          GOOGLE_PLAY_TRACK: production
+          GOOGLE_PLAY_RELEASE_STATUS: completed
+        run: bundle exec fastlane android google_play_distribution
+
+      - name: Clean up credentials
+        if: always()
+        run: |
+          rm -f android/key.properties
+          rm -f "$RUNNER_TEMP/upload-keystore.jks"
+          rm -f "$RUNNER_TEMP/google-play-service-account.json"
