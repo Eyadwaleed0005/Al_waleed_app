@@ -1,21 +1,25 @@
-name: Main Firebase Distribution
+name: Google Play Production
 
 on:
   pull_request:
     branches:
-      - main
+      - google-play-production
     types:
       - closed
 
 permissions:
   contents: read
 
+concurrency:
+  group: google-play-production
+  cancel-in-progress: false
+
 jobs:
-  distribute:
-    name: Build and distribute client APK
+  deploy:
+    name: Build and upload production bundle
     if: >-
       github.event.pull_request.merged == true &&
-      github.event.pull_request.head.ref == 'development' &&
+      github.event.pull_request.head.ref == 'main' &&
       github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
 
@@ -81,28 +85,29 @@ jobs:
             printf 'storePassword=%s\n' "$STORE_PASSWORD"
           } > android/key.properties
 
-      - name: Build Shorebird release APK
+      - name: Build Shorebird release bundle
         env:
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
-        run: shorebird release android --artifact apk --flutter-version 3.47.3
+        run: shorebird release android --flutter-version 3.47.3
 
-      - name: Prepare Firebase credentials
+      - name: Prepare Google Play credentials
         env:
-          FIREBASE_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_PLAY_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
         run: |
           umask 077
-          printf '%s' "$FIREBASE_JSON" > "$RUNNER_TEMP/firebase-service-account.json"
+          printf '%s' "$GOOGLE_PLAY_JSON" > "$RUNNER_TEMP/google-play-service-account.json"
 
-      - name: Distribute APK to client
+      - name: Upload bundle to Google Play production
         working-directory: android
         env:
-          FIREBASE_ANDROID_APP_ID: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-service-account.json
-        run: bundle exec fastlane android firebase_client_distribution
+          GOOGLE_PLAY_SERVICE_ACCOUNT_FILE: ${{ runner.temp }}/google-play-service-account.json
+          GOOGLE_PLAY_TRACK: production
+          GOOGLE_PLAY_RELEASE_STATUS: completed
+        run: bundle exec fastlane android google_play_distribution
 
       - name: Clean up credentials
         if: always()
         run: |
           rm -f android/key.properties
           rm -f "$RUNNER_TEMP/upload-keystore.jks"
-          rm -f "$RUNNER_TEMP/firebase-service-account.json"
+          rm -f "$RUNNER_TEMP/google-play-service-account.json"

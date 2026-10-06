@@ -128,6 +128,7 @@ export const submitExamAttempt = onCall(
             throw new HttpsError(
               "not-found",
               "The requested exam does not exist.",
+              {reason: "exam_deleted"},
             );
           }
 

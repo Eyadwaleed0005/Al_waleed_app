@@ -37,7 +37,7 @@ class FlutterLocalNotificationDataSource
       );
 
   @override
-  Future<void> initialize() async {
+  Future<void> initialize({bool requestPermission = true}) async {
     const initializationSettings = InitializationSettings(
       android: AndroidInitializationSettings(_notificationIcon),
       iOS: DarwinInitializationSettings(
@@ -61,7 +61,9 @@ class FlutterLocalNotificationDataSource
       _androidChannel,
     );
 
-    await androidNotificationsPlugin?.requestNotificationsPermission();
+    if (requestPermission) {
+      await androidNotificationsPlugin?.requestNotificationsPermission();
+    }
   }
 
   @override
@@ -73,6 +75,7 @@ class FlutterLocalNotificationDataSource
         channelDescription:
             'إشعارات الدروس والمذكرات والامتحانات والبث المباشر',
         icon: _notificationIcon,
+        largeIcon: DrawableResourceAndroidBitmap('al_waleed_logo'),
         color: _notificationColor,
         importance: Importance.max,
         priority: Priority.high,

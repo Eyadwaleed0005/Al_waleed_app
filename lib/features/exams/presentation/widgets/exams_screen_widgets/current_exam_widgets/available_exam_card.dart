@@ -39,7 +39,7 @@ class AvailableExamCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Text(
-                'متاح لصفك',
+                exam.isPublished ? 'متاح لصفك' : 'محاولتك الحالية',
                 style: AppTextStyle.font11TextHighlightBoldTajawal(),
               ),
             ),

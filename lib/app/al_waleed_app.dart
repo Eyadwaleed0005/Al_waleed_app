@@ -63,7 +63,6 @@ class AlWaleedApp extends StatelessWidget {
       context,
       child,
     );
-
     return PendingExamSubmissionsSyncHandler(
       child: NotificationNavigationHandler(
         navigatorKey: navigatorKey,
