@@ -22,6 +22,7 @@ platform :android do
 
   # Firebase distribution for the client
   desc "Send main APK to the client"
+
   lane :firebase_client_distribution do
     apk_path = File.expand_path(
       "../../build/app/outputs/flutter-apk/app-release.apk",
@@ -35,6 +36,29 @@ platform :android do
       android_artifact_path: apk_path,
       groups: "client",
       release_notes: "Main build for client testing"
+    )
+  end
+
+  # Google Play production 
+  desc "Upload Android App Bundle to Google Play production"
+
+  lane :google_play_distribution do
+    aab_path = File.expand_path(
+      "../../build/app/outputs/bundle/release/app-release.aab",
+      __dir__
+    )
+
+    upload_to_play_store(
+      package_name: "com.famex.alwaleed",
+      json_key: ENV.fetch("GOOGLE_PLAY_SERVICE_ACCOUNT_FILE"),
+      aab: aab_path,
+      track: "production",
+      release_status: "completed",
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
     )
   end
 end
