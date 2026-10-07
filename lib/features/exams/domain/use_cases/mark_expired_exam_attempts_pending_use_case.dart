@@ -22,7 +22,7 @@ class MarkExpiredExamAttemptsPendingUseCase {
       },
       (List<CachedExamAttemptEntity> attempts) async {
         for (final CachedExamAttemptEntity attempt in attempts) {
-          if (attempt.isPendingSubmission) {
+          if (attempt.isPendingSubmission || attempt.isSubmissionStopped) {
             continue;
           }
 

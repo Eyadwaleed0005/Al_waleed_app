@@ -15,7 +15,6 @@ import 'package:al_waleed/features/exams/domain/entities/student_exam_attempt_en
 import 'package:al_waleed/features/exams/domain/entities/student_exam_entity.dart';
 import 'package:al_waleed/features/exams/domain/entities/student_exam_result_entity.dart';
 import 'package:al_waleed/features/exams/domain/entities/student_exam_session_entity.dart';
-import 'package:al_waleed/features/exams/domain/entities/student_exam_status.dart';
 import 'package:al_waleed/features/exams/domain/entities/submit_student_exam_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -52,9 +51,6 @@ class FirebaseStudentExamsRemoteDataSource
             final List<StudentExamEntity> exams = snapshot.docs
                 .map((QueryDocumentSnapshot<Map<String, dynamic>> document) {
                   return StudentExamModel.fromFirestore(document).toEntity();
-                })
-                .where((StudentExamEntity exam) {
-                  return exam.status == StudentExamStatus.published;
                 })
                 .toList(growable: false);
 
