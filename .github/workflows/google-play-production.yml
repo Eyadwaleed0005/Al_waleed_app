@@ -42,11 +42,6 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Setup Shorebird
-        uses: shorebirdtech/setup-shorebird@v1
-        with:
-          cache: true
-
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -85,10 +80,8 @@ jobs:
             printf 'storePassword=%s\n' "$STORE_PASSWORD"
           } > android/key.properties
 
-      - name: Build Shorebird release bundle
-        env:
-          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
-        run: shorebird release android --flutter-version 3.47.3
+      - name: Build release bundle
+        run: flutter build appbundle --release
 
       - name: Prepare Google Play credentials
         env:
@@ -101,8 +94,6 @@ jobs:
         working-directory: android
         env:
           GOOGLE_PLAY_SERVICE_ACCOUNT_FILE: ${{ runner.temp }}/google-play-service-account.json
-          GOOGLE_PLAY_TRACK: production
-          GOOGLE_PLAY_RELEASE_STATUS: completed
         run: bundle exec fastlane android google_play_distribution
 
       - name: Clean up credentials
