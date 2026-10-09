@@ -1,11 +1,28 @@
 flutter_native_splash:
-  color: "#023A22"
-  image: "assets/images/splash_logo.png"
-
   android: true
   ios: true
   web: false
 
+  color: "#023A22"
+  image: "assets/images/splash_logo.png"
+
+  color_dark: "#023A22"
+  image_dark: "assets/images/splash_logo.png"
+
+  android_gravity: center
+  ios_content_mode: center
+
+  branding: "assets/images/fame_x_branding.png"
+  branding_dark: "assets/images/fame_x_branding.png"
+  branding_mode: bottom
+  branding_bottom_padding: 24
+
   android_12:
     color: "#023A22"
-    image: "assets/images/splash_logo.png"
+    image: "assets/images/splash_logo_android12.png"
+
+    color_dark: "#023A22"
+    image_dark: "assets/images/splash_logo_android12.png"
+
+    branding: "assets/images/fame_x_branding_android12.png"
+    branding_dark: "assets/images/fame_x_branding_android12.png"
