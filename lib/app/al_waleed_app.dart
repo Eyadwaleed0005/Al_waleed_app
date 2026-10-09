@@ -50,6 +50,15 @@ class AlWaleedApp extends StatelessWidget {
             locale: DevicePreviewService.locale(context),
             theme: ThemeData(),
             initialRoute: RouteNames.splashScreen,
+            onGenerateInitialRoutes: (String initialRouteName) {
+              final Route<dynamic>? initialRoute = AppRoutes.generateRoute(
+                RouteSettings(name: initialRouteName),
+              );
+              if (initialRoute == null) {
+                return <Route<dynamic>>[];
+              }
+              return <Route<dynamic>>[initialRoute];
+            },
             onGenerateRoute: AppRoutes.generateRoute,
             builder: _buildApp,
           );
@@ -63,6 +72,7 @@ class AlWaleedApp extends StatelessWidget {
       context,
       child,
     );
+
     return PendingExamSubmissionsSyncHandler(
       child: NotificationNavigationHandler(
         navigatorKey: navigatorKey,
