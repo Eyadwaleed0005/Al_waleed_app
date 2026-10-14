@@ -1547,7 +1547,7 @@ packages:
     source: hosted
     version: "10.0.1"
   youtube_player_iframe:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: youtube_player_iframe
       sha256: "8488d3fd3ce10286356a3e40036cc9ab296c19f399a3141acb70dc18a5231dab"

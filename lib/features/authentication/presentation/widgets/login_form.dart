@@ -1,16 +1,16 @@
 import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
-import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:al_waleed/core/widgets/custom_button.dart';
 import 'package:al_waleed/core/widgets/custom_operation_result_dialog.dart';
-import 'package:al_waleed/core/widgets/custom_secondary_button.dart';
 import 'package:al_waleed/core/widgets/custom_text_form_field.dart';
 import 'package:al_waleed/features/authentication/presentation/cubit/login_cubit/login_cubit.dart';
 import 'package:al_waleed/features/authentication/presentation/validation/login_validation.dart';
+import 'package:al_waleed/features/authentication/presentation/widgets/create_account_whatsapp_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'forgot_password_button.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -23,7 +23,6 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
   bool _isObscure = true;
 
   @override
@@ -130,27 +129,9 @@ class _LoginFormState extends State<LoginForm> {
                 onPressed: () => _submit(context),
               ),
               verticalSpace(16),
-              CustomSecondaryButton(
-                onPressed: isLoading ? null : () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '.نسيت كلمة المرور؟ تواصل مع المدرس',
-                      style: AppTextStyle.font12TextSecondaryRegularTajawal(),
-                    ),
-                    horizontalSpace(9),
-                    CircleAvatar(
-                      radius: 10.r,
-                      backgroundColor: ColorPalette.accent,
-                      child: Text(
-                        '؟',
-                        style: AppTextStyle.font14TextPrimaryMediumKufam(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              ForgotPasswordButton(isLoading: isLoading),
+              verticalSpace(8),
+              CreateAccountWhatsAppText(isLoading: isLoading),
             ],
           ),
         );

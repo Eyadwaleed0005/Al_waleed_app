@@ -57,6 +57,15 @@ export const notifyStudentsWhenLessonPublished =
         return;
       }
 
+      const youtubeUrl = readRequiredString(
+        afterData,
+        "youtubeUrl",
+      );
+
+      const imageUrl = createYoutubeThumbnailUrl(
+        youtubeUrl,
+      );
+
       await sendGradeNotification({
         eventId: event.id,
         type: AppNotificationType.lesson,
@@ -64,6 +73,7 @@ export const notifyStudentsWhenLessonPublished =
         gradeId,
         title: "درس جديد",
         body: `تم إضافة درس جديد ${lessonTitle}`,
+        imageUrl,
       });
     },
   );
@@ -194,8 +204,7 @@ export const notifyStudentsWhenLiveSessionCreated =
           "Live session notification data is incomplete.",
           {
             eventId: event.id,
-            liveSessionId:
-              event.params.liveSessionId,
+            liveSessionId: event.params.liveSessionId,
           },
         );
 
@@ -260,9 +269,77 @@ function normalizeString(
 
   const normalizedValue = value.trim();
 
-  if (normalizedValue.length === 0) {
-    return null;
+  return normalizedValue.length > 0 ?
+    normalizedValue :
+    null;
+}
+
+function createYoutubeThumbnailUrl(
+  youtubeUrl: string | null,
+): string | undefined {
+  if (!youtubeUrl) {
+    return undefined;
   }
 
-  return normalizedValue;
+  const value = youtubeUrl.trim();
+  const validVideoId = /^[a-zA-Z0-9_-]{11}$/;
+
+  if (validVideoId.test(value)) {
+    return `https://img.youtube.com/vi/${value}/hqdefault.jpg`;
+  }
+
+  try {
+    const url = new URL(value);
+
+    if (
+      url.protocol !== "https:" &&
+      url.protocol !== "http:"
+    ) {
+      return undefined;
+    }
+
+    const host = url.hostname.toLowerCase();
+
+    const parts = url.pathname
+      .split("/")
+      .filter(Boolean);
+
+    let videoId: string | null = null;
+
+    if (
+      host === "youtu.be" ||
+      host === "www.youtu.be"
+    ) {
+      videoId = parts[0] ?? null;
+    } else {
+      const isYoutubeHost =
+        host === "youtube.com" ||
+        host.endsWith(".youtube.com") ||
+        host === "youtube-nocookie.com" ||
+        host.endsWith(".youtube-nocookie.com");
+
+      if (!isYoutubeHost) {
+        return undefined;
+      }
+
+      if (parts[0] === "watch") {
+        videoId = url.searchParams.get("v");
+      } else if (
+        parts[0] === "shorts" ||
+        parts[0] === "embed" ||
+        parts[0] === "live" ||
+        parts[0] === "v"
+      ) {
+        videoId = parts[1] ?? null;
+      }
+    }
+
+    if (!videoId || !validVideoId.test(videoId)) {
+      return undefined;
+    }
+
+    return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+  } catch {
+    return undefined;
+  }
 }
