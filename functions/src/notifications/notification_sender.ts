@@ -21,18 +21,26 @@ export async function sendGradeNotification(
 
   const topic = createGradeTopic(gradeId);
 
+  const data: Record<string, string> = {
+    eventId,
+    type: notification.type,
+    resourceId,
+    gradeId,
+    title: notification.title,
+    body: notification.body,
+  };
+
+  const imageUrl = notification.imageUrl?.trim();
+
   await getMessaging().send({
     topic,
-    data: {
-      eventId,
-      type: notification.type,
-      resourceId,
-      gradeId,
-      title: notification.title,
-      body: notification.body,
-    },
+    data,
     android: {
       priority: "high",
+      data: {
+        ...data,
+        ...(imageUrl ? {imageUrl} : {}),
+      },
     },
     apns: {
       headers: {
