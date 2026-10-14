@@ -8,6 +8,7 @@ class AppNotificationEntity {
     required this.gradeId,
     required this.title,
     required this.body,
+    this.imageUrl = '',
   });
 
   final String eventId;
@@ -16,6 +17,7 @@ class AppNotificationEntity {
   final String gradeId;
   final String title;
   final String body;
+  final String imageUrl;
 
   bool get canNavigate {
     return type != AppNotificationType.unknown;

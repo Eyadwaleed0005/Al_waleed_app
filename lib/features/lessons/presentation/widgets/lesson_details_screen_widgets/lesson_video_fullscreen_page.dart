@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:al_waleed/core/style/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+
+import 'lesson_video_controls.dart';
 
 class LessonVideoFullscreenPage extends StatefulWidget {
   const LessonVideoFullscreenPage({super.key, required this.videoId});
@@ -31,8 +34,9 @@ class _LessonVideoFullscreenPageState extends State<LessonVideoFullscreenPage> {
         playsInline: true,
         enableCaption: false,
         strictRelatedVideos: true,
-        showControls: true,
+        showControls: false,
         showFullscreenButton: false,
+        pointerEvents: PointerEvents.none,
       ),
     );
   }
@@ -44,23 +48,18 @@ class _LessonVideoFullscreenPageState extends State<LessonVideoFullscreenPage> {
   }
 
   void _closeVideo() {
-    if (_isClosing) {
-      return;
-    }
+    if (_isClosing) return;
 
     _isClosing = true;
     Navigator.of(context).pop();
   }
 
-  void _pauseOnExit() {
-    unawaited(
-      _controller.pauseVideo().catchError((
-        Object error,
-        StackTrace stackTrace,
-      ) {
-        // قد يكون المشغّل اتقفل بالفعل أثناء الخروج.
-      }),
-    );
+  Future<void> _pauseOnExit() async {
+    try {
+      await _controller.pauseVideo();
+    } catch (_) {
+      // قد يكون المشغّل اتقفل بالفعل.
+    }
   }
 
   @override
@@ -68,44 +67,34 @@ class _LessonVideoFullscreenPageState extends State<LessonVideoFullscreenPage> {
     return PopScope<void>(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
-          _pauseOnExit();
+          _isClosing = true;
+          unawaited(_pauseOnExit());
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: ColorPalette.textBlack,
         body: SafeArea(
-          child: Center(
-            child: Directionality(
-              textDirection: TextDirection.ltr,
-              child: YoutubePlayer(
-                controller: _controller,
-                aspectRatio: 16 / 9,
-                backgroundColor: Colors.black,
-                autoFullScreen: false,
-                enableFullScreenOnVerticalDrag: false,
-                controlsBuilder: (context, isFullscreen) {
-                  return Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Positioned(
-                        right: 8,
-                        bottom: 48,
-                        child: Material(
-                          color: Colors.black54,
-                          borderRadius: BorderRadius.circular(10),
-                          child: IconButton(
-                            tooltip: 'تصغير الفيديو',
-                            color: Colors.white,
-                            iconSize: 28,
-                            icon: const Icon(Icons.fullscreen_exit_rounded),
-                            onPressed: _closeVideo,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+          child: SizedBox.expand(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: YoutubePlayer(
+                    controller: _controller,
+                    aspectRatio: constraints.maxWidth / constraints.maxHeight,
+                    backgroundColor: ColorPalette.textBlack,
+                    autoFullScreen: false,
+                    enableFullScreenOnVerticalDrag: false,
+                    controlsBuilder: (context, isFullscreen) {
+                      return LessonVideoControls(
+                        key: ObjectKey(_controller),
+                        controller: _controller,
+                        onClose: _closeVideo,
+                      );
+                    },
+                  ),
+                );
+              },
             ),
           ),
         ),

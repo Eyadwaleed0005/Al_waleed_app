@@ -21,55 +21,66 @@ class StudyNotesScreenContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BackgroundStudentLayout(
       child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          child: Column(
-            children: [
-              CustomAppBar(
-                title: 'المذكرات',
-                backgroundColor: Colors.transparent,
-                showBackButton: false,
-                actions: [
-                  SvgPicture.asset(
-                    AppImage().studyNotes,
-                    width: 24.w,
-                    height: 24.h,
+        child: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: Column(
+                    children: [
+                      CustomAppBar(
+                        title: 'المذكرات',
+                        backgroundColor: Colors.transparent,
+                        showBackButton: false,
+                        actions: [
+                          SvgPicture.asset(
+                            AppImage().studyNotes,
+                            width: 24.w,
+                            height: 24.h,
+                          ),
+                        ],
+                      ),
+                      verticalSpace(24),
+                    ],
                   ),
-                ],
-              ),
-              verticalSpace(24),
-              Expanded(
-                child: BlocBuilder<StudyNotesCubit, StudyNotesState>(
-                  builder: (context, state) {
-                    if (state is StudyNotesInitial ||
-                        state is StudyNotesLoading) {
-                      return const StudyNotesLoadingView();
-                    }
-                    if (state is StudyNotesFailure) {
-                      return StudyNotesErrorView(
-                        errorMessage: state.error.message,
-                        onRetry: context.read<StudyNotesCubit>().retry,
-                      );
-                    }
-                    if (state is StudyNotesEmpty) {
-                      return const StudyNotesEmptyView();
-                    }
-                    if (state is StudyNotesDataSuccess) {
-                      return StudyNotesSuccessView(
-                        notes: state.notes,
-                        onNoteTap: (note) {
-                          Navigator.of(context).pushNamed(
-                            RouteNames.studyNotePdfReaderScreen,
-                            arguments: note,
-                          );
-                        },
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
                 ),
               ),
-            ],
+            ];
+          },
+          body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: BlocBuilder<StudyNotesCubit, StudyNotesState>(
+              builder: (context, state) {
+                if (state is StudyNotesInitial || state is StudyNotesLoading) {
+                  return const StudyNotesLoadingView();
+                }
+
+                if (state is StudyNotesFailure) {
+                  return StudyNotesErrorView(
+                    errorMessage: state.error.message,
+                    onRetry: context.read<StudyNotesCubit>().retry,
+                  );
+                }
+
+                if (state is StudyNotesEmpty) {
+                  return const StudyNotesEmptyView();
+                }
+
+                if (state is StudyNotesDataSuccess) {
+                  return StudyNotesSuccessView(
+                    notes: state.notes,
+                    onNoteTap: (note) {
+                      Navigator.of(context).pushNamed(
+                        RouteNames.studyNotePdfReaderScreen,
+                        arguments: note,
+                      );
+                    },
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
           ),
         ),
       ),

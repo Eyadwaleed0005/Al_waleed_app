@@ -12,4 +12,5 @@ export interface GradeNotification {
   gradeId: string;
   title: string;
   body: string;
+  imageUrl?: string;
 }
