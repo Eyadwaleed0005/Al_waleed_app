@@ -12,6 +12,9 @@ class CachedExamAttemptEntity {
     required this.isTimeExpired,
     required this.isPendingSubmission,
     required this.updatedAt,
+    this.isSubmissionStopped = false,
+    this.submissionStopCode,
+    this.submissionStopMessage,
   });
 
   final String resultId;
@@ -22,6 +25,9 @@ class CachedExamAttemptEntity {
   final DateTime expiresAt;
   final bool isTimeExpired;
   final bool isPendingSubmission;
+  final bool isSubmissionStopped;
+  final String? submissionStopCode;
+  final String? submissionStopMessage;
   final DateTime updatedAt;
 
   int get answeredQuestionsCount {
@@ -61,6 +67,9 @@ class CachedExamAttemptEntity {
     Map<String, int>? selectedChoiceIndexes,
     bool? isTimeExpired,
     bool? isPendingSubmission,
+    bool? isSubmissionStopped,
+    String? submissionStopCode,
+    String? submissionStopMessage,
     DateTime? updatedAt,
   }) {
     return CachedExamAttemptEntity(
@@ -73,6 +82,10 @@ class CachedExamAttemptEntity {
       expiresAt: expiresAt,
       isTimeExpired: isTimeExpired ?? this.isTimeExpired,
       isPendingSubmission: isPendingSubmission ?? this.isPendingSubmission,
+      isSubmissionStopped: isSubmissionStopped ?? this.isSubmissionStopped,
+      submissionStopCode: submissionStopCode ?? this.submissionStopCode,
+      submissionStopMessage:
+          submissionStopMessage ?? this.submissionStopMessage,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }

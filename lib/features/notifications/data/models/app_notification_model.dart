@@ -12,6 +12,7 @@ class AppNotificationModel extends AppNotificationEntity {
     required super.gradeId,
     required super.title,
     required super.body,
+    super.imageUrl = '',
   });
 
   factory AppNotificationModel.fromRemoteMessage(RemoteMessage message) {
@@ -33,6 +34,7 @@ class AppNotificationModel extends AppNotificationEntity {
         data[_NotificationFields.body],
         fallback: message.notification?.body,
       ),
+      imageUrl: _readString(data[_NotificationFields.imageUrl]),
     );
   }
 
@@ -44,6 +46,7 @@ class AppNotificationModel extends AppNotificationEntity {
       gradeId: _readString(map[_NotificationFields.gradeId]),
       title: _readString(map[_NotificationFields.title]),
       body: _readString(map[_NotificationFields.body]),
+      imageUrl: _readString(map[_NotificationFields.imageUrl]),
     );
   }
 
@@ -67,6 +70,7 @@ class AppNotificationModel extends AppNotificationEntity {
       gradeId: entity.gradeId,
       title: entity.title,
       body: entity.body,
+      imageUrl: entity.imageUrl,
     );
   }
 
@@ -78,6 +82,7 @@ class AppNotificationModel extends AppNotificationEntity {
       _NotificationFields.gradeId: gradeId,
       _NotificationFields.title: title,
       _NotificationFields.body: body,
+      _NotificationFields.imageUrl: imageUrl,
     };
   }
 
@@ -93,6 +98,7 @@ class AppNotificationModel extends AppNotificationEntity {
       gradeId: gradeId,
       title: title,
       body: body,
+      imageUrl: imageUrl,
     );
   }
 
@@ -138,4 +144,5 @@ abstract final class _NotificationFields {
   static const String gradeId = 'gradeId';
   static const String title = 'title';
   static const String body = 'body';
+  static const String imageUrl = 'imageUrl';
 }

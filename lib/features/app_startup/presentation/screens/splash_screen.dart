@@ -9,11 +9,14 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: AppSystemUi.dark(),
-      child: const Scaffold(
-        backgroundColor: ColorPalette.deepSurface,
-        body: SplashScreenContent(),
+    return PopScope(
+      canPop: false,
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: AppSystemUi.dark(),
+        child: const Scaffold(
+          backgroundColor: ColorPalette.deepSurface,
+          body: SplashScreenContent(),
+        ),
       ),
     );
   }

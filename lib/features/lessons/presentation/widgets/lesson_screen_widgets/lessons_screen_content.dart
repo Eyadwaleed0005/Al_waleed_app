@@ -1,5 +1,6 @@
 import 'package:al_waleed/app/routes/app_images_routes.dart';
 import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
+import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/widgets/background/background_student_layout.dart';
 import 'package:al_waleed/core/widgets/custom_app_bar.dart';
 import 'package:al_waleed/core/widgets/custom_search_bar.dart';
@@ -21,63 +22,67 @@ class LessonsScreenContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BackgroundStudentLayout(
       child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            children: [
-              CustomAppBar(
-                title: 'الدروس',
-                showBackButton: true,
-                backgroundColor: Colors.transparent,
-                actions: [
-                  SvgPicture.asset(
-                    AppImage().bookOpen,
-                    width: 28.w,
-                    height: 28.h,
+        child: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: CustomAppBar(
+                    title: 'الدروس',
+                    showBackButton: true,
+                    backgroundColor: Colors.transparent,
+                    actions: [
+                      SvgPicture.asset(
+                        AppImage().bookOpen,
+                        width: 28.w,
+                        height: 28.h,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              Expanded(
-                child: BlocBuilder<LessonsCubit, LessonsState>(
-                  builder: (context, state) {
-                    if (state is LessonsInitial || state is LessonsLoading) {
-                      return _buildLoadingView();
-                    }
-
-                    if (state is LessonsFailure) {
-                      return LessonsErrorView(
-                        errorMessage: state.error.message,
-                        onRetry: context.read<LessonsCubit>().retry,
-                      );
-                    }
-
-                    if (state is LessonsEmpty) {
-                      return const LessonsEmptyView();
-                    }
-
-                    if (state is LessonsDataSuccess) {
-                      return LessonsSuccessView(
-                        lessons: state.lessons,
-                        query: state.query,
-                        hasNoResults: state.hasNoResults,
-                        onLessonTap: (lesson) {
-                          Navigator.of(context).pushNamed(
-                            RouteNames.lessonDetails,
-                            arguments: lesson,
-                          );
-                        },
-                        onSearchChanged: context.read<LessonsCubit>().search,
-                        onSearchClear: () {
-                          context.read<LessonsCubit>().search('');
-                        },
-                      );
-                    }
-
-                    return const SizedBox.shrink();
-                  },
                 ),
               ),
-            ],
+            ];
+          },
+          body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: BlocBuilder<LessonsCubit, LessonsState>(
+              builder: (context, state) {
+                if (state is LessonsInitial || state is LessonsLoading) {
+                  return _buildLoadingView();
+                }
+
+                if (state is LessonsFailure) {
+                  return LessonsErrorView(
+                    errorMessage: state.error.message,
+                    onRetry: context.read<LessonsCubit>().retry,
+                  );
+                }
+
+                if (state is LessonsEmpty) {
+                  return const LessonsEmptyView();
+                }
+
+                if (state is LessonsDataSuccess) {
+                  return LessonsSuccessView(
+                    lessons: state.lessons,
+                    query: state.query,
+                    hasNoResults: state.hasNoResults,
+                    onLessonTap: (lesson) {
+                      Navigator.of(
+                        context,
+                      ).pushNamed(RouteNames.lessonDetails, arguments: lesson);
+                    },
+                    onSearchChanged: context.read<LessonsCubit>().search,
+                    onSearchClear: () {
+                      context.read<LessonsCubit>().search('');
+                    },
+                  );
+                }
+
+                return const SizedBox.shrink();
+              },
+            ),
           ),
         ),
       ),
@@ -88,7 +93,7 @@ class LessonsScreenContent extends StatelessWidget {
     return Column(
       children: [
         const AbsorbPointer(child: CustomSearchBar(hintText: 'ابحث عن درس...')),
-        SizedBox(height: 48.h),
+        verticalSpace(48),
         const Expanded(child: LessonsLoadingView()),
       ],
     );

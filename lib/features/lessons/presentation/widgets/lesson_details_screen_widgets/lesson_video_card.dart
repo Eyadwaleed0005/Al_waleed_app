@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+
+import 'lesson_video_fullscreen_page.dart';
 
 class LessonVideoCard extends StatefulWidget {
   const LessonVideoCard({super.key, required this.videoUrl});
@@ -18,73 +20,124 @@ class LessonVideoCard extends StatefulWidget {
   final String videoUrl;
 
   @override
-  State<LessonVideoCard> createState() {
-    return _LessonVideoCardState();
-  }
+  State<LessonVideoCard> createState() => _LessonVideoCardState();
 }
 
 class _LessonVideoCardState extends State<LessonVideoCard> {
   static const double _cardAspectRatio = 350 / 170;
 
-  YoutubePlayerController? _playerController;
-
-  bool _isPlayerActive = false;
   bool _isCheckingConnection = false;
+  bool _isOpeningVideo = false;
   bool _isOfflineDialogVisible = false;
 
+  int _activationGeneration = 0;
+
   @override
-  void didUpdateWidget(LessonVideoCard oldWidget) {
+  void didUpdateWidget(covariant LessonVideoCard oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.videoUrl != widget.videoUrl) {
-      _closePlayer();
-      _restorePortraitOrientation();
+      _activationGeneration++;
+      _isCheckingConnection = false;
     }
   }
 
   @override
   void dispose() {
-    _closePlayer();
-    _restorePortraitOrientation();
-
+    _activationGeneration++;
     super.dispose();
   }
 
   Future<void> _activatePlayer() async {
-    if (_isPlayerActive || _isCheckingConnection) {
+    if (_isOpeningVideo || _isOfflineDialogVisible) {
       return;
     }
 
-    final String? videoId = _extractVideoId(widget.videoUrl);
+    final videoId = _extractVideoId(widget.videoUrl);
 
     if (videoId == null) {
       return;
     }
 
-    _isCheckingConnection = true;
+    final generation = ++_activationGeneration;
+
+    bool changedOrientation = false;
+    bool shouldRetry = false;
+    bool failed = false;
+
+    setState(() {
+      _isOpeningVideo = true;
+      _isCheckingConnection = true;
+    });
 
     try {
-      final bool hasInternet = await _checkInternetConnection();
+      final hasInternet = await _checkInternetConnection();
 
-      if (!mounted) {
+      if (!mounted || generation != _activationGeneration) {
         return;
       }
+
+      setState(() {
+        _isCheckingConnection = false;
+      });
 
       if (!hasInternet) {
-        unawaited(_showOfflineDialog());
+        shouldRetry = await _showOfflineDialog();
+      } else {
+        changedOrientation = true;
 
-        return;
+        await SystemChrome.setPreferredOrientations(const [
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ]);
+
+        if (!mounted || generation != _activationGeneration) {
+          return;
+        }
+
+        await Navigator.of(context, rootNavigator: true).push<void>(
+          MaterialPageRoute<void>(
+            builder: (_) {
+              return LessonVideoFullscreenPage(videoId: videoId);
+            },
+          ),
+        );
       }
-
-      _createPlayer(videoId);
+    } catch (_) {
+      failed = true;
     } finally {
-      _isCheckingConnection = false;
+      try {
+        if (changedOrientation) {
+          await SystemChrome.setPreferredOrientations(const [
+            DeviceOrientation.portraitUp,
+          ]);
+        }
+      } catch (_) {
+        failed = true;
+      } finally {
+        _isOpeningVideo = false;
+
+        if (mounted) {
+          setState(() {
+            _isCheckingConnection = false;
+          });
+        }
+      }
+    }
+
+    if (!mounted || generation != _activationGeneration) {
+      return;
+    }
+
+    if (failed) {
+      await _showPlaybackErrorDialog();
+    } else if (shouldRetry) {
+      unawaited(_activatePlayer());
     }
   }
 
   Future<bool> _checkInternetConnection() async {
-    final NetworkStatusCubit networkStatusCubit = context
-        .read<NetworkStatusCubit>();
+    final networkStatusCubit = context.read<NetworkStatusCubit>();
 
     await networkStatusCubit.checkConnection();
 
@@ -95,126 +148,77 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
     return networkStatusCubit.state is NetworkStatusConnected;
   }
 
-  void _createPlayer(String videoId) {
-    final YoutubePlayerController controller =
-        YoutubePlayerController.fromVideoId(
-          videoId: videoId,
-          autoPlay: true,
-          params: const YoutubePlayerParams(
-            interfaceLanguage: 'ar',
-            captionLanguage: 'ar',
-            playsInline: true,
-            enableCaption: false,
-            strictRelatedVideos: true,
-          ),
-        );
-
-    controller.setFullScreenListener(_handleFullScreenChanged);
-
-    if (!mounted) {
-      unawaited(controller.close());
-
-      return;
-    }
-
-    setState(() {
-      _playerController = controller;
-      _isPlayerActive = true;
-    });
-  }
-
-  void _handleFullScreenChanged(bool isFullScreen) {
-    if (isFullScreen) {
-      _setLandscapeOrientation();
-
-      return;
-    }
-
-    _restorePortraitOrientation();
-  }
-
-  void _setLandscapeOrientation() {
-    unawaited(
-      SystemChrome.setPreferredOrientations(const [
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight,
-      ]),
-    );
-  }
-
-  void _restorePortraitOrientation() {
-    unawaited(
-      SystemChrome.setPreferredOrientations(const [
-        DeviceOrientation.portraitUp,
-      ]),
-    );
-  }
-
-  void _closePlayer() {
-    final YoutubePlayerController? controller = _playerController;
-
-    _playerController = null;
-    _isPlayerActive = false;
-
-    if (controller != null) {
-      unawaited(controller.close());
-    }
-  }
-
-  Future<void> _showOfflineDialog() async {
+  Future<bool> _showOfflineDialog() async {
     if (!mounted || _isOfflineDialogVisible) {
-      return;
+      return false;
     }
 
     _isOfflineDialogVisible = true;
 
-    final bool? shouldRetry = await showDialog<bool>(
+    try {
+      final shouldRetry = await showDialog<bool>(
+        context: context,
+        barrierDismissible: true,
+        builder: (dialogContext) {
+          return CustomOperationResultDialog(
+            type: CustomOperationResultType.failure,
+            title: 'لا يوجد اتصال بالإنترنت',
+            message:
+                'تحقق من اتصالك بالإنترنت ثم اضغط على إعادة المحاولة لتشغيل الفيديو.',
+            actionText: 'إعادة المحاولة',
+            secondaryActionText: 'إلغاء',
+            failureIcon: Icons.wifi_off_rounded,
+            onActionPressed: () {
+              Navigator.of(dialogContext).pop(true);
+            },
+            onSecondaryActionPressed: () {
+              Navigator.of(dialogContext).pop(false);
+            },
+          );
+        },
+      );
+
+      return shouldRetry == true;
+    } finally {
+      _isOfflineDialogVisible = false;
+    }
+  }
+
+  Future<void> _showPlaybackErrorDialog() async {
+    if (!mounted) {
+      return;
+    }
+
+    await showDialog<void>(
       context: context,
-      barrierDismissible: true,
-      builder: (BuildContext dialogContext) {
+      builder: (dialogContext) {
         return CustomOperationResultDialog(
           type: CustomOperationResultType.failure,
-          title: 'لا يوجد اتصال بالإنترنت',
-          message:
-              'تحقق من اتصالك بالإنترنت ثم اضغط على إعادة المحاولة لتشغيل الفيديو.',
-          actionText: 'إعادة المحاولة',
-          secondaryActionText: 'إلغاء',
-          failureIcon: Icons.wifi_off_rounded,
+          title: 'تعذّر تشغيل الفيديو',
+          message: 'حدث خطأ أثناء تجهيز الفيديو، حاول مرة أخرى.',
+          actionText: 'حسناً',
           onActionPressed: () {
-            Navigator.of(dialogContext).pop(true);
-          },
-          onSecondaryActionPressed: () {
-            Navigator.of(dialogContext).pop(false);
+            Navigator.of(dialogContext).pop();
           },
         );
       },
     );
-
-    _isOfflineDialogVisible = false;
-
-    if (shouldRetry == true && mounted) {
-      unawaited(_activatePlayer());
-    }
   }
 
   String? _extractVideoId(String videoUrl) {
-    final String normalizedUrl = videoUrl.trim();
+    final normalizedUrl = videoUrl.trim();
 
     if (normalizedUrl.isEmpty) {
       return null;
     }
 
-    final String? convertedVideoId = YoutubePlayerController.convertUrlToId(
-      normalizedUrl,
-    );
+    final convertedId = YoutubePlayerController.convertUrlToId(normalizedUrl);
 
-    if (convertedVideoId != null && convertedVideoId.trim().isNotEmpty) {
-      return convertedVideoId.trim();
+    if (convertedId != null && convertedId.trim().isNotEmpty) {
+      return convertedId.trim();
     }
 
-    final bool isRawVideoId = RegExp(
-      r'^[a-zA-Z0-9_-]{11}$',
-    ).hasMatch(normalizedUrl);
+    final isRawVideoId = RegExp(r'^[a-zA-Z0-9_-]{11}$').hasMatch(normalizedUrl);
 
     return isRawVideoId ? normalizedUrl : null;
   }
@@ -225,110 +229,110 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
 
   @override
   Widget build(BuildContext context) {
-    final String? videoId = _extractVideoId(widget.videoUrl);
+    final videoId = _extractVideoId(widget.videoUrl);
 
     return AspectRatio(
       aspectRatio: _cardAspectRatio,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18.r),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          child: _buildContent(videoId),
+        child: videoId == null
+            ? _buildInvalidVideoView()
+            : _buildThumbnailPreview(videoId),
+      ),
+    );
+  }
+
+  Widget _buildThumbnailPreview(String videoId) {
+    final isBusy = _isOpeningVideo || _isCheckingConnection;
+
+    return Semantics(
+      button: true,
+      enabled: !isBusy,
+      label: 'تشغيل فيديو الدرس بملء الشاشة',
+      child: GestureDetector(
+        onTap: isBusy ? null : _activatePlayer,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            CachedNetworkImage(
+              imageUrl: _thumbnailUrl(videoId),
+              fit: BoxFit.cover,
+              placeholder: (context, imageUrl) {
+                return const ColoredBox(
+                  color: ColorPalette.primarySoftBackground,
+                );
+              },
+              errorWidget: (context, imageUrl, error) {
+                return const ColoredBox(
+                  color: ColorPalette.primarySoftBackground,
+                );
+              },
+            ),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    ColorPalette.textBlack.withValues(alpha: 0),
+                    ColorPalette.textBlack.withValues(alpha: 0.38),
+                  ],
+                ),
+              ),
+            ),
+            Center(
+              child: _isCheckingConnection
+                  ? _buildLoadingIndicator()
+                  : _buildPlayButton(),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildContent(String? videoId) {
-    if (videoId == null) {
-      return _buildInvalidVideoView();
-    }
-
-    if (_isPlayerActive && _playerController != null) {
-      return _buildPlayer();
-    }
-
-    return _buildThumbnailPreview(videoId);
+  Widget _buildLoadingIndicator() {
+    return Container(
+      padding: EdgeInsets.all(14.w),
+      decoration: BoxDecoration(
+        color: ColorPalette.textBlack.withValues(alpha: 0.54),
+        shape: BoxShape.circle,
+      ),
+      child: const AppLoadingIndicator(
+        color: ColorPalette.textLight,
+        size: 30,
+        strokeWidth: 3,
+        wavelength: 14,
+        waveSpeed: 10,
+      ),
+    );
   }
 
-  Widget _buildThumbnailPreview(String videoId) {
-    return GestureDetector(
-      key: const ValueKey<String>('video-thumbnail'),
-      onTap: _activatePlayer,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          CachedNetworkImage(
-            imageUrl: _thumbnailUrl(videoId),
-            fit: BoxFit.cover,
-            placeholder: (BuildContext context, String imageUrl) {
-              return const ColoredBox(
-                color: ColorPalette.primarySoftBackground,
-                child: Center(
-                  child: AppLoadingIndicator(
-                    color: ColorPalette.primary,
-                    size: 30,
-                    strokeWidth: 3,
-                    wavelength: 14,
-                    waveSpeed: 10,
-                  ),
-                ),
-              );
-            },
-            errorWidget: (BuildContext context, String imageUrl, Object error) {
-              return const ColoredBox(
-                color: ColorPalette.primarySoftBackground,
-                child: Center(
-                  child: Icon(
-                    Icons.broken_image_outlined,
-                    color: ColorPalette.primary,
-                  ),
-                ),
-              );
-            },
-          ),
-          const DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.transparent, Colors.black38],
-              ),
-            ),
-          ),
-          Center(
-            child: Container(
-              padding: EdgeInsets.all(10.w),
-              decoration: BoxDecoration(
-                color: ColorPalette.primary,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: ColorPalette.textSoftSaga,
-                  width: 3.w,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.25),
-                    blurRadius: 12.r,
-                    offset: Offset(0, 4.h),
-                  ),
-                ],
-              ),
-              child: Icon(
-                Icons.play_arrow_rounded,
-                size: 40.sp,
-                color: ColorPalette.textLight,
-              ),
-            ),
+  Widget _buildPlayButton() {
+    return Container(
+      padding: EdgeInsets.all(10.w),
+      decoration: BoxDecoration(
+        color: ColorPalette.primary,
+        shape: BoxShape.circle,
+        border: Border.all(color: ColorPalette.textSoftSaga, width: 3.w),
+        boxShadow: [
+          BoxShadow(
+            color: ColorPalette.textBlack.withValues(alpha: 0.25),
+            blurRadius: 12.r,
+            offset: Offset(0, 4.h),
           ),
         ],
+      ),
+      child: Icon(
+        Icons.play_arrow_rounded,
+        size: 40.sp,
+        color: ColorPalette.textLight,
       ),
     );
   }
 
   Widget _buildInvalidVideoView() {
     return ColoredBox(
-      key: const ValueKey<String>('invalid-video'),
       color: ColorPalette.primarySoftBackground,
       child: Center(
         child: Column(
@@ -348,27 +352,6 @@ class _LessonVideoCardState extends State<LessonVideoCard> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPlayer() {
-    return Theme(
-      key: const ValueKey<String>('youtube-player'),
-      data: Theme.of(context).copyWith(
-        colorScheme: Theme.of(
-          context,
-        ).colorScheme.copyWith(primary: ColorPalette.primary),
-      ),
-      child: Directionality(
-        textDirection: TextDirection.ltr,
-        child: YoutubePlayer(
-          controller: _playerController!,
-          aspectRatio: _cardAspectRatio,
-          backgroundColor: ColorPalette.darkCharcoal,
-          autoFullScreen: false,
-          enableFullScreenOnVerticalDrag: false,
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:al_waleed/app/dependency_injection/service_locator.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/widgets/app_error_state.dart';
@@ -11,10 +12,12 @@ import 'package:al_waleed/features/main_navigation/presentation/cubit/bottom_nav
 import 'package:al_waleed/features/main_navigation/presentation/cubit/student_grade_sync_cubit.dart';
 import 'package:al_waleed/features/main_navigation/presentation/cubit/student_grade_sync_state.dart';
 import 'package:al_waleed/features/main_navigation/presentation/widgets/custom_bottom_nav_bar.dart';
+import 'package:al_waleed/features/main_navigation/presentation/widgets/exit_app_toast.dart';
 import 'package:al_waleed/features/notifications/presentation/cubit/notification_cubit.dart';
 import 'package:al_waleed/features/profile/presentation/screens/profile_screen.dart';
 import 'package:al_waleed/features/study_notes/presentation/screens/study_notes_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MainNavigationScreen extends StatelessWidget {
@@ -45,36 +48,39 @@ class MainNavigationScreen extends StatelessWidget {
       child: BlocListener<StudentGradeSyncCubit, StudentGradeSyncState>(
         listenWhen: _shouldSyncNotificationTopic,
         listener: _syncNotificationTopic,
-        child: Scaffold(
-          extendBody: true,
-          backgroundColor: ColorPalette.background,
-          body: BlocBuilder<StudentGradeSyncCubit, StudentGradeSyncState>(
-            builder: (BuildContext context, StudentGradeSyncState gradeState) {
-              return BlocBuilder<BottomNavigationCubit, int>(
-                builder: (BuildContext context, int selectedIndex) {
-                  final int currentIndex = selectedIndex.clamp(
-                    0,
-                    _screensCount - 1,
-                  );
+        child: _MainNavigationBackHandler(
+          child: Scaffold(
+            extendBody: true,
+            backgroundColor: ColorPalette.background,
+            body: BlocBuilder<StudentGradeSyncCubit, StudentGradeSyncState>(
+              builder:
+                  (BuildContext context, StudentGradeSyncState gradeState) {
+                    return BlocBuilder<BottomNavigationCubit, int>(
+                      builder: (BuildContext context, int selectedIndex) {
+                        final int currentIndex = selectedIndex.clamp(
+                          0,
+                          _screensCount - 1,
+                        );
 
-                  return KeyedSubtree(
-                    key: ValueKey<String>(
-                      _screenKey(
-                        currentIndex: currentIndex,
-                        gradeState: gradeState,
-                      ),
-                    ),
-                    child: _buildScreen(
-                      context: context,
-                      currentIndex: currentIndex,
-                      gradeState: gradeState,
-                    ),
-                  );
-                },
-              );
-            },
+                        return KeyedSubtree(
+                          key: ValueKey<String>(
+                            _screenKey(
+                              currentIndex: currentIndex,
+                              gradeState: gradeState,
+                            ),
+                          ),
+                          child: _buildScreen(
+                            context: context,
+                            currentIndex: currentIndex,
+                            gradeState: gradeState,
+                          ),
+                        );
+                      },
+                    );
+                  },
+            ),
+            bottomNavigationBar: const CustomBottomNavBar(),
           ),
-          bottomNavigationBar: const CustomBottomNavBar(),
         ),
       ),
     );
@@ -178,6 +184,93 @@ class MainNavigationScreen extends StatelessWidget {
 
     unawaited(
       context.read<NotificationCubit>().syncGradeTopic(gradeId: state.gradeId),
+    );
+  }
+}
+
+class _MainNavigationBackHandler extends StatefulWidget {
+  const _MainNavigationBackHandler({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_MainNavigationBackHandler> createState() =>
+      _MainNavigationBackHandlerState();
+}
+
+class _MainNavigationBackHandlerState
+    extends State<_MainNavigationBackHandler> {
+  static const int _homeIndex = 2;
+  static const Duration _exitWindow = Duration(seconds: 2);
+
+  Timer? _exitTimer;
+  bool _waitingForSecondBack = false;
+  bool _isExiting = false;
+
+  void _resetExitAttempt() {
+    _exitTimer?.cancel();
+    _exitTimer = null;
+    _waitingForSecondBack = false;
+
+    dismissExitAppToast();
+  }
+
+  Future<void> _handleBack() async {
+    if (_isExiting) {
+      return;
+    }
+
+    final navigationCubit = context.read<BottomNavigationCubit>();
+
+    if (navigationCubit.state != _homeIndex) {
+      _resetExitAttempt();
+      navigationCubit.changeIndex(_homeIndex);
+      return;
+    }
+
+    if (_waitingForSecondBack) {
+      _resetExitAttempt();
+      _isExiting = true;
+
+      try {
+        await SystemNavigator.pop();
+      } finally {
+        _isExiting = false;
+      }
+
+      return;
+    }
+
+    _waitingForSecondBack = true;
+
+    _exitTimer = Timer(_exitWindow, _resetExitAttempt);
+
+    showExitAppToast(context, duration: _exitWindow);
+  }
+
+  @override
+  void dispose() {
+    _resetExitAttempt();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<BottomNavigationCubit, int>(
+      listener: (context, state) {
+        _resetExitAttempt();
+      },
+      child: PopScope<Object?>(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) {
+            return;
+          }
+
+          unawaited(_handleBack());
+        },
+        child: widget.child,
+      ),
     );
   }
 }
