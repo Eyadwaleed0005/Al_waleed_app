@@ -23,6 +23,28 @@ class AppStartupRepositoryImpl implements AppStartupRepository {
   }
 
   @override
+  Future<Either<AppErrorModel, bool>> hasCompletedOnboarding() async {
+    try {
+      final hasCompleted = await _localDataSource.hasCompletedOnboarding();
+
+      return Right(hasCompleted);
+    } catch (error) {
+      return Left(FirebaseErrorHandler.handle(error));
+    }
+  }
+
+  @override
+  Future<Either<AppErrorModel, Unit>> completeOnboarding() async {
+    try {
+      await _localDataSource.completeOnboarding();
+
+      return const Right(unit);
+    } catch (error) {
+      return Left(FirebaseErrorHandler.handle(error));
+    }
+  }
+
+  @override
   Future<Either<AppErrorModel, int>> getInstalledBuildNumber() async {
     try {
       final buildNumber = await _localDataSource.getInstalledBuildNumber();

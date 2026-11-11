@@ -5,9 +5,9 @@ import 'package:al_waleed/core/widgets/app_toast.dart';
 import 'package:al_waleed/features/app_startup/domain/entities/app_startup_destination.dart';
 import 'package:al_waleed/features/app_startup/presentation/cubit/app_startup_cubit.dart';
 import 'package:al_waleed/features/app_startup/presentation/cubit/app_startup_state.dart';
-import 'package:al_waleed/features/app_startup/presentation/widgets/splash_loading_view.dart';
-import 'package:al_waleed/features/app_startup/presentation/widgets/splash_subscription_expired_dialog.dart';
-import 'package:al_waleed/features/app_startup/presentation/widgets/splash_update_dialog.dart';
+import 'package:al_waleed/features/app_startup/presentation/widgets/splash_screen_widgets/splash_loading_view.dart';
+import 'package:al_waleed/features/app_startup/presentation/widgets/splash_screen_widgets/splash_subscription_expired_dialog.dart';
+import 'package:al_waleed/features/app_startup/presentation/widgets/splash_screen_widgets/splash_update_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +20,8 @@ class SplashScreenContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<AppStartupCubit, AppStartupState>(
       listenWhen: (previous, current) {
-        return current is AppStartupNavigateToLogin ||
+        return current is AppStartupNavigateToOnboarding ||
+            current is AppStartupNavigateToLogin ||
             current is AppStartupNavigateToHome ||
             current is AppStartupUpdateRequired ||
             current is AppStartupSubscriptionExpired;
@@ -32,6 +33,9 @@ class SplashScreenContent extends StatelessWidget {
 
   void _handleStartupState(BuildContext context, AppStartupState state) {
     switch (state) {
+      case AppStartupNavigateToOnboarding():
+        _navigateToOnboarding(context);
+
       case AppStartupNavigateToLogin():
         _navigateToLogin(context);
 
@@ -53,6 +57,12 @@ class SplashScreenContent extends StatelessWidget {
       case AppStartupLoading():
         break;
     }
+  }
+
+  void _navigateToOnboarding(BuildContext context) {
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil(RouteNames.onboardingScreen, (route) => false);
   }
 
   void _navigateToLogin(BuildContext context) {
@@ -134,7 +144,6 @@ class SplashScreenContent extends StatelessWidget {
 
     if (normalizedStoreUrl.isEmpty || uri == null || !uri.hasScheme) {
       _showStoreError(context);
-
       return;
     }
 
@@ -158,6 +167,7 @@ class SplashScreenContent extends StatelessWidget {
     if (!context.mounted) {
       return;
     }
+
     showAppToast(
       context,
       message: 'تعذر فتح متجر التطبيقات',
