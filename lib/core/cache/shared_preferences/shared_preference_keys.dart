@@ -15,6 +15,8 @@ abstract final class SharedPreferenceKeys {
 
   static const String examAttemptPrefix = 'exam_attempt_';
 
+  static const String hasCompletedOnboarding = 'has_completed_onboarding';
+
   static String examAttempt(String resultId) {
     final String normalizedResultId = resultId.trim();
 

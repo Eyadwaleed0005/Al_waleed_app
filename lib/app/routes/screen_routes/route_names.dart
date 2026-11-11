@@ -30,4 +30,6 @@ abstract final class RouteNames {
   static const String startExamScreen = '/startExamScreen';
 
   static const String resultExamScreen = '/resultExamScreen';
+
+  static const String onboardingScreen = '/onboardingScreen';
 }

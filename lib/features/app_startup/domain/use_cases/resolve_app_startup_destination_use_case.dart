@@ -21,6 +21,17 @@ class ResolveAppStartupDestinationUseCase {
       return updateDestination;
     }
 
+    final onboardingResult = await _repository.hasCompletedOnboarding();
+
+    final hasCompletedOnboarding = onboardingResult.fold(
+      (_) => false,
+      (hasCompleted) => hasCompleted,
+    );
+
+    if (!hasCompletedOnboarding) {
+      return const AppStartupOnboardingDestination();
+    }
+
     final studentId = _repository.getCurrentUserId();
 
     if (studentId == null || studentId.trim().isEmpty) {

@@ -3,9 +3,9 @@ import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_animations.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
-import 'package:al_waleed/features/app_startup/presentation/widgets/blurred_oval_shadow.dart';
-import 'package:al_waleed/features/app_startup/presentation/widgets/splash_loading_bar.dart';
-import 'package:al_waleed/features/app_startup/presentation/widgets/splash_title_text.dart';
+import 'package:al_waleed/features/app_startup/presentation/widgets/splash_screen_widgets/blurred_oval_shadow.dart';
+import 'package:al_waleed/features/app_startup/presentation/widgets/splash_screen_widgets/splash_loading_bar.dart';
+import 'package:al_waleed/features/app_startup/presentation/widgets/splash_screen_widgets/splash_title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
