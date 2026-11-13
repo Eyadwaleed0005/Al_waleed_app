@@ -4,7 +4,7 @@ import 'package:al_waleed/core/errors/handlers/firebase_error_handler.dart';
 import 'package:al_waleed/core/firebase/firestore/firestore_collections.dart';
 import 'package:al_waleed/core/firebase/firestore/firestore_fields.dart';
 import 'package:al_waleed/core/firebase/firestore/firestore_service.dart';
-import 'package:al_waleed/features/profile/data/datasource/student_profile_data_source.dart';
+import 'package:al_waleed/features/profile/data/data_source/student_profile_data_source.dart';
 import 'package:al_waleed/features/profile/data/model/profile_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

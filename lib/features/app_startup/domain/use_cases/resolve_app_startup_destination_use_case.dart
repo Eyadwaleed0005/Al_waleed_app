@@ -94,16 +94,6 @@ class ResolveAppStartupDestinationUseCase {
   AppStartupDestination _resolveStudentDestination(
     StudentAccessEntity studentAccess,
   ) {
-    final hasValidSubscription = studentAccess.hasValidSubscription(
-      currentDate: DateTime.now(),
-    );
-
-    if (!hasValidSubscription) {
-      return AppStartupSubscriptionExpiredDestination(
-        subscriptionEndAt: studentAccess.subscriptionEndAt,
-      );
-    }
-
     return AppStartupHomeDestination(gradeId: studentAccess.gradeId);
   }
 }

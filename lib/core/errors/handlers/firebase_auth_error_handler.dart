@@ -119,6 +119,20 @@ abstract final class FirebaseAuthErrorHandler {
           type: AppErrorType.server,
           isRetryable: true,
         );
+      case 'email-already-in-use':
+        return _error(
+          code: code,
+          message:
+              'البريد الإلكتروني مستخدم بالفعل. سجّل الدخول أو استخدم بريدًا آخر.',
+          type: AppErrorType.conflict,
+        );
+
+      case 'weak-password':
+        return _error(
+          code: code,
+          message: 'كلمة المرور ضعيفة. استخدم كلمة مرور أقوى.',
+          type: AppErrorType.validation,
+        );
 
       default:
         return _error(

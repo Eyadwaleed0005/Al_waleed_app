@@ -1,6 +1,5 @@
 import 'package:al_waleed/core/firebase/firestore/firestore_fields.dart';
 import 'package:al_waleed/features/profile/domain/entities/profile_entity.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileModel extends ProfileEntity {
   const ProfileModel({required super.studentProfile, required super.grade});
@@ -21,8 +20,6 @@ class ProfileModel extends ProfileEntity {
         name: studentProfile.name,
         gradeId: studentProfile.gradeId,
         email: studentProfile.email,
-        subscriptionStartAt: studentProfile.subscriptionStartAt,
-        subscriptionEndAt: studentProfile.subscriptionEndAt,
       ),
       grade: GradeEntity(name: grade.name),
     );
@@ -34,8 +31,6 @@ class StudentProfileModel extends StudentProfileEntity {
     required super.name,
     required super.gradeId,
     required super.email,
-    required super.subscriptionStartAt,
-    required super.subscriptionEndAt,
   });
 
   factory StudentProfileModel.fromFirestore(Map<String, dynamic> data) {
@@ -52,25 +47,11 @@ class StudentProfileModel extends StudentProfileEntity {
         data: data,
         field: FirestoreFields.email,
       ),
-      subscriptionStartAt: _ProfileFieldReader.requiredDate(
-        data: data,
-        field: FirestoreFields.subscriptionStartAt,
-      ),
-      subscriptionEndAt: _ProfileFieldReader.requiredDate(
-        data: data,
-        field: FirestoreFields.subscriptionEndAt,
-      ),
     );
   }
 
   StudentProfileEntity toEntity() {
-    return StudentProfileEntity(
-      name: name,
-      gradeId: gradeId,
-      email: email,
-      subscriptionStartAt: subscriptionStartAt,
-      subscriptionEndAt: subscriptionEndAt,
-    );
+    return StudentProfileEntity(name: name, gradeId: gradeId, email: email);
   }
 }
 
@@ -111,43 +92,5 @@ abstract final class _ProfileFieldReader {
     }
 
     return normalizedValue;
-  }
-
-  static DateTime requiredDate({
-    required Map<String, dynamic> data,
-    required String field,
-  }) {
-    final value = data[field];
-    final date = _parseDate(value);
-
-    if (date == null) {
-      throw const FormatException();
-    }
-
-    return date.toUtc();
-  }
-
-  static DateTime? _parseDate(Object? value) {
-    if (value is Timestamp) {
-      return value.toDate();
-    }
-
-    if (value is DateTime) {
-      return value;
-    }
-
-    if (value is int) {
-      return DateTime.fromMillisecondsSinceEpoch(value, isUtc: true);
-    }
-
-    if (value is num) {
-      return DateTime.fromMillisecondsSinceEpoch(value.toInt(), isUtc: true);
-    }
-
-    if (value is String) {
-      return DateTime.tryParse(value);
-    }
-
-    return null;
   }
 }

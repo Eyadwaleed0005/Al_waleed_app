@@ -1,14 +1,13 @@
-// the chain
-import 'package:al_waleed/features/authentication/presentation/validation/email_handler.dart';
-import 'package:al_waleed/features/authentication/presentation/validation/login_validation_handler.dart';
-import 'package:al_waleed/features/authentication/presentation/validation/password_handler.dart';
+import 'package:al_waleed/features/authentication/presentation/validation/validation__handlers/email_handler.dart';
+import 'package:al_waleed/features/authentication/presentation/validation/validation__handlers/password_handler.dart';
+import 'validation_handler.dart';
 
 class LoginValidation {
   LoginValidation._();
 
-  static final LoginValidationHandler _chain = _createChain();
+  static final ValidationHandler _chain = _createChain();
 
-  static LoginValidationHandler _createChain() {
+  static ValidationHandler _createChain() {
     final emailHandler = EmailHandler();
     final passwordHandler = PasswordHandler();
 
@@ -19,19 +18,13 @@ class LoginValidation {
 
   static String? email(String? value) {
     return _chain.handle(
-      LoginValidationRequest(
-        field: LoginValidationField.email,
-        value: value ?? '',
-      ),
+      ValidationRequest(field: ValidationField.email, value: value ?? ''),
     );
   }
 
   static String? password(String? value) {
     return _chain.handle(
-      LoginValidationRequest(
-        field: LoginValidationField.password,
-        value: value ?? '',
-      ),
+      ValidationRequest(field: ValidationField.password, value: value ?? ''),
     );
   }
 }
