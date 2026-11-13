@@ -1,3 +1,4 @@
+import 'package:al_waleed/app/routes/app_images_routes.dart';
 import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/core/widgets/custom_operation_result_dialog.dart';
 import 'package:al_waleed/features/authentication/presentation/cubit/logout_cubit/logout_cubit.dart';
@@ -61,7 +62,10 @@ class ProfileScreenContent extends StatelessWidget {
           }
 
           if (state is ProfileSuccess) {
-            return ProfileSuccessView(profile: state.profile);
+            return ProfileSuccessView(
+              profile: state.profile,
+              imageAsset: AppImage().profileAvatar,
+            );
           }
 
           return const ProfileLoadingView();

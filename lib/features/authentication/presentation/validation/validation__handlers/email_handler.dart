@@ -1,14 +1,14 @@
-import 'package:al_waleed/features/authentication/presentation/validation/login_validation_handler.dart';
+import '../validation_handler.dart';
 
-class EmailHandler extends LoginValidationHandler {
+class EmailHandler extends ValidationHandler {
   static final RegExp _emailRegExp = RegExp(
     r'^[a-zA-Z0-9._%+-]+@'
     r'[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
   );
 
   @override
-  String? handle(LoginValidationRequest request) {
-    if (request.field != LoginValidationField.email) {
+  String? handle(ValidationRequest request) {
+    if (request.field != ValidationField.email) {
       return super.handle(request);
     }
 

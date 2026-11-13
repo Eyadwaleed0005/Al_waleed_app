@@ -1,8 +1,8 @@
 import 'package:al_waleed/core/firebase/firestore/firestore_service.dart';
 
 // Data sources
-import 'package:al_waleed/features/profile/data/datasource/firebase_student_profile_data_source.dart';
-import 'package:al_waleed/features/profile/data/datasource/student_profile_data_source.dart';
+import 'package:al_waleed/features/profile/data/data_source/firebase_student_profile_data_source.dart';
+import 'package:al_waleed/features/profile/data/data_source/student_profile_data_source.dart';
 
 // Repository implementation
 import 'package:al_waleed/features/profile/data/repositories/student_profile_repositoy_impl.dart';

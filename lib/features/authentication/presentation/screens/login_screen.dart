@@ -1,4 +1,4 @@
-import 'package:al_waleed/features/authentication/presentation/widgets/login_screen_contant.dart';
+import 'package:al_waleed/features/authentication/presentation/widgets/login_screen_widgets/login_screen_contant.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {

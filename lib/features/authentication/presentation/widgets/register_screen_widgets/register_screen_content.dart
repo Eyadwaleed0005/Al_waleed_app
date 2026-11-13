@@ -1,18 +1,19 @@
+import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/core/helper/app_system_ui.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_animations.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:al_waleed/core/widgets/custom_app_card.dart';
-import 'package:al_waleed/features/authentication/presentation/widgets/login_background.dart';
-import 'package:al_waleed/features/authentication/presentation/widgets/login_form.dart';
-import 'package:al_waleed/features/authentication/presentation/widgets/login_logo.dart';
+import 'package:al_waleed/features/authentication/presentation/widgets/login_screen_widgets/login_background.dart';
+import 'package:al_waleed/features/authentication/presentation/widgets/login_screen_widgets/login_logo.dart';
+import 'package:al_waleed/features/authentication/presentation/widgets/register_screen_widgets/register_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class LoginScreenContant extends StatelessWidget {
-  const LoginScreenContant({super.key});
+class RegisterScreenContent extends StatelessWidget {
+  const RegisterScreenContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,19 +50,31 @@ class LoginScreenContant extends StatelessWidget {
                 delay: 900,
                 child: CustomAppCard(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        'أهلاً بك من جديد',
+                        'إنشاء حساب جديد',
                         style: AppTextStyle.font20TextBlackSemiBoldKufam(),
+                        textAlign: TextAlign.center,
                       ),
                       verticalSpace(8),
                       Text(
-                        'سجّل دخولك للوصول إلى دروسك واختباراتك.',
+                        'أدخل بياناتك لإنشاء حسابك على منصة الوليد.',
                         style: AppTextStyle.font14TextSecondaryRegularTajawal(),
                         textAlign: TextAlign.center,
                       ),
                       verticalSpace(24),
-                      const LoginForm(),
+                      RegisterForm(
+                        onRegistered: () {
+                          Navigator.of(
+                            context,
+                            rootNavigator: true,
+                          ).pushNamedAndRemoveUntil(
+                            RouteNames.mainNavigationScreen,
+                            (route) => false,
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),

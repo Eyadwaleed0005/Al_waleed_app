@@ -1,16 +1,15 @@
 import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
+import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:al_waleed/core/widgets/custom_button.dart';
 import 'package:al_waleed/core/widgets/custom_operation_result_dialog.dart';
 import 'package:al_waleed/core/widgets/custom_text_form_field.dart';
 import 'package:al_waleed/features/authentication/presentation/cubit/login_cubit/login_cubit.dart';
 import 'package:al_waleed/features/authentication/presentation/validation/login_validation.dart';
-import 'package:al_waleed/features/authentication/presentation/widgets/create_account_whatsapp_text.dart';
+import 'package:al_waleed/features/authentication/presentation/widgets/login_screen_widgets/forgot_password_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'forgot_password_button.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -23,6 +22,7 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
   bool _isObscure = true;
 
   @override
@@ -33,6 +33,8 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _submit(BuildContext context) {
+    if (context.read<LoginCubit>().state is LoginLoading) return;
+
     if (_formKey.currentState?.validate() ?? false) {
       FocusScope.of(context).unfocus();
 
@@ -91,8 +93,7 @@ class _LoginFormState extends State<LoginForm> {
         }
       },
       builder: (context, state) {
-        final bool isLoading = state is LoginLoading;
-
+        final isLoading = state is LoginLoading;
         return Form(
           key: _formKey,
           child: Column(
@@ -131,7 +132,20 @@ class _LoginFormState extends State<LoginForm> {
               verticalSpace(16),
               ForgotPasswordButton(isLoading: isLoading),
               verticalSpace(8),
-              CreateAccountWhatsAppText(isLoading: isLoading),
+              TextButton(
+                onPressed: isLoading
+                    ? null
+                    : () {
+                        Navigator.of(
+                          context,
+                        ).pushNamed(RouteNames.registerScreen);
+                      },
+                child: Text(
+                  'ليس لديك حساب؟ إنشاء حساب',
+                  style: AppTextStyle.font14TextSecondaryRegularTajawal()
+                      .copyWith(color: ColorPalette.primary),
+                ),
+              ),
             ],
           ),
         );

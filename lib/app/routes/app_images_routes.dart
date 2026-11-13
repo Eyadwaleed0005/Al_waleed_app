@@ -32,6 +32,7 @@ class AppImage {
 
   // ===== Lessons =====
   late final String lessonTestTubes = '${baseImages}lesson_test_tubes.png';
+  late final String profileAvatar = '${baseImages}avatar_sage.svg';
 
   // ===== Navigation Icons =====
   late final String homeIcon = '${baseIcons}Home.svg';
