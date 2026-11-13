@@ -26,9 +26,21 @@ abstract final class LessonsRoutes {
           );
         }
 
-        return MaterialPageRoute<void>(
+        return PageRouteBuilder<void>(
           settings: settings,
-          builder: (_) => LessonDetailsScreen(lesson: lesson),
+          transitionDuration: const Duration(milliseconds: 450),
+          reverseTransitionDuration: const Duration(milliseconds: 450),
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return LessonDetailsScreen(lesson: lesson);
+          },
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation.drive(
+                CurveTween(curve: Curves.easeInOutCubic),
+              ),
+              child: child,
+            );
+          },
         );
 
       case RouteNames.lessonDetailsPdf:
@@ -58,7 +70,9 @@ abstract final class LessonsRoutes {
     return MaterialPageRoute<void>(
       settings: settings,
       builder: (_) {
-        return Scaffold(body: Center(child: Text(message)));
+        return Scaffold(
+          body: Center(child: Text(message, textDirection: TextDirection.rtl)),
+        );
       },
     );
   }

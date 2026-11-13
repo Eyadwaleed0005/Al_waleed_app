@@ -45,6 +45,7 @@ abstract final class FirestoreFields {
 
   static const String youtubeUrl = 'youtubeUrl';
   static const String pdfUrl = 'pdfUrl';
+  static const String isFree = 'isFree';
 
   // Study notes PDF
 
