@@ -128,6 +128,27 @@ export const startExamAttempt = onCall(
 
       const transactionResult = await firestore.runTransaction(
         async (transaction) => {
+          const studentSnapshot = await transaction.get(
+            firestore
+              .collection(examCollections.students)
+              .doc(studentId),
+          );
+
+          if (!studentSnapshot.exists) {
+            throw new HttpsError(
+              "not-found",
+              "The student account does not exist.",
+            );
+          }
+
+          if (studentSnapshot.get("isDeleting") === true) {
+            throw new HttpsError(
+              "failed-precondition",
+              "The student account is being deleted.",
+              {reason: "account-deletion-in-progress"},
+            );
+          }
+
           const currentExamSnapshot = await transaction.get(
             examReference,
           );

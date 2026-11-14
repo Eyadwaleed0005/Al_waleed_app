@@ -13,6 +13,7 @@ class LessonModel extends LessonEntity {
     required super.pdfStoragePath,
     required super.pdfFileName,
     required super.pdfFileSize,
+    super.isFree = true,
     super.createdAt,
     super.updatedAt,
   });
@@ -27,6 +28,7 @@ class LessonModel extends LessonEntity {
       description: map[FirestoreFields.description] as String? ?? '',
       gradeId: map[FirestoreFields.gradeId] as String? ?? '',
       isPublished: map[FirestoreFields.isPublished] as bool? ?? false,
+      isFree: map[FirestoreFields.isFree] as bool? ?? true,
       youtubeUrl: map[FirestoreFields.youtubeUrl] as String? ?? '',
       pdfStoragePath: map[FirestoreFields.pdfStoragePath] as String? ?? '',
       pdfFileName: map[FirestoreFields.pdfFileName] as String? ?? '',

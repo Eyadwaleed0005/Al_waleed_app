@@ -2,29 +2,38 @@ import 'dart:async';
 
 import 'package:al_waleed/core/errors/error_model/app_error_model.dart';
 import 'package:al_waleed/features/lessons/domain/entities/lesson_entity.dart';
+import 'package:al_waleed/features/lessons/domain/use_case/check_lesson_access_use_case.dart';
 import 'package:al_waleed/features/lessons/domain/use_case/stream_lessons_use_case.dart';
 import 'package:al_waleed/features/lessons/presentation/cubit/lessons_state.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LessonsCubit extends Cubit<LessonsState> {
-  final StreamLessonsUseCase _streamLessonsUseCase;
+  LessonsCubit({
+    required StreamLessonsUseCase streamLessonsUseCase,
+    required CheckLessonAccessUseCase checkLessonAccessUseCase,
+  }) : _streamLessonsUseCase = streamLessonsUseCase,
+       _checkLessonAccessUseCase = checkLessonAccessUseCase,
+       super(const LessonsInitial());
 
-  LessonsCubit({required StreamLessonsUseCase streamLessonsUseCase})
-    : _streamLessonsUseCase = streamLessonsUseCase,
-      super(const LessonsInitial());
+  final StreamLessonsUseCase _streamLessonsUseCase;
+  final CheckLessonAccessUseCase _checkLessonAccessUseCase;
 
   StreamSubscription<Either<AppErrorModel, List<LessonEntity>>>?
   _lessonsSubscription;
 
   bool _isInitializing = false;
   bool _isClosing = false;
+  bool _showFree = true;
+  bool? _hasValidSubscription;
 
   List<LessonEntity> _allLessons = const <LessonEntity>[];
 
   String _query = '';
 
   String get query => _query;
+
+  bool get showFree => _showFree;
 
   bool get _canEmit => !_isClosing && !isClosed;
 
@@ -40,10 +49,20 @@ class LessonsCubit extends Cubit<LessonsState> {
 
       _allLessons = const <LessonEntity>[];
       _query = '';
+      _showFree = true;
+      _hasValidSubscription = null;
 
       emit(const LessonsLoading());
 
+      final subscriptionResult = await _checkLessonAccessUseCase
+          .checkSubscription();
+
       if (!_canEmit) return;
+
+      _hasValidSubscription = subscriptionResult.fold<bool?>(
+        (_) => null,
+        (isActive) => isActive,
+      );
 
       _watchLessons();
     } finally {
@@ -53,6 +72,48 @@ class LessonsCubit extends Cubit<LessonsState> {
 
   Future<void> retry() {
     return initialize();
+  }
+
+  void selectAccessType(bool showFree) {
+    if (!_canEmit || state is! LessonsDataSuccess) return;
+
+    if (_showFree == showFree) return;
+
+    _showFree = showFree;
+
+    _emitFilteredLessons();
+  }
+
+  void search(String query) {
+    if (!_canEmit || state is! LessonsDataSuccess) return;
+
+    final normalizedQuery = query.trim();
+
+    if (normalizedQuery == _query) return;
+
+    _query = normalizedQuery;
+
+    _emitFilteredLessons();
+  }
+
+  Future<Either<AppErrorModel, bool>> checkLessonAccess({
+    required LessonEntity lesson,
+  }) async {
+    final result = await _checkLessonAccessUseCase(lesson: lesson);
+
+    if (!_canEmit || lesson.isFree) {
+      return result;
+    }
+
+    result.fold((_) {}, (isActive) {
+      _hasValidSubscription = isActive;
+
+      if (state is LessonsDataSuccess) {
+        _emitFilteredLessons();
+      }
+    });
+
+    return result;
   }
 
   void _watchLessons() {
@@ -65,17 +126,6 @@ class LessonsCubit extends Cubit<LessonsState> {
     if (!_canEmit) return;
 
     result.fold(_emitFailure, _emitLessons);
-  }
-
-  void search(String query) {
-    if (!_canEmit) return;
-
-    final normalizedQuery = query.trim();
-    if (normalizedQuery == _query) return;
-
-    _query = normalizedQuery;
-
-    _emitFilteredLessons();
   }
 
   void _emitLessons(List<LessonEntity> lessons) {
@@ -94,14 +144,21 @@ class LessonsCubit extends Cubit<LessonsState> {
   void _emitFilteredLessons() {
     if (!_canEmit) return;
 
-    final filtered = _query.isEmpty
-        ? _allLessons
-        : _allLessons.where(_matchesQuery).toList(growable: false);
+    final filtered = _allLessons
+        .where((lesson) {
+          final matchesAccessType = lesson.isFree == _showFree;
+          final matchesSearch = _query.isEmpty || _matchesQuery(lesson);
+
+          return matchesAccessType && matchesSearch;
+        })
+        .toList(growable: false);
 
     emit(
       LessonsDataSuccess(
         lessons: List<LessonEntity>.unmodifiable(filtered),
         query: _query,
+        showFree: _showFree,
+        hasValidSubscription: _hasValidSubscription,
       ),
     );
   }

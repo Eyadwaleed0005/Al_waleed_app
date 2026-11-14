@@ -31,27 +31,39 @@ class LessonDetailsContentScreen extends StatelessWidget {
                 showBackButton: true,
                 backgroundColor: Colors.transparent,
               ),
-
               verticalSpace(15),
-
               if (lesson.hasYoutubeVideo) ...[
-                LessonVideoCard(videoUrl: lesson.youtubeUrl),
+                Hero(
+                  tag: 'lesson-thumbnail-${lesson.lessonId}',
+                  flightShuttleBuilder:
+                      (
+                        flightContext,
+                        animation,
+                        flightDirection,
+                        fromHeroContext,
+                        toHeroContext,
+                      ) {
+                        final thumbnailHero =
+                            (flightDirection == HeroFlightDirection.push
+                                    ? fromHeroContext.widget
+                                    : toHeroContext.widget)
+                                as Hero;
+
+                        return thumbnailHero.child;
+                      },
+                  child: LessonVideoCard(videoUrl: lesson.youtubeUrl),
+                ),
                 verticalSpace(20),
               ],
-
               LessonOverviewCard(description: lesson.description),
-
               verticalSpace(76),
-
               Text(
                 'محتوى الدرس',
                 textAlign: TextAlign.right,
                 textDirection: TextDirection.rtl,
                 style: AppTextStyle.font20TextPrimarySemiBoldKufam(),
               ),
-
               verticalSpace(14),
-
               LessonMaterialTile(
                 title: 'ملف الدرس',
                 subtitle: _getPdfSubtitle(),
@@ -62,9 +74,7 @@ class LessonDetailsContentScreen extends StatelessWidget {
                   ).pushNamed(RouteNames.lessonDetailsPdf, arguments: lesson);
                 },
               ),
-
               verticalSpace(14),
-
               LessonMaterialTile(
                 title: lesson.title,
                 subtitle: 'اختبار تدريبي',
@@ -77,7 +87,6 @@ class LessonDetailsContentScreen extends StatelessWidget {
                   );
                 },
               ),
-
               verticalSpace(28),
             ],
           ),
@@ -90,10 +99,13 @@ class LessonDetailsContentScreen extends StatelessWidget {
     if (!lesson.hasPdfFile) {
       return 'لا يوجد ملف متاح حاليًا';
     }
+
     final fileName = lesson.pdfFileName.trim();
+
     if (fileName.isEmpty) {
       return 'ملف PDF';
     }
+
     return 'ملف PDF · $fileName';
   }
 }

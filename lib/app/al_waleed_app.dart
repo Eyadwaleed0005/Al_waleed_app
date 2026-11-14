@@ -46,6 +46,7 @@ class AlWaleedApp extends StatelessWidget {
             navigatorKey: navigatorKey,
             title: 'الوليد',
             debugShowCheckedModeBanner: false,
+            // ignore: deprecated_member_use
             useInheritedMediaQuery: true,
             locale: DevicePreviewService.locale(context),
             theme: ThemeData(),

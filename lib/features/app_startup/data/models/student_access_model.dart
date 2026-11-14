@@ -7,7 +7,7 @@ class StudentAccessModel extends StudentAccessEntity {
     required super.studentId,
     required super.gradeId,
     required super.isActive,
-    required super.subscriptionEndAt,
+    super.subscriptionEndAt,
   });
 
   factory StudentAccessModel.fromFirestore({
@@ -18,7 +18,7 @@ class StudentAccessModel extends StudentAccessEntity {
       studentId: _readRequiredDocumentId(documentId),
       gradeId: _readRequiredString(data: data, field: FirestoreFields.gradeId),
       isActive: _readRequiredBool(data: data, field: FirestoreFields.isActive),
-      subscriptionEndAt: _readRequiredDateTime(
+      subscriptionEndAt: _readNullableDateTime(
         data: data,
         field: FirestoreFields.subscriptionEndAt,
       ),
@@ -70,11 +70,15 @@ class StudentAccessModel extends StudentAccessEntity {
     return value;
   }
 
-  static DateTime _readRequiredDateTime({
+  static DateTime? _readNullableDateTime({
     required Map<String, dynamic> data,
     required String field,
   }) {
     final value = data[field];
+
+    if (value == null) {
+      return null;
+    }
 
     if (value is Timestamp) {
       return value.toDate().toUtc();
@@ -82,10 +86,6 @@ class StudentAccessModel extends StudentAccessEntity {
 
     if (value is DateTime) {
       return value.toUtc();
-    }
-
-    if (value is int) {
-      return DateTime.fromMillisecondsSinceEpoch(value, isUtc: true);
     }
 
     if (value is num) {
@@ -100,6 +100,6 @@ class StudentAccessModel extends StudentAccessEntity {
       }
     }
 
-    throw FormatException('Missing or invalid field: $field');
+    throw FormatException('Invalid date field: $field');
   }
 }

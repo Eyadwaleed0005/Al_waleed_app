@@ -1,8 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
-  // String
-
   static Future<void> saveString({
     required String key,
     required String value,
@@ -18,8 +16,6 @@ class SharedPreferencesHelper {
     return prefs.getString(key);
   }
 
-  // Int
-
   static Future<void> saveInt({required String key, required int value}) async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -32,15 +28,17 @@ class SharedPreferencesHelper {
     return prefs.getInt(key);
   }
 
-  // Bool
-
   static Future<void> saveBool({
     required String key,
     required bool value,
   }) async {
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setBool(key, value);
+    final isSaved = await prefs.setBool(key, value);
+
+    if (!isSaved) {
+      throw StateError('Failed to save boolean preference: $key');
+    }
   }
 
   static Future<bool?> getBool({required String key}) async {
@@ -48,8 +46,6 @@ class SharedPreferencesHelper {
 
     return prefs.getBool(key);
   }
-
-  // Double
 
   static Future<void> saveDouble({
     required String key,
@@ -66,15 +62,11 @@ class SharedPreferencesHelper {
     return prefs.getDouble(key);
   }
 
-  // Remove
-
   static Future<void> removeData({required String key}) async {
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.remove(key);
   }
-
-  // Contains
 
   static Future<bool> containsKey({required String key}) async {
     final prefs = await SharedPreferences.getInstance();
@@ -82,11 +74,26 @@ class SharedPreferencesHelper {
     return prefs.containsKey(key);
   }
 
-  // Clear all
-
   static Future<void> clearAll() async {
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.clear();
+  }
+
+  static Future<void> clearAllExcept({required Set<String> keysToKeep}) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final keysToRemove = prefs
+        .getKeys()
+        .where((key) => !keysToKeep.contains(key))
+        .toList();
+
+    for (final key in keysToRemove) {
+      final removed = await prefs.remove(key);
+
+      if (!removed) {
+        throw StateError('Failed to remove preference: $key');
+      }
+    }
   }
 }

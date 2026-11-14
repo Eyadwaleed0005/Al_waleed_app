@@ -9,15 +9,11 @@ class StudentProfileEntity {
   final String name;
   final String gradeId;
   final String email;
-  final DateTime subscriptionStartAt;
-  final DateTime subscriptionEndAt;
 
   const StudentProfileEntity({
     required this.name,
     required this.gradeId,
     required this.email,
-    required this.subscriptionStartAt,
-    required this.subscriptionEndAt,
   });
 }
 

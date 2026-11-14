@@ -33,3 +33,7 @@ final class AppStartupSubscriptionExpired extends AppStartupState {
 
   final AppStartupSubscriptionExpiredDestination destination;
 }
+
+final class AppStartupNavigateToOnboarding extends AppStartupState {
+  const AppStartupNavigateToOnboarding();
+}

@@ -8,6 +8,10 @@ final class AppStartupLoginDestination extends AppStartupDestination {
   const AppStartupLoginDestination();
 }
 
+final class AppStartupOnboardingDestination extends AppStartupDestination {
+  const AppStartupOnboardingDestination();
+}
+
 final class AppStartupHomeDestination extends AppStartupDestination {
   final String gradeId;
 

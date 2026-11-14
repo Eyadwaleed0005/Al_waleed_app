@@ -17,7 +17,7 @@ import 'package:al_waleed/features/exams/presentation/widgets/start_exam_widgets
 import 'package:al_waleed/features/exams/presentation/widgets/start_exam_widgets/finish_exam_confirmation_dialog.dart';
 import 'package:al_waleed/features/exams/presentation/widgets/start_exam_widgets/start_exam_progress_header.dart';
 import 'package:al_waleed/features/exams/presentation/widgets/start_exam_widgets/start_exam_timer.dart';
-import 'package:al_waleed/features/profile/presentation/widgets/profile_background.dart';
+import 'package:al_waleed/features/profile/presentation/widgets/profile_widgets_screen/profile_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

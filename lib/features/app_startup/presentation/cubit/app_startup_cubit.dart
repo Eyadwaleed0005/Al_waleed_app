@@ -4,8 +4,12 @@ import 'package:al_waleed/features/app_startup/presentation/cubit/app_startup_st
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppStartupCubit extends Cubit<AppStartupState> {
-  AppStartupCubit({required this._resolveAppStartupDestinationUseCase})
-    : super(const AppStartupInitial());
+  AppStartupCubit({
+    required ResolveAppStartupDestinationUseCase
+    resolveAppStartupDestinationUseCase,
+  }) : _resolveAppStartupDestinationUseCase =
+           resolveAppStartupDestinationUseCase,
+       super(const AppStartupInitial());
 
   final ResolveAppStartupDestinationUseCase
   _resolveAppStartupDestinationUseCase;
@@ -89,6 +93,9 @@ class AppStartupCubit extends Cubit<AppStartupState> {
 
   void _emitDestination(AppStartupDestination destination) {
     switch (destination) {
+      case AppStartupOnboardingDestination():
+        emit(const AppStartupNavigateToOnboarding());
+
       case AppStartupLoginDestination():
         emit(const AppStartupNavigateToLogin());
 

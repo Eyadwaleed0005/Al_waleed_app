@@ -21,6 +21,17 @@ class ResolveAppStartupDestinationUseCase {
       return updateDestination;
     }
 
+    final onboardingResult = await _repository.hasCompletedOnboarding();
+
+    final hasCompletedOnboarding = onboardingResult.fold(
+      (_) => false,
+      (hasCompleted) => hasCompleted,
+    );
+
+    if (!hasCompletedOnboarding) {
+      return const AppStartupOnboardingDestination();
+    }
+
     final studentId = _repository.getCurrentUserId();
 
     if (studentId == null || studentId.trim().isEmpty) {
@@ -83,16 +94,6 @@ class ResolveAppStartupDestinationUseCase {
   AppStartupDestination _resolveStudentDestination(
     StudentAccessEntity studentAccess,
   ) {
-    final hasValidSubscription = studentAccess.hasValidSubscription(
-      currentDate: DateTime.now(),
-    );
-
-    if (!hasValidSubscription) {
-      return AppStartupSubscriptionExpiredDestination(
-        subscriptionEndAt: studentAccess.subscriptionEndAt,
-      );
-    }
-
     return AppStartupHomeDestination(gradeId: studentAccess.gradeId);
   }
 }
