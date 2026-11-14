@@ -1,20 +1,29 @@
 import 'package:al_waleed/core/firebase/firestore/firestore_service.dart';
+import 'package:al_waleed/features/authentication/data/data_source/cache/logout_local_data_source.dart';
+import 'package:al_waleed/features/profile/data/data_source/delete_account_local_data_source.dart';
+import 'package:al_waleed/features/profile/data/data_source/delete_account_remote_data_source.dart';
+import 'package:al_waleed/features/profile/data/data_source/device_delete_account_local_data_source.dart';
+import 'package:al_waleed/features/profile/data/data_source/firebase_delete_account_remote_data_source.dart';
 import 'package:al_waleed/features/profile/data/data_source/firebase_my_subscription_remote_data_source.dart';
 import 'package:al_waleed/features/profile/data/data_source/firebase_personal_info_remote_data_source.dart';
 import 'package:al_waleed/features/profile/data/data_source/firebase_student_profile_data_source.dart';
 import 'package:al_waleed/features/profile/data/data_source/my_subscription_remote_data_source.dart';
 import 'package:al_waleed/features/profile/data/data_source/personal_info_remote_data_source.dart';
 import 'package:al_waleed/features/profile/data/data_source/student_profile_data_source.dart';
+import 'package:al_waleed/features/profile/data/repositories/delete_account_repository_impl.dart';
 import 'package:al_waleed/features/profile/data/repositories/my_subscription_repository_impl.dart';
 import 'package:al_waleed/features/profile/data/repositories/personal_info_repository_impl.dart';
 import 'package:al_waleed/features/profile/data/repositories/student_profile_repositoy_impl.dart';
+import 'package:al_waleed/features/profile/domain/repositories/delete_account_repository.dart';
 import 'package:al_waleed/features/profile/domain/repositories/my_subscription_repository.dart';
 import 'package:al_waleed/features/profile/domain/repositories/personal_info_repository.dart';
 import 'package:al_waleed/features/profile/domain/repositories/student_profile_repository.dart';
+import 'package:al_waleed/features/profile/domain/usecase/delete_account_use_case.dart';
 import 'package:al_waleed/features/profile/domain/usecase/get_personal_info_use_case.dart';
 import 'package:al_waleed/features/profile/domain/usecase/stream_my_subscription_use_case.dart';
 import 'package:al_waleed/features/profile/domain/usecase/stream_student_profile_use_case.dart';
 import 'package:al_waleed/features/profile/domain/usecase/update_personal_info_use_case.dart';
+import 'package:al_waleed/features/profile/presentation/cubit/delete_account_cubit/delete_account_cubit.dart';
 import 'package:al_waleed/features/profile/presentation/cubit/my_subscription_cubit/my_subscription_cubit.dart';
 import 'package:al_waleed/features/profile/presentation/cubit/personal_info_cubit/personal_info_cubit.dart';
 import 'package:al_waleed/features/profile/presentation/cubit/profile_cubit/profile_cubit.dart';
@@ -51,6 +60,20 @@ void _registerDataSources(GetIt getIt) {
       firestoreService: getIt<FirestoreService>(),
     ),
   );
+
+  getIt.registerLazySingleton<DeleteAccountRemoteDataSource>(
+    () => FirebaseDeleteAccountRemoteDataSource(
+      firebaseAuth: getIt<FirebaseAuth>(),
+      firebaseFunctions: getIt<FirebaseFunctions>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<DeleteAccountLocalDataSource>(
+    () => DeviceDeleteAccountLocalDataSource(
+      firebaseAuth: getIt<FirebaseAuth>(),
+      logoutLocalDataSource: getIt<LogoutLocalDataSource>(),
+    ),
+  );
 }
 
 void _registerRepositories(GetIt getIt) {
@@ -69,6 +92,13 @@ void _registerRepositories(GetIt getIt) {
   getIt.registerLazySingleton<MySubscriptionRepository>(
     () => MySubscriptionRepositoryImpl(
       remoteDataSource: getIt<MySubscriptionRemoteDataSource>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<DeleteAccountRepository>(
+    () => DeleteAccountRepositoryImpl(
+      remoteDataSource: getIt<DeleteAccountRemoteDataSource>(),
+      localDataSource: getIt<DeleteAccountLocalDataSource>(),
     ),
   );
 }
@@ -94,6 +124,10 @@ void _registerUseCases(GetIt getIt) {
       repository: getIt<MySubscriptionRepository>(),
     ),
   );
+
+  getIt.registerLazySingleton<DeleteAccountUseCase>(
+    () => DeleteAccountUseCase(repository: getIt<DeleteAccountRepository>()),
+  );
 }
 
 void _registerCubits(GetIt getIt) {
@@ -114,5 +148,10 @@ void _registerCubits(GetIt getIt) {
     () => MySubscriptionCubit(
       streamMySubscriptionUseCase: getIt<StreamMySubscriptionUseCase>(),
     ),
+  );
+
+  getIt.registerFactory<DeleteAccountCubit>(
+    () =>
+        DeleteAccountCubit(deleteAccountUseCase: getIt<DeleteAccountUseCase>()),
   );
 }

@@ -33,20 +33,30 @@ class _StudyNotesScreenContentState extends State<StudyNotesScreenContent> {
 
     _isOpeningNote = true;
 
-    final cubit = context.read<StudyNotesCubit>();
-
     try {
-      final result = await cubit.checkStudyNoteAccess(studyNote: note);
+      final result = await context.read<StudyNotesCubit>().checkStudyNoteAccess(
+        studyNote: note,
+      );
 
       if (!mounted) return;
 
       await result.fold<Future<void>>(
         (error) {
-          return _showAccessError(error.message);
+          return _showAccessDialog(
+            title: 'تعذر التحقق من الاشتراك',
+            message: error.message,
+            icon: Icons.error_outline_rounded,
+          );
         },
         (canAccess) async {
           if (!canAccess) {
-            await _showSubscriptionDialog();
+            await _showAccessDialog(
+              title: 'المحتوى غير متاح لحسابك',
+              message:
+                  'هذه المذكرة متاحة للحسابات ذات الاشتراك النشط.\n'
+                  'يمكنك متابعة المذكرات المجانية المتاحة.',
+              icon: Icons.lock_outline_rounded,
+            );
             return;
           }
 
@@ -60,52 +70,26 @@ class _StudyNotesScreenContentState extends State<StudyNotesScreenContent> {
     }
   }
 
-  Future<void> _showAccessError(String message) async {
+  Future<void> _showAccessDialog({
+    required String title,
+    required String message,
+    required IconData icon,
+  }) async {
     await showDialog<void>(
-      context: context,
-      builder: (_) {
-        return CustomOperationResultDialog(
-          type: CustomOperationResultType.failure,
-          title: 'تعذر التحقق من الاشتراك',
-          message: message,
-          actionText: 'حسنًا',
-        );
-      },
-    );
-  }
-
-  Future<void> _showSubscriptionDialog() async {
-    final openSubscription = await showDialog<bool>(
       context: context,
       builder: (dialogContext) {
         return CustomOperationResultDialog(
           type: CustomOperationResultType.failure,
-          failureIcon: Icons.lock_outline_rounded,
-          title: 'هذه المذكرة تحتاج إلى اشتراك',
-          message:
-              'لمشاهدة هذه المذكرة، '
-              'تواصل مع المعلّم لتفعيل اشتراكك أو تجديده.',
-          actionText: 'تفعيل الاشتراك',
-          secondaryActionText: 'إلغاء',
+          failureIcon: icon,
+          title: title,
+          message: message,
+          actionText: 'حسنًا',
           onActionPressed: () {
-            Navigator.of(dialogContext).pop(true);
-          },
-          onSecondaryActionPressed: () {
-            Navigator.of(dialogContext).pop(false);
+            Navigator.of(dialogContext).pop();
           },
         );
       },
     );
-
-    if (!mounted || openSubscription != true) return;
-
-    final cubit = context.read<StudyNotesCubit>();
-
-    await Navigator.of(context).pushNamed(RouteNames.mySubscriptionScreen);
-
-    if (!mounted || cubit.isClosed) return;
-
-    await cubit.refreshSubscription();
   }
 
   @override

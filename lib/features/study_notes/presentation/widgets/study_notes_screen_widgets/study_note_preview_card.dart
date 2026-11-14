@@ -180,12 +180,11 @@ class StudyNotePreviewCard extends StatelessWidget {
                 child: Text(
                   _accessLabel,
                   textDirection: TextDirection.rtl,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                   style: AppTextStyle.font12TextSecondaryRegularTajawal()
                       .copyWith(
                         color: ColorPalette.textLight,
                         fontWeight: FontWeight.w700,
+                        height: 1.5,
                       ),
                 ),
               ),
@@ -196,7 +195,7 @@ class StudyNotePreviewCard extends StatelessWidget {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 9.h),
           decoration: BoxDecoration(
-            color: _isLocked ? ColorPalette.highlight : ColorPalette.paleSage,
+            color: ColorPalette.paleSage,
             borderRadius: BorderRadius.circular(10.r),
           ),
           child: Row(
@@ -204,7 +203,7 @@ class StudyNotePreviewCard extends StatelessWidget {
             textDirection: TextDirection.rtl,
             children: [
               Text(
-                _isLocked ? 'تفعيل الاشتراك' : 'عرض المذكرة',
+                'عرض المذكرة',
                 textDirection: TextDirection.rtl,
                 style: AppTextStyle.font15TextPrimaryBoldTajawal(),
               ),

@@ -170,9 +170,9 @@ class LessonPreviewCard extends StatelessWidget {
     } else if (hasValidSubscription == true) {
       label = 'متاح باشتراكك';
     } else if (hasValidSubscription == false) {
-      label = 'تفعيل الاشتراك';
+      label = 'يتطلب اشتراكًا نشطًا';
     } else {
-      label = 'التحقق من الاشتراك عند الفتح';
+      label = 'محتوى للمشتركين';
     }
 
     return Container(

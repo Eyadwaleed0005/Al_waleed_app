@@ -30,3 +30,7 @@ export {
 export {
   updateMyEmail,
 } from "./profile/update_my_email";
+
+export {
+  deleteMyAccount,
+} from "./profile/delete_my_account";

@@ -46,7 +46,7 @@ class MySubscriptionStatusCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(30.r),
             ),
             child: Text(
-              isActive ? 'اشتراك نشط' : 'اشتراك غير مفعّل',
+              isActive ? 'اشتراك نشط' : 'اشتراك غير نشط',
               textDirection: TextDirection.rtl,
               style: AppTextStyle.font12TextSecondaryRegularTajawal().copyWith(
                 color: statusColor,
@@ -56,7 +56,7 @@ class MySubscriptionStatusCard extends StatelessWidget {
           ),
           verticalSpace(16),
           Text(
-            isActive ? 'اشتراكك سارٍ!' : 'مستنيينك ترجع تتعلّم',
+            isActive ? 'اشتراكك سارٍ!' : 'اشتراكك غير نشط حاليًا',
             textAlign: TextAlign.center,
             textDirection: TextDirection.rtl,
             style: AppTextStyle.font18TextPrimarySemiBoldKufam().copyWith(
@@ -68,9 +68,8 @@ class MySubscriptionStatusCard extends StatelessWidget {
             isActive
                 ? 'كمّل رحلتك في فهم الكيمياء، '
                       'محتوى اشتراكك متاح ليك.'
-                : 'اشتراكك غير مفعّل حاليًا.\n'
-                      'تواصل مع المعلّم لتفعيل الاشتراك أو تجديده، '
-                      'وكمّل رحلتك معانا.',
+                : 'المحتوى المرتبط بالاشتراك غير متاح لحسابك حاليًا.\n'
+                      'تقدر تتابع الدروس والمذكرات المجانية المتاحة.',
             textAlign: TextAlign.center,
             textDirection: TextDirection.rtl,
             style: AppTextStyle.font14TextSecondaryRegularTajawal().copyWith(

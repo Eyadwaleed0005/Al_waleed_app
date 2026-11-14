@@ -4,7 +4,6 @@ import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_color.dart';
 import 'package:al_waleed/core/style/textstyles.dart';
 import 'package:al_waleed/core/widgets/app_toast.dart';
-import 'package:al_waleed/core/widgets/custom_button.dart';
 import 'package:al_waleed/features/profile/domain/entities/my_subscription_entity.dart';
 import 'package:al_waleed/features/profile/domain/usecase/get_personal_info_use_case.dart';
 import 'package:al_waleed/features/profile/presentation/widgets/my_subscription_widgets/my_subscription_details_card.dart';
@@ -26,14 +25,12 @@ class MySubscriptionSuccessView extends StatefulWidget {
 
 class _MySubscriptionSuccessViewState extends State<MySubscriptionSuccessView> {
   bool _isOpeningWhatsApp = false;
-  bool _isSupportRequest = false;
 
-  Future<void> _contactTeacher({required bool isSupport}) async {
+  Future<void> _contactSupport() async {
     if (_isOpeningWhatsApp) return;
 
     setState(() {
       _isOpeningWhatsApp = true;
-      _isSupportRequest = isSupport;
     });
 
     try {
@@ -50,14 +47,9 @@ class _MySubscriptionSuccessViewState extends State<MySubscriptionSuccessView> {
           );
         },
         (personalInfo) async {
-          final requestMessage = isSupport
-              ? 'السلام عليكم، '
-                    'محتاج مساعدة بخصوص حسابي على منصة الوليد.'
-              : 'السلام عليكم يا مستر، '
-                    'لو سمحت عاوز أفعّل أو أجدّد اشتراكي على منصة الوليد.';
-
           final message = [
-            requestMessage,
+            'السلام عليكم،',
+            'عندي استفسار بخصوص حالة اشتراكي على منصة الوليد.',
             '',
             'بيانات الطالب:',
             'الاسم: ${personalInfo.name.trim()}',
@@ -87,7 +79,6 @@ class _MySubscriptionSuccessViewState extends State<MySubscriptionSuccessView> {
       if (mounted) {
         setState(() {
           _isOpeningWhatsApp = false;
-          _isSupportRequest = false;
         });
       }
     }
@@ -109,11 +100,10 @@ class _MySubscriptionSuccessViewState extends State<MySubscriptionSuccessView> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         MySubscriptionStatusCard(isActive: subscription.isActive),
-        verticalSpace(32),
-        if (subscription.isActive)
-          MySubscriptionDetailsCard(subscription: subscription)
-        else
-          _buildActivationSection(),
+        if (subscription.isActive) ...[
+          verticalSpace(32),
+          MySubscriptionDetailsCard(subscription: subscription),
+        ],
         verticalSpace(28),
         const Divider(height: 1, color: ColorPalette.border),
         verticalSpace(28),
@@ -122,43 +112,7 @@ class _MySubscriptionSuccessViewState extends State<MySubscriptionSuccessView> {
     );
   }
 
-  Widget _buildActivationSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          'تفعيل الاشتراك',
-          textDirection: TextDirection.rtl,
-          textAlign: TextAlign.right,
-          style: AppTextStyle.font16TextPrimarySemiBoldKufam(),
-        ),
-        verticalSpace(8),
-        Text(
-          'تواصل مع المعلّم لمعرفة تفاصيل التفعيل أو التجديد.',
-          textDirection: TextDirection.rtl,
-          textAlign: TextAlign.right,
-          style: AppTextStyle.font12TextSecondaryRegularTajawal().copyWith(
-            height: 1.6,
-          ),
-        ),
-        verticalSpace(20),
-        IgnorePointer(
-          ignoring: _isOpeningWhatsApp,
-          child: CustomButton(
-            text: 'تفعيل أو تجديد الاشتراك',
-            isLoading: _isOpeningWhatsApp && !_isSupportRequest,
-            onPressed: () {
-              _contactTeacher(isSupport: false);
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildSupportSection() {
-    final isOpeningSupport = _isOpeningWhatsApp && _isSupportRequest;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -171,13 +125,10 @@ class _MySubscriptionSuccessViewState extends State<MySubscriptionSuccessView> {
         verticalSpace(16),
         Material(
           type: MaterialType.transparency,
+          borderRadius: BorderRadius.circular(12.r),
+          clipBehavior: Clip.antiAlias,
           child: InkWell(
-            onTap: _isOpeningWhatsApp
-                ? null
-                : () {
-                    _contactTeacher(isSupport: true);
-                  },
-            borderRadius: BorderRadius.circular(12.r),
+            onTap: _isOpeningWhatsApp ? null : _contactSupport,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 14.h),
               child: Row(
@@ -194,16 +145,23 @@ class _MySubscriptionSuccessViewState extends State<MySubscriptionSuccessView> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          isOpeningSupport
-                              ? 'جارٍ فتح واتساب...'
-                              : 'تواصل مع الدعم',
+                          'تواصل مع الدعم',
                           textDirection: TextDirection.rtl,
                           textAlign: TextAlign.right,
                           style: AppTextStyle.font14TextPrimarySemiBoldKufam(),
                         ),
                         verticalSpace(6),
                         Text(
-                          'نساعدك في أي استفسار بخصوص حسابك أو اشتراكك.',
+                          'للاستفسار عن حالة اشتراكك أو الإبلاغ عن مشكلة.',
+                          textDirection: TextDirection.rtl,
+                          textAlign: TextAlign.right,
+                          style:
+                              AppTextStyle.font12TextSecondaryRegularTajawal()
+                                  .copyWith(height: 1.5),
+                        ),
+                        verticalSpace(4),
+                        Text(
+                          'ستُضاف بيانات حسابك إلى رسالة واتساب لتراجعها قبل الإرسال.',
                           textDirection: TextDirection.rtl,
                           textAlign: TextAlign.right,
                           style:

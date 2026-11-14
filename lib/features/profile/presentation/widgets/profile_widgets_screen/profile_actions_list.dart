@@ -12,6 +12,7 @@ class ProfileActionsList extends StatelessWidget {
     required this.onSubscription,
     required this.onAboutTeacher,
     required this.onSupport,
+    required this.onDeleteAccount,
     required this.onLogout,
   });
 
@@ -20,6 +21,7 @@ class ProfileActionsList extends StatelessWidget {
   final VoidCallback onSubscription;
   final VoidCallback onAboutTeacher;
   final VoidCallback onSupport;
+  final VoidCallback onDeleteAccount;
   final VoidCallback onLogout;
 
   @override
@@ -48,6 +50,13 @@ class ProfileActionsList extends StatelessWidget {
           title: 'اشتراكي',
           subtitle: 'تفاصيل اشتراكك في المنصة',
           onTap: onSubscription,
+        ),
+        verticalSpace(10),
+        ProfileActionCard(
+          icon: Icons.delete_outline_rounded,
+          title: 'حذف الحساب',
+          subtitle: 'حذف حسابك وبياناتك نهائيًا',
+          onTap: onDeleteAccount,
         ),
         verticalSpace(10),
         ProfileActionCard(

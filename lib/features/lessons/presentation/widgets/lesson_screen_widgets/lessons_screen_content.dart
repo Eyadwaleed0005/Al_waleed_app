@@ -12,7 +12,6 @@ import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_wi
 import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_widgets/lessons_screen_states/lessons_error_view.dart';
 import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_widgets/lessons_screen_states/lessons_loading_view.dart';
 import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_widgets/lessons_screen_states/lessons_success_view.dart';
-import 'package:al_waleed/features/profile/presentation/screens/my_subscription_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,7 +21,9 @@ class LessonsScreenContent extends StatefulWidget {
   const LessonsScreenContent({super.key});
 
   @override
-  State<LessonsScreenContent> createState() => _LessonsScreenContentState();
+  State<LessonsScreenContent> createState() {
+    return _LessonsScreenContentState();
+  }
 }
 
 class _LessonsScreenContentState extends State<LessonsScreenContent> {
@@ -51,12 +52,12 @@ class _LessonsScreenContentState extends State<LessonsScreenContent> {
         (canAccess) async {
           if (!canAccess) {
             await _showAccessDialog(
-              title: 'هذا الدرس يحتاج إلى اشتراك',
+              title: 'المحتوى غير متاح لحسابك',
               message:
-                  'لمشاهدة هذا الدرس ومحتوياته، '
-                  'فعّل اشتراكك أو جدّده من صفحة اشتراكي.',
+                  'هذا الدرس ومحتوياته متاحة للحسابات '
+                  'ذات الاشتراك النشط.\n'
+                  'يمكنك متابعة الدروس المجانية المتاحة.',
               icon: Icons.lock_outline_rounded,
-              showSubscriptionAction: true,
             );
             return;
           }
@@ -75,9 +76,8 @@ class _LessonsScreenContentState extends State<LessonsScreenContent> {
     required String title,
     required String message,
     required IconData icon,
-    bool showSubscriptionAction = false,
   }) async {
-    final openSubscription = await showDialog<bool>(
+    await showDialog<void>(
       context: context,
       builder: (dialogContext) {
         return CustomOperationResultDialog(
@@ -85,22 +85,12 @@ class _LessonsScreenContentState extends State<LessonsScreenContent> {
           failureIcon: icon,
           title: title,
           message: message,
-          actionText: showSubscriptionAction ? 'تفعيل الاشتراك' : 'حسنًا',
-          secondaryActionText: showSubscriptionAction ? 'إغلاق' : null,
+          actionText: 'حسنًا',
           onActionPressed: () {
-            Navigator.of(dialogContext).pop(showSubscriptionAction);
-          },
-          onSecondaryActionPressed: () {
-            Navigator.of(dialogContext).pop(false);
+            Navigator.of(dialogContext).pop();
           },
         );
       },
-    );
-
-    if (!mounted || openSubscription != true) return;
-
-    await Navigator.of(context).push<void>(
-      MaterialPageRoute<void>(builder: (_) => const MySubscriptionScreen()),
     );
   }
 

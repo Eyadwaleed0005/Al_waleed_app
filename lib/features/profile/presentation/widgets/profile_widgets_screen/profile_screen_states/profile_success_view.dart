@@ -9,6 +9,7 @@ import 'package:al_waleed/core/widgets/custom_operation_result_dialog.dart';
 import 'package:al_waleed/features/authentication/presentation/cubit/logout_cubit/logout_cubit.dart';
 import 'package:al_waleed/features/authentication/presentation/cubit/logout_cubit/logout_state.dart';
 import 'package:al_waleed/features/profile/domain/entities/profile_entity.dart';
+import 'package:al_waleed/features/profile/presentation/widgets/profile_widgets_screen/delete_account_dialog.dart';
 import 'package:al_waleed/features/profile/presentation/widgets/profile_widgets_screen/profile_actions_list.dart';
 import 'package:al_waleed/features/profile/presentation/widgets/profile_widgets_screen/profile_background.dart';
 import 'package:al_waleed/features/profile/presentation/widgets/profile_widgets_screen/profile_header_card.dart';
@@ -17,7 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ProfileSuccessView extends StatelessWidget {
+class ProfileSuccessView extends StatefulWidget {
   const ProfileSuccessView({
     super.key,
     required this.profile,
@@ -26,6 +27,18 @@ class ProfileSuccessView extends StatelessWidget {
 
   final ProfileEntity profile;
   final String imageAsset;
+
+  @override
+  State<ProfileSuccessView> createState() {
+    return _ProfileSuccessViewState();
+  }
+}
+
+class _ProfileSuccessViewState extends State<ProfileSuccessView> {
+  bool _isOpeningContact = false;
+  bool _isDeleteDialogOpen = false;
+
+  bool get _isBusy => _isOpeningContact || _isDeleteDialogOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +67,9 @@ class ProfileSuccessView extends StatelessWidget {
               AppAnimations.screenSection(
                 delay: 250,
                 child: ProfileHeaderCard(
-                  name: profile.studentProfile.name,
-                  email: profile.studentProfile.email,
-                  imageAsset: imageAsset,
+                  name: widget.profile.studentProfile.name,
+                  email: widget.profile.studentProfile.email,
+                  imageAsset: widget.imageAsset,
                 ),
               ),
               verticalSpace(24),
@@ -66,9 +79,9 @@ class ProfileSuccessView extends StatelessWidget {
                   selector: (state) => state is LogoutLoading,
                   builder: (context, isLoading) {
                     return AbsorbPointer(
-                      absorbing: isLoading,
+                      absorbing: isLoading || _isBusy,
                       child: ProfileActionsList(
-                        gradeName: profile.grade.name,
+                        gradeName: widget.profile.grade.name,
                         onPersonalInfo: () {
                           Navigator.of(
                             context,
@@ -84,13 +97,12 @@ class ProfileSuccessView extends StatelessWidget {
                             context,
                           ).pushNamed(RouteNames.aboutTeacherScreen);
                         },
-                        onSupport: () {
-                          _contactSupport(context);
-                        },
+                        onSupport: _contactSupport,
+                        onDeleteAccount: _showDeleteAccountDialog,
                         onLogout: () {
-                          if (isLoading) return;
+                          if (isLoading || _isBusy) return;
 
-                          _showLogoutDialog(context);
+                          _showLogoutDialog();
                         },
                       ),
                     );
@@ -105,29 +117,58 @@ class ProfileSuccessView extends StatelessWidget {
     );
   }
 
-  Future<void> _contactSupport(BuildContext context) async {
-    final uri = Uri.parse(Const.teacherWhatsAppUrl).replace(
-      queryParameters: {
-        'text':
-            'السلام عليكم، '
-            'محتاج مساعدة بخصوص حسابي على منصة الوليد.',
-      },
-    );
+  Future<void> _showDeleteAccountDialog() async {
+    if (_isBusy || context.read<LogoutCubit>().state is LogoutLoading) {
+      return;
+    }
+
+    setState(() {
+      _isDeleteDialogOpen = true;
+    });
 
     try {
-      final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
-
-      if (!opened && context.mounted) {
-        _showSupportError(context);
-      }
-    } catch (_) {
-      if (context.mounted) {
-        _showSupportError(context);
+      await DeleteAccountDialog.show(context);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isDeleteDialogOpen = false;
+        });
       }
     }
   }
 
-  void _showSupportError(BuildContext context) {
+  Future<void> _contactSupport() async {
+    if (_isBusy || context.read<LogoutCubit>().state is LogoutLoading) {
+      return;
+    }
+
+    setState(() {
+      _isOpeningContact = true;
+    });
+
+    try {
+      final opened = await launchUrl(
+        Uri.parse(Const.teacherWhatsAppUrl),
+        mode: LaunchMode.externalApplication,
+      );
+
+      if (!opened && mounted) {
+        _showContactError();
+      }
+    } catch (_) {
+      if (mounted) {
+        _showContactError();
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isOpeningContact = false;
+        });
+      }
+    }
+  }
+
+  void _showContactError() {
     showAppToast(
       context,
       message: 'تعذر فتح واتساب. حاول مرة أخرى.',
@@ -135,10 +176,10 @@ class ProfileSuccessView extends StatelessWidget {
     );
   }
 
-  void _showLogoutDialog(BuildContext context) {
+  void _showLogoutDialog() {
     final cubit = context.read<LogoutCubit>();
 
-    if (cubit.state is LogoutLoading) return;
+    if (cubit.state is LogoutLoading || _isBusy) return;
 
     showDialog<void>(
       context: context,
