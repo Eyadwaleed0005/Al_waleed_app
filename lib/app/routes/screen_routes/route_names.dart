@@ -7,6 +7,8 @@ abstract final class RouteNames {
 
   static const String loginScreen = '/loginScreen';
 
+  static const String registerScreen = '/registerScreen';
+
   static const String profileScreen = '/profileScreen';
 
   static const String lessons = '/lessons';
@@ -30,4 +32,12 @@ abstract final class RouteNames {
   static const String startExamScreen = '/startExamScreen';
 
   static const String resultExamScreen = '/resultExamScreen';
+
+  static const String onboardingScreen = '/onboardingScreen';
+
+  static const String aboutTeacherScreen = '/aboutTeacherScreen';
+
+  static const String personalInfoScreen = '/personalInfoScreen';
+
+  static const String mySubscriptionScreen = '/my-subscription';
 }

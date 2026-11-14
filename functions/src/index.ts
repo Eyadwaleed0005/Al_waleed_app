@@ -26,3 +26,11 @@ export {
 export {
   submitExamAttempt,
 } from "./exams/submit_exam_attempt";
+
+export {
+  updateMyEmail,
+} from "./profile/update_my_email";
+
+export {
+  deleteMyAccount,
+} from "./profile/delete_my_account";

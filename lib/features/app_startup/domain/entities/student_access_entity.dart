@@ -1,21 +1,23 @@
 class StudentAccessEntity {
-  final String studentId;
-  final String gradeId;
-  final bool isActive;
-  final DateTime subscriptionEndAt;
-
   const StudentAccessEntity({
     required this.studentId,
     required this.gradeId,
     required this.isActive,
-    required this.subscriptionEndAt,
+    this.subscriptionEndAt,
   });
 
+  final String studentId;
+  final String gradeId;
+  final bool isActive;
+  final DateTime? subscriptionEndAt;
+
   bool hasValidSubscription({required DateTime currentDate}) {
-    if (!isActive) {
+    final endAt = subscriptionEndAt;
+
+    if (!isActive || endAt == null) {
       return false;
     }
 
-    return subscriptionEndAt.toUtc().isAfter(currentDate.toUtc());
+    return endAt.toUtc().isAfter(currentDate.toUtc());
   }
 }

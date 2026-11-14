@@ -6,7 +6,7 @@ import 'package:al_waleed/core/widgets/custom_button.dart';
 import 'package:al_waleed/features/exams/domain/entities/student_exam_result_entity.dart';
 import 'package:al_waleed/features/exams/presentation/widgets/result_exam_widgets/exam_submitted_details_card.dart';
 import 'package:al_waleed/features/exams/presentation/widgets/result_exam_widgets/exam_submitted_success_card.dart';
-import 'package:al_waleed/features/profile/presentation/widgets/profile_background.dart';
+import 'package:al_waleed/features/profile/presentation/widgets/profile_widgets_screen/profile_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

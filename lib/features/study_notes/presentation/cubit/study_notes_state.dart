@@ -18,13 +18,23 @@ final class StudyNotesEmpty extends StudyNotesState {
 }
 
 final class StudyNotesFailure extends StudyNotesState {
-  final AppErrorModel error;
-
   const StudyNotesFailure({required this.error});
+
+  final AppErrorModel error;
 }
 
 final class StudyNotesDataSuccess extends StudyNotesState {
-  final List<StudyNoteEntity> notes;
+  const StudyNotesDataSuccess({
+    required this.notes,
+    this.showFree = true,
+    this.hasValidSubscription,
+    this.subscriptionError,
+  });
 
-  const StudyNotesDataSuccess({required this.notes});
+  final List<StudyNoteEntity> notes;
+  final bool showFree;
+  final bool? hasValidSubscription;
+  final AppErrorModel? subscriptionError;
+
+  bool get isSelectedSectionEmpty => notes.isEmpty;
 }

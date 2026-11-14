@@ -3,6 +3,8 @@ import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/widgets/background/background_student_layout.dart';
 import 'package:al_waleed/core/widgets/custom_app_bar.dart';
+import 'package:al_waleed/core/widgets/custom_operation_result_dialog.dart';
+import 'package:al_waleed/features/study_notes/domain/entities/study_note_entity.dart';
 import 'package:al_waleed/features/study_notes/presentation/cubit/study_notes_cubit.dart';
 import 'package:al_waleed/features/study_notes/presentation/cubit/study_notes_state.dart';
 import 'package:al_waleed/features/study_notes/presentation/widgets/study_notes_screen_widgets/study_notes_screen_states/study_notes_empty_view.dart';
@@ -12,10 +14,83 @@ import 'package:al_waleed/features/study_notes/presentation/widgets/study_notes_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class StudyNotesScreenContent extends StatelessWidget {
+class StudyNotesScreenContent extends StatefulWidget {
   const StudyNotesScreenContent({super.key});
+
+  @override
+  State<StudyNotesScreenContent> createState() {
+    return _StudyNotesScreenContentState();
+  }
+}
+
+class _StudyNotesScreenContentState extends State<StudyNotesScreenContent> {
+  bool _isOpeningNote = false;
+
+  Future<void> _openNote(StudyNoteEntity note) async {
+    if (_isOpeningNote) return;
+
+    _isOpeningNote = true;
+
+    try {
+      final result = await context.read<StudyNotesCubit>().checkStudyNoteAccess(
+        studyNote: note,
+      );
+
+      if (!mounted) return;
+
+      await result.fold<Future<void>>(
+        (error) {
+          return _showAccessDialog(
+            title: 'تعذر التحقق من الاشتراك',
+            message: error.message,
+            icon: Icons.error_outline_rounded,
+          );
+        },
+        (canAccess) async {
+          if (!canAccess) {
+            await _showAccessDialog(
+              title: 'المحتوى غير متاح لحسابك',
+              message:
+                  'هذه المذكرة متاحة للحسابات ذات الاشتراك النشط.\n'
+                  'يمكنك متابعة المذكرات المجانية المتاحة.',
+              icon: Icons.lock_outline_rounded,
+            );
+            return;
+          }
+
+          await Navigator.of(
+            context,
+          ).pushNamed(RouteNames.studyNotePdfReaderScreen, arguments: note);
+        },
+      );
+    } finally {
+      _isOpeningNote = false;
+    }
+  }
+
+  Future<void> _showAccessDialog({
+    required String title,
+    required String message,
+    required IconData icon,
+  }) async {
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return CustomOperationResultDialog(
+          type: CustomOperationResultType.failure,
+          failureIcon: icon,
+          title: title,
+          message: message,
+          actionText: 'حسنًا',
+          onActionPressed: () {
+            Navigator.of(dialogContext).pop();
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,16 +143,17 @@ class StudyNotesScreenContent extends StatelessWidget {
                 }
 
                 if (state is StudyNotesDataSuccess) {
+                  final cubit = context.read<StudyNotesCubit>();
+
                   return StudyNotesSuccessView(
                     notes: state.notes,
-                    onNoteTap: (note) {
-                      Navigator.of(context).pushNamed(
-                        RouteNames.studyNotePdfReaderScreen,
-                        arguments: note,
-                      );
-                    },
+                    showFree: state.showFree,
+                    hasValidSubscription: state.hasValidSubscription,
+                    onAccessTypeChanged: cubit.selectAccessType,
+                    onNoteTap: _openNote,
                   );
                 }
+
                 return const SizedBox.shrink();
               },
             ),

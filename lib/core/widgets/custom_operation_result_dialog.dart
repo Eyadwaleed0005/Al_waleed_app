@@ -19,11 +19,13 @@ class CustomOperationResultDialog extends StatefulWidget {
     required this.title,
     required this.message,
     required this.actionText,
+    this.content,
     this.secondaryActionText,
     this.onActionPressed,
     this.onSecondaryActionPressed,
     this.email,
     this.password,
+    this.isLoading = false,
     this.successIcon = Icons.check_circle_outline_rounded,
     this.failureIcon = Icons.error_outline_rounded,
   });
@@ -35,8 +37,12 @@ class CustomOperationResultDialog extends StatefulWidget {
   final String actionText;
   final String? secondaryActionText;
 
+  final Widget? content;
+
   final String? email;
   final String? password;
+
+  final bool isLoading;
 
   final VoidCallback? onActionPressed;
   final VoidCallback? onSecondaryActionPressed;
@@ -86,15 +92,11 @@ class _CustomOperationResultDialogState
   }
 
   Future<void> _copyEmail() async {
-    if (!hasEmail) {
-      return;
-    }
+    if (widget.isLoading || !hasEmail) return;
 
     await Clipboard.setData(ClipboardData(text: _emailController.text));
 
-    if (!mounted) {
-      return;
-    }
+    if (!mounted) return;
 
     showAppToast(
       context,
@@ -104,15 +106,11 @@ class _CustomOperationResultDialogState
   }
 
   Future<void> _copyPassword() async {
-    if (!hasPassword) {
-      return;
-    }
+    if (widget.isLoading || !hasPassword) return;
 
     await Clipboard.setData(ClipboardData(text: _passwordController.text));
 
-    if (!mounted) {
-      return;
-    }
+    if (!mounted) return;
 
     showAppToast(
       context,
@@ -122,6 +120,8 @@ class _CustomOperationResultDialogState
   }
 
   Future<void> _copyCredentials() async {
+    if (widget.isLoading) return;
+
     final values = <String>[];
 
     if (hasEmail) {
@@ -132,15 +132,11 @@ class _CustomOperationResultDialogState
       values.add('كلمة المرور: ${_passwordController.text}');
     }
 
-    if (values.isEmpty) {
-      return;
-    }
+    if (values.isEmpty) return;
 
     await Clipboard.setData(ClipboardData(text: values.join('\n')));
 
-    if (!mounted) {
-      return;
-    }
+    if (!mounted) return;
 
     showAppToast(
       context,
@@ -152,6 +148,8 @@ class _CustomOperationResultDialogState
   }
 
   void _handlePrimaryAction() {
+    if (widget.isLoading) return;
+
     final action = widget.onActionPressed;
 
     if (action != null) {
@@ -163,6 +161,8 @@ class _CustomOperationResultDialogState
   }
 
   void _handleSecondaryAction() {
+    if (widget.isLoading) return;
+
     final action = widget.onSecondaryActionPressed;
 
     if (action != null) {
@@ -184,113 +184,123 @@ class _CustomOperationResultDialogState
   @override
   Widget build(BuildContext context) {
     final statusColor = isSuccess ? ColorPalette.success : ColorPalette.error;
-
     final icon = isSuccess ? widget.successIcon : widget.failureIcon;
 
-    return AppAnimations.operationDialogEntrance(
-      child: Dialog(
-        elevation: 0,
-        insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
-        backgroundColor: Colors.transparent,
-        child: SingleChildScrollView(
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
-            decoration: BoxDecoration(
-              color: ColorPalette.surface,
-              borderRadius: BorderRadius.circular(28.r),
-              border: Border.all(
-                color: statusColor.withValues(alpha: 0.30),
-                width: 1.2.w,
+    return PopScope(
+      canPop: !widget.isLoading,
+      child: AppAnimations.operationDialogEntrance(
+        child: Dialog(
+          elevation: 0,
+          insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
+          backgroundColor: Colors.transparent,
+          child: SingleChildScrollView(
+            child: AbsorbPointer(
+              absorbing: widget.isLoading,
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+                decoration: BoxDecoration(
+                  color: ColorPalette.surface,
+                  borderRadius: BorderRadius.circular(28.r),
+                  border: Border.all(
+                    color: statusColor.withValues(alpha: 0.30),
+                    width: 1.2.w,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: statusColor.withValues(alpha: 0.12),
+                      blurRadius: 28.r,
+                      offset: Offset(0, 10.h),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 72.w,
+                      height: 72.w,
+                      decoration: BoxDecoration(
+                        color: statusColor.withValues(alpha: 0.10),
+                        shape: BoxShape.circle,
+                      ),
+                      alignment: Alignment.center,
+                      child: Icon(icon, size: 38.sp, color: statusColor),
+                    ),
+                    verticalSpace(22),
+                    Text(
+                      widget.title,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyle.font18TextPrimarySemiBoldKufam(),
+                    ),
+                    verticalSpace(10),
+                    Text(
+                      widget.message,
+                      textAlign: TextAlign.center,
+                      textDirection: TextDirection.rtl,
+                      style: AppTextStyle.font14TextSecondaryRegularTajawal(),
+                    ),
+                    if (widget.content != null) ...[
+                      verticalSpace(20),
+                      widget.content!,
+                    ],
+                    if (hasCredentials) ...[
+                      verticalSpace(24),
+                      if (hasEmail)
+                        CustomTextFormField(
+                          controller: _emailController,
+                          labelText: 'البريد الإلكتروني',
+                          hintText: 'البريد الإلكتروني',
+                          readOnly: true,
+                          textDirection: TextDirection.ltr,
+                          suffixIcon: Icon(
+                            Icons.copy_rounded,
+                            color: ColorPalette.primary,
+                            size: 22.sp,
+                          ),
+                          onSuffixTap: _copyEmail,
+                        ),
+                      if (hasEmail && hasPassword) verticalSpace(12),
+                      if (hasPassword)
+                        CustomTextFormField(
+                          controller: _passwordController,
+                          labelText: 'كلمة المرور',
+                          hintText: 'كلمة المرور',
+                          readOnly: true,
+                          isPassword: true,
+                          textDirection: TextDirection.ltr,
+                          suffixIcon: Icon(
+                            Icons.copy_rounded,
+                            color: ColorPalette.primary,
+                            size: 22.sp,
+                          ),
+                          onSuffixTap: _copyPassword,
+                        ),
+                      verticalSpace(16),
+                      CustomSecondaryButton(
+                        text: hasPassword
+                            ? 'نسخ بيانات الدخول'
+                            : 'نسخ البريد الإلكتروني',
+                        icon: Icons.copy_all_rounded,
+                        onPressed: _copyCredentials,
+                      ),
+                    ],
+                    verticalSpace(26),
+                    CustomButton(
+                      text: widget.actionText,
+                      isLoading: widget.isLoading,
+                      onPressed: _handlePrimaryAction,
+                    ),
+                    if (hasSecondaryAction) ...[
+                      verticalSpace(12),
+                      CustomSecondaryButton(
+                        text: widget.secondaryActionText!,
+                        onPressed: _handleSecondaryAction,
+                      ),
+                    ],
+                  ],
+                ),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: statusColor.withValues(alpha: 0.12),
-                  blurRadius: 28.r,
-                  offset: Offset(0, 10.h),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 72.w,
-                  height: 72.w,
-                  decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 0.10),
-                    shape: BoxShape.circle,
-                  ),
-                  alignment: Alignment.center,
-                  child: Icon(icon, size: 38.sp, color: statusColor),
-                ),
-                verticalSpace(22),
-                Text(
-                  widget.title,
-                  textAlign: TextAlign.center,
-                  style: AppTextStyle.font18TextPrimarySemiBoldKufam(),
-                ),
-                verticalSpace(10),
-                Text(
-                  widget.message,
-                  textAlign: TextAlign.center,
-                  textDirection: TextDirection.rtl,
-                  style: AppTextStyle.font14TextSecondaryRegularTajawal(),
-                ),
-                if (hasCredentials) ...[
-                  verticalSpace(24),
-                  if (hasEmail)
-                    CustomTextFormField(
-                      controller: _emailController,
-                      labelText: 'البريد الإلكتروني',
-                      hintText: 'البريد الإلكتروني',
-                      readOnly: true,
-                      textDirection: TextDirection.ltr,
-                      suffixIcon: Icon(
-                        Icons.copy_rounded,
-                        color: ColorPalette.primary,
-                        size: 22.sp,
-                      ),
-                      onSuffixTap: _copyEmail,
-                    ),
-                  if (hasEmail && hasPassword) verticalSpace(12),
-                  if (hasPassword)
-                    CustomTextFormField(
-                      controller: _passwordController,
-                      labelText: 'كلمة المرور',
-                      hintText: 'كلمة المرور',
-                      readOnly: true,
-                      isPassword: true,
-                      textDirection: TextDirection.ltr,
-                      suffixIcon: Icon(
-                        Icons.copy_rounded,
-                        color: ColorPalette.primary,
-                        size: 22.sp,
-                      ),
-                      onSuffixTap: _copyPassword,
-                    ),
-                  verticalSpace(16),
-                  CustomSecondaryButton(
-                    text: hasPassword
-                        ? 'نسخ بيانات الدخول'
-                        : 'نسخ البريد الإلكتروني',
-                    icon: Icons.copy_all_rounded,
-                    onPressed: _copyCredentials,
-                  ),
-                ],
-                verticalSpace(26),
-                CustomButton(
-                  text: widget.actionText,
-                  onPressed: _handlePrimaryAction,
-                ),
-                if (hasSecondaryAction) ...[
-                  verticalSpace(12),
-                  CustomSecondaryButton(
-                    text: widget.secondaryActionText!,
-                    onPressed: _handleSecondaryAction,
-                  ),
-                ],
-              ],
             ),
           ),
         ),

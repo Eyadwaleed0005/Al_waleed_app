@@ -22,16 +22,15 @@ class FirebaseLoginRemoteDataSource implements LoginRemoteDataSource {
   @override
   Future<LoginModel> login({required String email, required String password}) {
     return FirebaseErrorHandler.execute<LoginModel>(() async {
-      final String normalizedEmail = email.trim();
+      final normalizedEmail = email.trim();
 
-      final UserCredential userCredential = await firebaseAuth
-          .signInWithEmailAndPassword(
-            email: normalizedEmail,
-            password: password,
-          );
+      final userCredential = await firebaseAuth.signInWithEmailAndPassword(
+        email: normalizedEmail,
+        password: password,
+      );
 
       try {
-        final User authenticatedUser = await _verifyAuthenticatedUser(
+        final authenticatedUser = await _verifyAuthenticatedUser(
           userCredential,
         );
 
@@ -48,15 +47,7 @@ class FirebaseLoginRemoteDataSource implements LoginRemoteDataSource {
           );
         }
 
-        final bool isActive = studentData[FirestoreFields.isActive] == true;
-
-        if (!isActive) {
-          FirebaseErrorHandler.throwAuthCode(
-            FirebaseAuthErrorHandler.subscriptionExpiredCode,
-          );
-        }
-
-        final bool isLoggedIn = studentData[FirestoreFields.isLoggedIn] == true;
+        final isLoggedIn = studentData[FirestoreFields.isLoggedIn] == true;
 
         if (isLoggedIn) {
           FirebaseErrorHandler.throwAuthCode(
@@ -64,7 +55,7 @@ class FirebaseLoginRemoteDataSource implements LoginRemoteDataSource {
           );
         }
 
-        final dynamic gradeIdValue = studentData[FirestoreFields.gradeId];
+        final gradeIdValue = studentData[FirestoreFields.gradeId];
 
         if (gradeIdValue is! String || gradeIdValue.trim().isEmpty) {
           FirebaseErrorHandler.throwAuthCode(
@@ -72,11 +63,11 @@ class FirebaseLoginRemoteDataSource implements LoginRemoteDataSource {
           );
         }
 
-        final String gradeId = gradeIdValue.trim();
+        final gradeId = gradeIdValue.trim();
 
         await loginLocalDataSource.saveGradeId(gradeId: gradeId);
 
-        final User verifiedUser = await _verifyCurrentUser(
+        final verifiedUser = await _verifyCurrentUser(
           expectedUserId: authenticatedUser.uid,
         );
 
@@ -98,7 +89,7 @@ class FirebaseLoginRemoteDataSource implements LoginRemoteDataSource {
   }
 
   Future<User> _verifyAuthenticatedUser(UserCredential userCredential) async {
-    final User? credentialUser = userCredential.user;
+    final credentialUser = userCredential.user;
 
     if (credentialUser == null) {
       FirebaseErrorHandler.throwAuthCode(
@@ -112,7 +103,7 @@ class FirebaseLoginRemoteDataSource implements LoginRemoteDataSource {
   }
 
   Future<User> _verifyCurrentUser({required String expectedUserId}) async {
-    final User? currentUser = firebaseAuth.currentUser;
+    final currentUser = firebaseAuth.currentUser;
 
     if (currentUser == null ||
         currentUser.uid.trim().isEmpty ||
@@ -122,7 +113,7 @@ class FirebaseLoginRemoteDataSource implements LoginRemoteDataSource {
       );
     }
 
-    final String? idToken = await currentUser.getIdToken(true);
+    final idToken = await currentUser.getIdToken(true);
 
     if (idToken == null || idToken.trim().isEmpty) {
       FirebaseErrorHandler.throwAuthCode(

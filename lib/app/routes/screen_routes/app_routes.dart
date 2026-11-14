@@ -5,6 +5,7 @@ import 'package:al_waleed/app/routes/screen_routes/feature/lesson_quiz_routes.da
 import 'package:al_waleed/app/routes/screen_routes/feature/lessons_routes.dart';
 import 'package:al_waleed/app/routes/screen_routes/feature/live_session_routes.dart';
 import 'package:al_waleed/app/routes/screen_routes/feature/main_navigation_routes.dart';
+import 'package:al_waleed/app/routes/screen_routes/feature/profile_routes.dart';
 import 'package:al_waleed/app/routes/screen_routes/feature/study_notes_routes.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,7 @@ abstract final class AppRoutes {
         AuthenticationRoutes.generateRoute(settings) ??
         MainNavigationRoutes.generateRoute(settings) ??
         LiveSessionRoutes.generateRoute(settings) ??
+        ProfileRoutes.generateRoute(settings) ??
         StudyNotesRoutes.generateRoute(settings) ??
         LessonsRoutes.generateRoute(settings) ??
         LessonQuizRoutes.generateRoute(settings) ??
