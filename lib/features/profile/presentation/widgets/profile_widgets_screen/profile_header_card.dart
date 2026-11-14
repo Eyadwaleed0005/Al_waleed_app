@@ -32,31 +32,43 @@ class ProfileHeaderCard extends StatelessWidget {
           ClipOval(
             child: SvgPicture.asset(
               imageAsset,
-              width: 88.w,
-              height: 88.h,
+              width: 88.r,
+              height: 88.r,
               fit: BoxFit.contain,
             ),
           ),
           horizontalSpace(16),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  name,
-                  textDirection: TextDirection.rtl,
-                  textAlign: TextAlign.right,
-                  style: AppTextStyle.font20TextBlackSemiBoldKufam().copyWith(
-                    color: ColorPalette.textLight,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    name,
+                    maxLines: 1,
+                    softWrap: false,
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.right,
+                    style: AppTextStyle.font20TextBlackSemiBoldKufam().copyWith(
+                      color: ColorPalette.textLight,
+                    ),
                   ),
                 ),
                 verticalSpace(8),
-                Text(
-                  email,
-                  textDirection: TextDirection.ltr,
-                  textAlign: TextAlign.right,
-                  style: AppTextStyle.font14TextSecondaryRegularTajawal()
-                      .copyWith(color: ColorPalette.paleSage),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    email,
+                    maxLines: 1,
+                    softWrap: false,
+                    textDirection: TextDirection.ltr,
+                    textAlign: TextAlign.right,
+                    style: AppTextStyle.font14TextSecondaryRegularTajawal()
+                        .copyWith(color: ColorPalette.paleSage),
+                  ),
                 ),
               ],
             ),

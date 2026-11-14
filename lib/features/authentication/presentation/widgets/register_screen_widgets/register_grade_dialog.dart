@@ -23,8 +23,8 @@ class RegisterGradeDialog extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return CustomOperationResultDialog(
-          type: CustomOperationResultType.success,
-          successIcon: Icons.warning_amber_rounded,
+          type: CustomOperationResultType.failure,
+          failureIcon: Icons.warning_amber_rounded,
           title: 'تأكيد الصف الدراسي',
           message:
               'لقد اخترت "${grade.name}".\n'
@@ -61,6 +61,12 @@ class RegisterGradeDialog extends StatelessWidget {
         child: StreamBuilder<Either<AppErrorModel, List<GradeEntity>>>(
           stream: gradesStream,
           builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return _buildMessage(
+                'تعذر تحميل الصفوف الدراسية. حاول مرة أخرى.',
+              );
+            }
+
             if (snapshot.connectionState == ConnectionState.waiting &&
                 !snapshot.hasData) {
               return const Center(
@@ -74,39 +80,58 @@ class RegisterGradeDialog extends StatelessWidget {
             final result = snapshot.data;
 
             if (result == null) {
-              return const SizedBox.shrink();
+              return _buildMessage('لا توجد صفوف دراسية متاحة حاليًا.');
             }
 
             return result.fold((error) => _buildMessage(error.message), (
               grades,
             ) {
+              if (grades.isEmpty) {
+                return _buildMessage('لا توجد صفوف دراسية متاحة حاليًا.');
+              }
+
               return Directionality(
                 textDirection: TextDirection.rtl,
-                child: ListView.builder(
-                  itemCount: grades.length,
-                  itemBuilder: (context, index) {
-                    final grade = grades[index];
-                    final isSelected = grade.gradeId == selectedGradeId;
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: grades.length,
+                    itemBuilder: (context, index) {
+                      final grade = grades[index];
+                      final isSelected = grade.gradeId == selectedGradeId;
 
-                    return ListTile(
-                      selected: isSelected,
-                      selectedColor: ColorPalette.primary,
-                      selectedTileColor: ColorPalette.primarySoftBackground,
-                      title: Text(
-                        grade.name,
-                        style: AppTextStyle.font14TextSecondaryRegularTajawal(),
-                      ),
-                      trailing: Icon(
-                        isSelected
-                            ? Icons.radio_button_checked
-                            : Icons.radio_button_unchecked,
-                        color: isSelected
-                            ? ColorPalette.primary
-                            : ColorPalette.textMuted,
-                      ),
-                      onTap: () => _confirmGrade(context, grade),
-                    );
-                  },
+                      return ListTile(
+                        selected: isSelected,
+                        selectedColor: ColorPalette.primary,
+                        selectedTileColor: ColorPalette.primarySoftBackground,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        title: Text(
+                          grade.name,
+                          style:
+                              AppTextStyle.font14TextSecondaryRegularTajawal()
+                                  .copyWith(
+                                    color: isSelected
+                                        ? ColorPalette.primary
+                                        : ColorPalette.textSecondary,
+                                  ),
+                        ),
+                        trailing: Icon(
+                          isSelected
+                              ? Icons.radio_button_checked
+                              : Icons.radio_button_unchecked,
+                          color: isSelected
+                              ? ColorPalette.primary
+                              : ColorPalette.textMuted,
+                        ),
+                        onTap: () {
+                          _confirmGrade(context, grade);
+                        },
+                      );
+                    },
+                  ),
                 ),
               );
             });
