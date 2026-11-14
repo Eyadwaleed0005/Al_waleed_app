@@ -4,9 +4,12 @@ Al-Waleed is an educational mobile application for secondary school students, pr
 
 ## Features
 
-- Student authentication and account information
+- Student authentication and editable account information
 - Grade-based lessons and educational videos
-- PDF study materials
+- Free and subscription-based lessons and PDF study materials
+- Subscription status, dates, and remaining days
+- WhatsApp contact for subscription activation, renewal, and support
+- Teacher biography and official social links
 - Online exams, quizzes, and results
 - Live-session links
 - Push notifications and announcements
