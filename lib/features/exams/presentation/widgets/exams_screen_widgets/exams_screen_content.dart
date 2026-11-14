@@ -11,7 +11,7 @@ import 'package:al_waleed/features/exams/presentation/cubit/exams_screen_cubit.d
 import 'package:al_waleed/features/exams/presentation/widgets/exams_screen_widgets/exams_screen_state_widgets/exams_screen_empty_view.dart';
 import 'package:al_waleed/features/exams/presentation/widgets/exams_screen_widgets/exams_screen_state_widgets/exams_screen_loading_view.dart';
 import 'package:al_waleed/features/exams/presentation/widgets/exams_screen_widgets/exams_screen_state_widgets/exams_screen_success_view.dart';
-import 'package:al_waleed/features/profile/presentation/widgets/profile_background.dart';
+import 'package:al_waleed/features/profile/presentation/widgets/profile_widgets_screen/profile_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

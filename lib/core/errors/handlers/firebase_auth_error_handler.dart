@@ -14,6 +14,8 @@ abstract final class FirebaseAuthErrorHandler {
 
   static const String authenticatedUserNotFoundCode =
       'authenticated-user-not-found';
+  static const String currentPasswordIncorrectCode =
+      'current-password-incorrect';
 
   static AppErrorModel handle(FirebaseAuthException error) {
     return handleCode(error.code);
@@ -132,6 +134,13 @@ abstract final class FirebaseAuthErrorHandler {
           code: code,
           message: 'كلمة المرور ضعيفة. استخدم كلمة مرور أقوى.',
           type: AppErrorType.validation,
+        );
+
+      case currentPasswordIncorrectCode:
+        return _error(
+          code: code,
+          message: 'كلمة المرور الحالية غير صحيحة. حاول مرة أخرى.',
+          type: AppErrorType.authentication,
         );
 
       default:
