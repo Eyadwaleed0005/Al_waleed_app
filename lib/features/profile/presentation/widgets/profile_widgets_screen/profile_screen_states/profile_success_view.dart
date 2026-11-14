@@ -1,17 +1,21 @@
+import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
+import 'package:al_waleed/core/constants/const.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/style/app_animations.dart';
 import 'package:al_waleed/core/style/app_color.dart';
+import 'package:al_waleed/core/widgets/app_toast.dart';
 import 'package:al_waleed/core/widgets/custom_app_bar.dart';
 import 'package:al_waleed/core/widgets/custom_operation_result_dialog.dart';
 import 'package:al_waleed/features/authentication/presentation/cubit/logout_cubit/logout_cubit.dart';
 import 'package:al_waleed/features/authentication/presentation/cubit/logout_cubit/logout_state.dart';
 import 'package:al_waleed/features/profile/domain/entities/profile_entity.dart';
-import 'package:al_waleed/features/profile/presentation/widgets/profile_actions_list.dart';
-import 'package:al_waleed/features/profile/presentation/widgets/profile_background.dart';
-import 'package:al_waleed/features/profile/presentation/widgets/profile_header_card.dart';
+import 'package:al_waleed/features/profile/presentation/widgets/profile_widgets_screen/profile_actions_list.dart';
+import 'package:al_waleed/features/profile/presentation/widgets/profile_widgets_screen/profile_background.dart';
+import 'package:al_waleed/features/profile/presentation/widgets/profile_widgets_screen/profile_header_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileSuccessView extends StatelessWidget {
   const ProfileSuccessView({
@@ -65,9 +69,24 @@ class ProfileSuccessView extends StatelessWidget {
                       absorbing: isLoading,
                       child: ProfileActionsList(
                         gradeName: profile.grade.name,
-                        onPersonalInfo: () {},
-                        onSubscription: () {},
-                        onAboutTeacher: () {},
+                        onPersonalInfo: () {
+                          Navigator.of(
+                            context,
+                          ).pushNamed(RouteNames.personalInfoScreen);
+                        },
+                        onSubscription: () {
+                          Navigator.of(
+                            context,
+                          ).pushNamed(RouteNames.mySubscriptionScreen);
+                        },
+                        onAboutTeacher: () {
+                          Navigator.of(
+                            context,
+                          ).pushNamed(RouteNames.aboutTeacherScreen);
+                        },
+                        onSupport: () {
+                          _contactSupport(context);
+                        },
                         onLogout: () {
                           if (isLoading) return;
 
@@ -83,6 +102,36 @@ class ProfileSuccessView extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _contactSupport(BuildContext context) async {
+    final uri = Uri.parse(Const.teacherWhatsAppUrl).replace(
+      queryParameters: {
+        'text':
+            'السلام عليكم، '
+            'محتاج مساعدة بخصوص حسابي على منصة الوليد.',
+      },
+    );
+
+    try {
+      final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+
+      if (!opened && context.mounted) {
+        _showSupportError(context);
+      }
+    } catch (_) {
+      if (context.mounted) {
+        _showSupportError(context);
+      }
+    }
+  }
+
+  void _showSupportError(BuildContext context) {
+    showAppToast(
+      context,
+      message: 'تعذر فتح واتساب. حاول مرة أخرى.',
+      icon: Icons.error_outline_rounded,
     );
   }
 

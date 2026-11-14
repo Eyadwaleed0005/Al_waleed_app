@@ -3,10 +3,10 @@ import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/core/widgets/custom_operation_result_dialog.dart';
 import 'package:al_waleed/features/authentication/presentation/cubit/logout_cubit/logout_cubit.dart';
 import 'package:al_waleed/features/authentication/presentation/cubit/logout_cubit/logout_state.dart';
-import 'package:al_waleed/features/profile/presentation/cubit/profile_cubit.dart';
-import 'package:al_waleed/features/profile/presentation/widgets/profile_screen_states/profile_error_view.dart';
-import 'package:al_waleed/features/profile/presentation/widgets/profile_screen_states/profile_loading_view.dart';
-import 'package:al_waleed/features/profile/presentation/widgets/profile_screen_states/profile_success_view.dart';
+import 'package:al_waleed/features/profile/presentation/cubit/profile_cubit/profile_cubit.dart';
+import 'package:al_waleed/features/profile/presentation/widgets/profile_widgets_screen/profile_screen_states/profile_error_view.dart';
+import 'package:al_waleed/features/profile/presentation/widgets/profile_widgets_screen/profile_screen_states/profile_loading_view.dart';
+import 'package:al_waleed/features/profile/presentation/widgets/profile_widgets_screen/profile_screen_states/profile_success_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

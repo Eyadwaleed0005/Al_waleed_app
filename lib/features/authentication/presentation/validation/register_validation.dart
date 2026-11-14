@@ -1,9 +1,9 @@
-import 'package:al_waleed/features/authentication/presentation/validation/validation__handlers/confirm_password_handler.dart';
-import 'package:al_waleed/features/authentication/presentation/validation/validation__handlers/email_handler.dart';
-import 'package:al_waleed/features/authentication/presentation/validation/validation__handlers/grade_handler.dart';
-import 'package:al_waleed/features/authentication/presentation/validation/validation__handlers/name_handler.dart';
-import 'package:al_waleed/features/authentication/presentation/validation/validation__handlers/password_handler.dart';
-import 'package:al_waleed/features/authentication/presentation/validation/validation__handlers/phone_handler.dart';
+import 'package:al_waleed/core/validation__handlers/confirm_password_handler.dart';
+import 'package:al_waleed/core/validation__handlers/email_handler.dart';
+import 'package:al_waleed/core/validation__handlers/grade_handler.dart';
+import 'package:al_waleed/core/validation__handlers/name_handler.dart';
+import 'package:al_waleed/core/validation__handlers/password_handler.dart';
+import 'package:al_waleed/core/validation__handlers/phone_handler.dart';
 import 'validation_handler.dart';
 
 class RegisterValidation {

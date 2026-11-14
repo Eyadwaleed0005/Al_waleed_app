@@ -3,20 +3,106 @@ import 'package:al_waleed/app/routes/screen_routes/route_names.dart';
 import 'package:al_waleed/core/helper/spacer.dart';
 import 'package:al_waleed/core/widgets/background/background_student_layout.dart';
 import 'package:al_waleed/core/widgets/custom_app_bar.dart';
+import 'package:al_waleed/core/widgets/custom_operation_result_dialog.dart';
 import 'package:al_waleed/core/widgets/custom_search_bar.dart';
+import 'package:al_waleed/features/lessons/domain/entities/lesson_entity.dart';
 import 'package:al_waleed/features/lessons/presentation/cubit/lessons_cubit.dart';
 import 'package:al_waleed/features/lessons/presentation/cubit/lessons_state.dart';
 import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_widgets/lessons_screen_states/lessons_empty_view.dart';
 import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_widgets/lessons_screen_states/lessons_error_view.dart';
 import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_widgets/lessons_screen_states/lessons_loading_view.dart';
 import 'package:al_waleed/features/lessons/presentation/widgets/lesson_screen_widgets/lessons_screen_states/lessons_success_view.dart';
+import 'package:al_waleed/features/profile/presentation/screens/my_subscription_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class LessonsScreenContent extends StatelessWidget {
+class LessonsScreenContent extends StatefulWidget {
   const LessonsScreenContent({super.key});
+
+  @override
+  State<LessonsScreenContent> createState() => _LessonsScreenContentState();
+}
+
+class _LessonsScreenContentState extends State<LessonsScreenContent> {
+  bool _isOpeningLesson = false;
+
+  Future<void> _openLesson(LessonEntity lesson) async {
+    if (_isOpeningLesson) return;
+
+    _isOpeningLesson = true;
+
+    try {
+      final result = await context.read<LessonsCubit>().checkLessonAccess(
+        lesson: lesson,
+      );
+
+      if (!mounted) return;
+
+      await result.fold<Future<void>>(
+        (error) {
+          return _showAccessDialog(
+            title: 'تعذر التحقق من الاشتراك',
+            message: error.message,
+            icon: Icons.error_outline_rounded,
+          );
+        },
+        (canAccess) async {
+          if (!canAccess) {
+            await _showAccessDialog(
+              title: 'هذا الدرس يحتاج إلى اشتراك',
+              message:
+                  'لمشاهدة هذا الدرس ومحتوياته، '
+                  'فعّل اشتراكك أو جدّده من صفحة اشتراكي.',
+              icon: Icons.lock_outline_rounded,
+              showSubscriptionAction: true,
+            );
+            return;
+          }
+
+          await Navigator.of(
+            context,
+          ).pushNamed(RouteNames.lessonDetails, arguments: lesson);
+        },
+      );
+    } finally {
+      _isOpeningLesson = false;
+    }
+  }
+
+  Future<void> _showAccessDialog({
+    required String title,
+    required String message,
+    required IconData icon,
+    bool showSubscriptionAction = false,
+  }) async {
+    final openSubscription = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return CustomOperationResultDialog(
+          type: CustomOperationResultType.failure,
+          failureIcon: icon,
+          title: title,
+          message: message,
+          actionText: showSubscriptionAction ? 'تفعيل الاشتراك' : 'حسنًا',
+          secondaryActionText: showSubscriptionAction ? 'إغلاق' : null,
+          onActionPressed: () {
+            Navigator.of(dialogContext).pop(showSubscriptionAction);
+          },
+          onSecondaryActionPressed: () {
+            Navigator.of(dialogContext).pop(false);
+          },
+        );
+      },
+    );
+
+    if (!mounted || openSubscription != true) return;
+
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(builder: (_) => const MySubscriptionScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,18 +150,19 @@ class LessonsScreenContent extends StatelessWidget {
                 }
 
                 if (state is LessonsDataSuccess) {
+                  final cubit = context.read<LessonsCubit>();
+
                   return LessonsSuccessView(
                     lessons: state.lessons,
                     query: state.query,
+                    showFree: state.showFree,
                     hasNoResults: state.hasNoResults,
-                    onLessonTap: (lesson) {
-                      Navigator.of(
-                        context,
-                      ).pushNamed(RouteNames.lessonDetails, arguments: lesson);
-                    },
-                    onSearchChanged: context.read<LessonsCubit>().search,
+                    hasValidSubscription: state.hasValidSubscription,
+                    onAccessTypeChanged: cubit.selectAccessType,
+                    onLessonTap: _openLesson,
+                    onSearchChanged: cubit.search,
                     onSearchClear: () {
-                      context.read<LessonsCubit>().search('');
+                      cubit.search('');
                     },
                   );
                 }

@@ -1,4 +1,4 @@
-import '../validation_handler.dart';
+import '../../features/authentication/presentation/validation/validation_handler.dart';
 
 class PasswordHandler extends ValidationHandler {
   PasswordHandler({this.requireStrongPassword = false});

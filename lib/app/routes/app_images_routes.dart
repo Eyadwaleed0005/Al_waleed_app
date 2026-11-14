@@ -29,6 +29,7 @@ class AppImage {
   late final String teacherBanner = '${baseImages}teacher_banner.png';
   late final String liveSessionBannerIllustration =
       '${baseImages}live_session_banner_illustration.png';
+  late final String aboutTeacherImage = '${baseImages}about_teacher.png';
 
   // ===== Lessons =====
   late final String lessonTestTubes = '${baseImages}lesson_test_tubes.png';

@@ -1,4 +1,4 @@
-import '../validation_handler.dart';
+import '../../features/authentication/presentation/validation/validation_handler.dart';
 
 class EmailHandler extends ValidationHandler {
   static final RegExp _emailRegExp = RegExp(
