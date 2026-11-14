@@ -12,6 +12,7 @@ class StudyNoteModel extends StudyNoteEntity {
     required super.pdfStoragePath,
     required super.pdfFileName,
     required super.pdfFileSize,
+    super.isFree = true,
     super.createdAt,
     super.updatedAt,
   });
@@ -26,6 +27,7 @@ class StudyNoteModel extends StudyNoteEntity {
       description: map[FirestoreFields.description] as String? ?? '',
       gradeId: map[FirestoreFields.gradeId] as String? ?? '',
       isPublished: map[FirestoreFields.isPublished] as bool? ?? false,
+      isFree: map[FirestoreFields.isFree] as bool? ?? true,
       pdfStoragePath: map[FirestoreFields.pdfStoragePath] as String? ?? '',
       pdfFileName: map[FirestoreFields.pdfFileName] as String? ?? '',
       pdfFileSize: _readFileSize(map[FirestoreFields.pdfFileSize]),
